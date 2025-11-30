@@ -162,3 +162,8 @@ $$\Delta z = \frac{R_d}{g} \, \bar{T} \, \ln\left(\frac{p_1}{p_2}\right)$$
 2.	同一对等压面之间：暖则厚，冷则薄。
 3.	厚度 = 那一层的平均温度 → 是天空里的温度计，也是物理先验的“压缩特征”。
 :::
+
+
+```{literalinclude} ../../src/snippets/pressure_layer_thickness.py
+:lineno-match:
+```
