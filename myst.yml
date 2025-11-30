@@ -14,6 +14,11 @@ project:
     # Paths in the TOC are relative to the myst.yml file location
     - file: intro.md
       title: Introduction
+    - file: docs/thermo/overview.md
+      title: Thermodynamics
+      children:
+        - file: docs/thermo/gas_laws.md
+          title: Gas Laws
   exports:
     - format: pdf
       template: lapreprint-typst
