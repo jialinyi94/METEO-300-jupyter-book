@@ -13,9 +13,10 @@ Instead, if you use Python, you'd see code like:
 ```python
 pressure * volume = num_moles * GAS_CONST * temperature
 ```
-Looks more informative, right?
+Looks more informative, right? 
+We will see more benefits later.
 
-% An arbitrary math equation
+% Ideal gas law equation
 :::{math}
 :name: eq:book
 
