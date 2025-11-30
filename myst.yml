@@ -7,6 +7,8 @@ project:
   keywords: ["METEO 300", "Atmospheric Science", "PSU", "AI Trading"]
   authors: 
     - name: Jialin Yi
+    - name: GPT
+      affiliation: "Open AI"
   github: https://github.com/jialinyi94/METEO-300-jupyter-book
   # To autogenerate a Table of Contents, run "jupyter book init --write-toc"
   toc:
