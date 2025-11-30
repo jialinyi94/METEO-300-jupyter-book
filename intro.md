@@ -26,7 +26,7 @@ PV = nRT
 Let's end the introduction with a beautiful picture showing the atmosphere environment we will study in this book in [](#fig:atmosphere)!
 
 % A figure of a photograph of some atmosphere, followed by a caption
-:::{figure} https://commons.wikimedia.org/wiki/File:Top_of_Atmosphere.jpg
+:::{figure} https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Top_of_Atmosphere.jpg/1200px-Top_of_Atmosphere.jpg
 :label: fig:atmosphere
 
 A photograph of some beautiful atmosphere from Wikipedia to look at whilst reading.
