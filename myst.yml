@@ -7,6 +7,7 @@ project:
   keywords: ["METEO 300", "Atmospheric Science", "PSU", "AI Trading"]
   authors: 
     - name: Jialin Yi
+      affiliation: "Citadel"
     - name: GPT
       affiliation: "Open AI"
   github: https://github.com/jialinyi94/METEO-300-jupyter-book
