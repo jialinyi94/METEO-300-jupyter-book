@@ -19,6 +19,8 @@ project:
       children:
         - file: docs/thermo/gas_laws.md
           title: Gas Laws
+        - file: docs/thermo/pressure_structure.md
+          title: Atmospheric Pressure Structure
   exports:
     - format: pdf
       template: lapreprint-typst
