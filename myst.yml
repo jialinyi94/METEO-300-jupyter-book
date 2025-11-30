@@ -8,7 +8,7 @@ project:
   authors: 
     - name: Jialin Yi
       affiliation: "Citadel"
-    - name: GPT
+    - name: GPT 5.1
       affiliation: "Open AI"
   github: https://github.com/jialinyi94/METEO-300-jupyter-book
   # To autogenerate a Table of Contents, run "jupyter book init --write-toc"
