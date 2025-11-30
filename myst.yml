@@ -25,6 +25,8 @@ project:
           title: First Law of Thermodynamics
         - file: docs/thermo/thickness.md
           title: The higher the temperature, the thicker the layer
+        - file: docs/thermo/adiabatics.md
+          title: Adiabatic Processes
   exports:
     - format: pdf
       template: lapreprint-typst
