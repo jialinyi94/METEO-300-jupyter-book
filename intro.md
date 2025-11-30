@@ -1,5 +1,9 @@
 # Introduction
 
++++ {"part": "abstract"}
+Why this jupyter notebook exists: learning atmospheric science using Python.
++++
+
 I am a computational notebook about Fundamental of Atomospheric Sicence. Pennsylvania State University has [an awesome open course](wiki:book): hover over the link for more information.
 
 % An admonition containing a note
