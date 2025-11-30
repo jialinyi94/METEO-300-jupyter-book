@@ -21,6 +21,8 @@ project:
           title: Gas Laws
         - file: docs/thermo/pressure_structure.md
           title: Atmospheric Pressure Structure
+        - file: docs/thermo/first_law.md
+          title: First Law of Thermodynamics
   exports:
     - format: pdf
       template: lapreprint-typst
