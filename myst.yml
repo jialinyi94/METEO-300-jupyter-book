@@ -2,9 +2,9 @@
 version: 1
 project:
   id: 8af17319-8168-40c6-bf42-bf1935b58e70
-  title: METEO 300 Fundamentals of Atmospheric Science
-  description: A Jupyter Book for METEO 300 Fundamentals of Atmospheric Science at the University of British Columbia.
-  keywords: ["METEO 300", "Atmospheric Science", "PSU"]
+  title: METEO 300 Fundamentals of Atmospheric Science, But for AI Traders
+  description: An AI Trader's Jupyter Book for METEO 300 Fundamentals of Atmospheric Science at Pennsylvania State University
+  keywords: ["METEO 300", "Atmospheric Science", "PSU", "AI Trading"]
   authors: 
     - name: Jialin Yi
   github: https://github.com/jialinyi94/METEO-300-jupyter-book
