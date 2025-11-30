@@ -32,6 +32,8 @@ project:
           title: Adiabatic Processes
         - file: docs/thermo/stability.md
           title: Stability and Buoyancy
+    - file: docs/moist/overview.md
+      title: Moist Processes
   exports:
     - format: pdf
       template: lapreprint-typst
