@@ -36,6 +36,8 @@ project:
       title: Moist Processes
     - file: docs/radiation/overview.md
       title: Radiation
+    - file: docs/dynamics/overview.md
+      title: Dynamical Meteorology
   exports:
     - format: pdf
       template: lapreprint-typst
