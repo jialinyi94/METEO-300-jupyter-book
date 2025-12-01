@@ -38,6 +38,9 @@ project:
       title: Radiation
     - file: docs/dynamics/overview.md
       title: Dynamical Meteorology
+      children:
+        - file: docs/dynamics/math/overview.md
+          title: Mathematical Foundations
   exports:
     - format: pdf
       template: lapreprint-typst
