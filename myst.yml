@@ -34,6 +34,8 @@ project:
           title: Stability and Buoyancy
     - file: docs/moist/overview.md
       title: Moist Processes
+    - file: docs/radiation/overview.md
+      title: Radiation
   exports:
     - format: pdf
       template: lapreprint-typst
