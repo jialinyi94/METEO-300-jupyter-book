@@ -36,10 +36,10 @@ project:
       title: Moist Processes
     - file: docs/radiation/overview.md
       title: Radiation
-    - file: docs/dynamics/overview.md
+    - file: docs/dynamic/overview.md
       title: Dynamical Meteorology
       children:
-        - file: docs/dynamics/math/overview.md
+        - file: docs/dynamic/math/overview.md
           title: Mathematical Foundations
   exports:
     - format: pdf
