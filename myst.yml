@@ -39,7 +39,7 @@ project:
     - file: docs/dynamic/overview.md
       title: Dynamical Meteorology
       children:
-        - file: docs/dynamic/math/overview.md
+        - file: docs/dynamic/math.md
           title: Mathematical Foundations
   exports:
     - format: pdf
