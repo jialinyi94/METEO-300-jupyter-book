@@ -190,9 +190,7 @@ Lesson 的总结是：
 
 # 8.5 梯度：风为什么总喜欢切着等温线吹？
 
-:::{important}
-梯度 = “某个标量在空间中最大变化的方向和强度”。 
-:::
+## 梯度 = “某个标量在空间中最大变化的方向和强度”
 
 以温度为例：
 - 温度场 $T(x,y,z)$，它的梯度 $\nabla T$ 是一个向量
@@ -222,12 +220,12 @@ $$
 梯度总是垂直于等值线（如等温线、等压线），指向数值增大的那侧。  
 :::
 
-具体怎么从天气图上算梯度？
+## 具体怎么从天气图上算梯度？
 
 他们用 2012 年 9 月 8 日美国地面温度图做例子： 
 1.	找一个点（比如肯塔基州西部）
 2.	看看这个点周围的等温线如何排布：
-	- 如果东南方温度明显高、西北方温度低，那 \nabla T 大致指向东南
+	- 如果东南方温度明显高、西北方温度低，那 $\nabla T$ 大致指向东南
 3.	要估大小，就要用到有限差分：
 	- 沿 x 方向：$\partial T / \partial x \approx \Delta T/\Delta x$
 	- 沿 y 方向：$\partial T / \partial y \approx \Delta T/\Delta y$  
@@ -238,7 +236,7 @@ $$
 他们甚至专门讲了如何用尺子量地图上的实际距离，把“厘米”换成“海里或公里”，再套进 $\Delta T/\Delta x$ 里算梯度。 
 
 
-8.6 欧拉 vs 拉格朗日：你是站在窗边，还是在云里飞？
+# 8.6 欧拉 vs 拉格朗日：你是站在窗边，还是在云里飞？
 
 这一节的核心是一个画面： 
 
@@ -248,18 +246,21 @@ $$
 
 于是：
 - 房子里的观测者：
-- 固定在某个点
-- 只在云飘过头顶时被雨“扫一下”
-- 这是 欧拉视角（Eulerian）：在固定位置上观测随时间变化的物理量
+	- 固定在某个点
+	- 只在云飘过头顶时被雨“扫一下”
+	- 这是 欧拉视角（Eulerian）：在固定位置上观测随时间变化的物理量
 - 车里的司机：
-- 跟着云一起走
-- 体验的是这团云本身“内部”强弱变化
-- 这是 拉格朗日视角（Lagrangian）：跟随同一空气团，看它自身的演化
+	- 跟着云一起走
+	- 体验的是这团云本身“内部”强弱变化
+	- 这是 拉格朗日视角（Lagrangian）：跟随同一空气团，看它自身的演化
 
-接着引入一个核心概念：空气包裹（air parcel）： 
+接着引入一个核心概念：
+:::{important}
+空气包裹（air parcel） 
 - 一个理想化的“小块空气”
 - 质量和组成在运动中基本守恒（不不断混入其它空气）
-- 尺寸要足够大，使 T、p 等热力学量“有意义”；又要足够小，可以快速响应环境变化
+- 尺寸要足够大，使 $T$、$p$ 等热力学量“有意义”；又要足够小，可以快速响应环境变化
+:::
 
 然后总结两种框架的特点： 
 
@@ -269,106 +270,98 @@ Eulerian 框架：
 - 是数值天气预报模式、观测网络的主流方式
 
 Lagrangian 框架：
-- 跟着单个空气团走，看这个团内部的 T、q、p 等如何变化
+- 跟着单个空气团走，看这个团内部的 $T$、$q$、$p$ 等如何变化
 - 更容易联系物理过程（绝热上升、凝结、加热冷却）
 - 实际观测中不好实现，多用于理论和数值实验
 
 教材还指出：探空（radiosonde）既不是纯 Eulerian（它会飘走），也不是纯 Lagrangian（它不会牢牢跟住同一团空气），属于“两边都沾点但都不完全”。 
 
-⸻
 
-8.7 用一个公式连接两种视角：物质导数 & 平流
+# 8.7 用一个公式连接两种视角：物质导数 & 平流
 
 现在进入本课最核心的数学连接：Eulerian vs Lagrangian 用一个公式打通。 
 
-设一个标量 R(x, y, z, t)（比如降雨率），它依赖空间和时间。
+设一个标量 $R(x, y, z, t)$（比如降雨率），它依赖空间和时间。
 
-1）从全微分出发
+## 1）从全微分出发
 
-先写 R 的全微分：
-
+先写 $R$ 的全微分：
+$$
 dR =
 \frac{\partial R}{\partial t} dt +
 \frac{\partial R}{\partial x} dx +
 \frac{\partial R}{\partial y} dy +
 \frac{\partial R}{\partial z} dz  
-
+$$
 把两边都除以 dt：
-
+$$
 \frac{dR}{dt} =
 \frac{\partial R}{\partial t} +
 \frac{\partial R}{\partial x}\frac{dx}{dt} +
 \frac{\partial R}{\partial y}\frac{dy}{dt} +
 \frac{\partial R}{\partial z}\frac{dz}{dt}
-
+$$
 注意：
-- \frac{dx}{dt}, \frac{dy}{dt}, \frac{dz}{dt} 正是空气团的速度分量 u, v, w
+$- \frac{dx}{dt}, \frac{dy}{dt}, \frac{dz}{dt}$ 正是空气团的速度分量 $u$, $v$, $w$
 
 于是：
-
+$$
 \frac{dR}{dt} =
 \frac{\partial R}{\partial t} +
 u \frac{\partial R}{\partial x} +
 v \frac{\partial R}{\partial y} +
 w \frac{\partial R}{\partial z}
-
+$$
 这就是物质导数（substantial / material / Lagrangian derivative）：
 
-“跟着空气团移动时，R 的变化率”。 
+“跟着空气团移动时，$R$ 的变化率”。 
 
 用向量写得更优雅：
-
+$$
 \frac{dR}{dt} = \frac{\partial R}{\partial t} + \mathbf{U} \cdot \nabla R
+$$
+其中第二项 $\mathbf{U} \cdot \nabla R$ 就是advective derivative（平流导数）。 
 
-其中第二项 \mathbf{U} \cdot \nabla R 就是advective derivative（平流导数）。 
-
-2）Euler 关系：局地变化 = 物质变化 – 平流
+## 2）Euler 关系：局地变化 = 物质变化 – 平流
 
 把公式稍微变个形：
-
+$$
 \frac{\partial R}{\partial t} =
 \frac{dR}{dt} - \mathbf{U} \cdot \nabla R  
-
+$$
 解释：
-- 左边：固定在一个观测站，看 R 随时间如何变化（Eulerian 局地导数）
+- 左边：固定在一个观测站，看 $R$ 随时间如何变化（Eulerian 局地导数）
 - 第一项：空气团自己“内在”变化（加热、冷却、凝结等）（Lagrangian 物质导数）
-- 第二项：因为空气在空间中移动，带来了原本在别处的 R 值（平流 advection）
+- 第二项：因为空气在空间中移动，带来了原本在别处的 $R$ 值（平流 advection）
 
 他们特别强调：advection 只是 advective derivative 的负号，只是符号约定问题。 
 
-3）用温度平流来感受符号
+## 3）用温度平流来感受符号
 
-例子：只在 x 方向有温度梯度，T 往东升高：
-- 即 \partial T / \partial x > 0
-- 风是西风（u > 0，风从西往东吹） 
+例子：只在 $x$ 方向有温度梯度，$T$ 往东升高：
+- 即 $\partial T / \partial x > 0$
+- 风是西风（$u > 0$，风从西往东吹） 
 
-那平流项里 u 和 \partial T / \partial x 都是正的，于是：
-- 温度平流（定义成 – u ∂T/∂x）是负值 → 冷平流（cold advection）
+那平流项里 $u$ 和 $\partial T / \partial x$ 都是正的，于是：
+- 温度平流（定义成 $-u \partial T / \partial x$）是负值 → 冷平流（cold advection）
 - 物理意义：
 - 你站在某点，右边更暖，左边更冷，风从左往右吹
 - 随着时间过去，你脚下的位置被“更冷的空气替换掉”，温度在下降
-- 所以 \partial T / \partial t < 0
+- 所以 $\partial T / \partial t$ < 0
 
 类似地，如果平流项是正的，就是暖平流（warm advection）。 
 
 这一套结构非常通用：
-- R 可以是降雨率、温度、气压、湿度等任何标量
-- 你只需要给出 \mathbf{U} 和 \nabla R，就能写出“R 的局地变化 = 物质变化 – 平流”的平衡
+- $R$ 可以是降雨率、温度、气压、湿度等任何标量
+- 你只需要给出 $\mathbf{U}$ 和 $\nabla R$，就能写出“R 的局地变化 = 物质变化 – 平流”的平衡
 
 ⸻
 
-9. 总结：Lesson 8 = 给“动力学方程”铺好语言地板
+# 9. 总结：Lesson 8 = 给“动力学方程”铺好语言地板
 
 整节课的 Summary 明说了：
-- 你现在具备后面所有运动学（流线、发散、旋度）和动力学（力平衡、涡度方程）的数学工具箱：偏导数、向量、点积/叉积、∇、梯度、坐标系、风向约定、欧拉/拉格朗日、物质导数、平流。 
+- 你现在具备后面所有运动学（流线、发散、旋度）和动力学（力平衡、涡度方程）的数学工具箱：偏导数、向量、点积/叉积、$\nabla$、梯度、坐标系、风向约定、欧拉/拉格朗日、物质导数、平流。 
 
 如果用一句更“气象人”的话来概括 Lesson 8：
 
 它在教你：如何用向量微积分和两种视角（Eulerian/Lagrangian）来“听懂”风在说什么。
-
-⸻
-
-如果你愿意，下一步我可以帮你把这套东西翻译成你自己（和你工作里）会实际用到的几个“公式模板”，比如：
-- 怎么从再分析场里用风场 + 温度场算平流
-- 怎么用物质导数直观理解数值模式里的“tendency term”
-- 或者，把 Lesson 8 直接嵌进你做 AI 天气模型时的 feature/explanation 体系里。
