@@ -41,6 +41,8 @@ project:
       children:
         - file: docs/dynamic/math.ipynb
           title: Mathematical Foundations
+        - file: docs/dynamic/kinematics.ipynb
+          title: Kinematics
   exports:
     - format: pdf
       template: lapreprint-typst
