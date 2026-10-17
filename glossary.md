@@ -217,6 +217,7 @@
 | 散度 | divergence | $\delta$ | s⁻¹ | `d` / `divergence` | 辐散度 |
 | 辐合 | convergence | $\delta < 0$ | — | — | 汇聚、会聚 |
 | 辐散 | divergence of the flow | $\delta > 0$ | — | — | — |
+| 变形 | deformation | — | s⁻¹ | — | 形变 |
 | 环流 | circulation | $C$ | m² s⁻¹ | — | — |
 | 气旋式 | cyclonic | — | — | — | — |
 | 反气旋式 | anticyclonic | — | — | — | — |
@@ -306,6 +307,7 @@
 | 辐射对流平衡 | radiative–convective equilibrium | RCE | — | climlab `RadiativeConvectiveModel` | 辐射-对流平衡 |
 | 对流调整 | convective adjustment | — | — | climlab `ConvectiveAdjustment` | — |
 | 静止卫星 | geostationary satellite | — | — | GOES、Meteosat、Himawari | 地球静止卫星、同步卫星 |
+| 极轨卫星 | polar-orbiting satellite | — | — | NOAA-20、Metop | 极地轨道卫星 |
 | 辐射传输模式 | radiative transfer model | — | — | RTTOV | 辐射传输模型 |
 | Planck 常数 | Planck constant | $h$ | J s | `scipy.constants.h` | 普朗克常数 |
 | Boltzmann 常数 | Boltzmann constant | $k_B$ | J K⁻¹ | `scipy.constants.k` | 玻尔兹曼常数 |
@@ -435,6 +437,9 @@
 | 冷锋 | cold front | — | — | — | — |
 | 暖锋 | warm front | — | — | — | — |
 | 锢囚锋 | occluded front | — | — | — | 囚锢锋 |
+| 暖区 | warm sector | — | — | — | 暖扇区 |
+| 锋生 | frontogenesis | — | — | — | 锋面生成 |
+| 锋生函数 | frontogenesis function | $\mathcal{F}$ | K (100 km)⁻¹ (3 h)⁻¹ | MetPy `frontogenesis`，单位 K m⁻¹ s⁻¹ | — |
 | 静止锋 | stationary front | — | — | — | 准静止锋 |
 | 气旋 | cyclone | — | — | — | — |
 | 反气旋 | anticyclone | — | — | — | — |
@@ -448,6 +453,13 @@
 | 斜压不稳定 | baroclinic instability | — | — | — | 斜压不稳定性 |
 | 气旋生成 | cyclogenesis | — | — | — | 气旋发生、气旋新生 |
 | 爆发性气旋 | explosive cyclone | — | — | — | 炸弹气旋 |
+| 气旋中心 | cyclone centre | — | — | — | — |
+| 中心气压 | central pressure | $p_c$ | hPa | 气旋中心的 `msl` | 中心压力 |
+| 气旋路径 | cyclone track | — | — | — | 气旋轨迹 |
+| 气旋追踪 | cyclone tracking | — | — | — | 气旋跟踪 |
+| 局地极小值 | local minimum | — | — | — | 局部极小值、局部最小值 |
+| 搜索半径 | search radius | — | km | — | — |
+| 匹配半径 | match radius | — | km | — | 匹配距离 |
 | 风暴路径 | storm track | — | — | — | 风暴轴 |
 | 重力波 | gravity wave | — | — | — | — |
 
@@ -503,6 +515,10 @@
 | 均方误差 | mean squared error | MSE | — | — | — |
 | 均方根误差 | root mean squared error | RMSE | 与变量相同 | — | 均方误差根、均方根差、均方差 |
 | 偏差 | bias | — | 与变量相同 | — | — |
+| 平均绝对误差 | mean absolute error | MAE | 与变量相同 | — | 平均绝对偏差 |
+| 路径误差 | track error | — | km | — | 轨迹误差、位置误差 |
+| 命中 | hit | — | — | — | — |
+| 漏报 | miss | — | — | — | 未命中 |
 | 相关系数 | Pearson correlation coefficient | — | — | earthkit-meteo `score.pearson_correlation` | 皮尔逊相关系数 |
 | 百分位数 | percentile | — | 与变量相同 | — | 百分位、分位点 |
 | 标准误差 | standard error | — | 与变量相同 | — | 标准误 |
