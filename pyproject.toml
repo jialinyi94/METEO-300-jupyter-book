@@ -10,7 +10,8 @@ dependencies = [
     "numpy",
     "pandas",
     "xarray",
-    "matplotlib",
+    # MetPy 1.7.1 StationPlot breaks with Matplotlib 3.11 (Text._get_layout changed).
+    "matplotlib>=3.10,<3.11",
     "metpy",
     "pint",
     "pint-xarray",
@@ -20,6 +21,19 @@ dependencies = [
     "gcsfs",
     "ipykernel",
     "jupyter-book>=2,<3",
+    "siphon>=0.11.0",
+    "ecmwf-opendata>=0.3.35",
+    "cfgrib>=0.9.15.1",
+    # eccodes >= 2.43 needs eckitlib, which bundles its own PROJ and crashes with pyproj.
+    # 2.42.0 is the last wheel that bundles libeccodes alone.
+    "eccodes==2.42.0",
+    "s3fs>=2026.9.0",
+    "satpy>=0.60.0",
+    "h5netcdf>=1.8.1",
+    "earthaccess>=0.19.0",
+    "cdsapi>=0.7.7",
+    "eumdac>=3.1.1",
+    "requests>=2.34.2",
 ]
 
 [dependency-groups]
@@ -52,6 +66,9 @@ select = ["E", "F", "W", "I", "B", "UP", "NPY"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Network tests download data; run them with: uv run pytest -m network
+markers = ["network: downloads data from the internet"]
+addopts = "-m 'not network'"
 
 [tool.ste_check]
 # Settings of tools/ste_check.py, the automatic checks of STYLE.md.

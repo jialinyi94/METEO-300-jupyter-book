@@ -58,6 +58,7 @@ project:
       children:
         - file: docs/reference/datasets.md
         - file: docs/reference/toolkits.md
+        - file: docs/reference/data-access-demo.md
         - file: docs/reference/glossary.md
         - file: docs/reference/style.md
 

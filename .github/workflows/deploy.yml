@@ -26,12 +26,31 @@ jobs:
     name: Build site (execute notebooks)
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      # The readers in meteo300.data read data/samples/ instead of the network.
+      METEO300_OFFLINE: "1"
     steps:
       - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v7
         with:
           node-version: 22
+
+      # Chinese labels in Matplotlib figures. meteo300.plot selects Noto Sans CJK SC.
+      - name: Install the CJK font
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk
+
+      # Allowed network use on the first build: MetPy station tables and cartopy Natural
+      # Earth files that data/natural_earth does not hold. The cache keeps them for later builds.
+      - name: Restore the MetPy and cartopy download cache
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/metpy
+            ~/.local/share/cartopy
+          key: downloads-${{ hashFiles('uv.lock') }}
+          restore-keys: |
+            downloads-
 
       - uses: astral-sh/setup-uv@v10
         with:
@@ -63,6 +82,8 @@ jobs:
     name: Writing standard and code checks
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      METEO300_OFFLINE: "1"
     steps:
       - uses: actions/checkout@v7
 

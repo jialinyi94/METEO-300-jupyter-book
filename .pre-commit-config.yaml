@@ -4,9 +4,12 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
+      # data/ holds sample and shapefile data files; the text fixers must not change them.
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
+        exclude: ^data/
       - id: end-of-file-fixer
+        exclude: ^data/
       - id: check-yaml
       - id: check-toml
       - id: check-merge-conflict
