@@ -37,7 +37,7 @@ Mauna Loa 的记录有两个特征。第一，二氧化碳逐年增加，主要�
 
 气溶胶光学厚度是气溶胶造成的那部分光学厚度 $\tau$。它描述整层大气的气溶胶让阳光减弱多少。
 
-按 Beer–Lambert 定律，太阳在天顶时，直射阳光穿过整层大气后剩下 $e^{-\tau}$。CAMS 的变量 `aod550` 是 550 nm 波长上的气溶胶光学厚度。550 nm 在可见光的中间。干净的空气里，气溶胶光学厚度约为 0.1。强沙尘过程中，它可以超过 1。
+按 Beer–Lambert 定律，太阳在天顶时，直射阳光穿过整层大气后剩下 $e^{-\tau}$。CAMS 的变量 `aod550` 是 550 nm 波长上的气溶胶光学厚度。550 nm 在可见光的中间。干净的空气里，气溶胶光学厚度约为 0.1 或更小。强沙尘过程中，它可以超过 1。这两个量级见 NASA Earth Observatory 的 [说明](https://science.nasa.gov/earth/earth-observatory/global-maps/aerosol-optical-depth)。
 
 ### 成云的三个条件
 
@@ -56,7 +56,7 @@ $e_s$ 是平的纯水面上的饱和水汽压。云滴表面是曲面，云滴�
 
 $r_\mathrm{d}$ 是滴半径。$\sigma_\mathrm{w}$ 是水的表面张力，20 °C 时约为 0.073 N m⁻¹。$n_\mathrm{L}$ 是液态水的摩尔浓度，约为 $5.55 \times 10^4$ mol m⁻³。$R^*$ 是摩尔气体常数。Kelvin 系数 $a_\mathrm{K}$ 约为 0.001 μm，所以 Kelvin 效应只对很小的水滴重要。
 
-没有气溶胶时，水分子要自己聚成水滴。最初的水滴只有几个分子大，Kelvin 效应很强。METEO 300 估计，这样成核需要约 440% 的相对湿度。真实大气的相对湿度几乎从不超过 101%。所以云滴都在气溶胶颗粒上形成。
+没有气溶胶时，水分子要自己聚成水滴。最初的水滴只有几个分子大，Kelvin 效应很强。METEO 300 估计，这样成核需要约 440% 的相对湿度。实验在 2 °C 时测得约 420%，在 -13 °C 时测得约 500%，见 Pound，1972，[doi:10.1063/1.3253095](https://doi.org/10.1063/1.3253095)。METEO 300 也说，大气的相对湿度很少比 100% 高很多。所以云滴都在气溶胶颗粒上形成。
 
 ### 溶质效应
 
@@ -67,7 +67,9 @@ $r_\mathrm{d}$ 是滴半径。$\sigma_\mathrm{w}$ 是水的表面张力，20 °C
 \frac{e_\mathrm{eq}}{e_s} = 1 - x_\mathrm{s} \approx 1 - \frac{b_\mathrm{s}}{r_\mathrm{d}^3}, \qquad b_\mathrm{s} = \frac{3\,i\,N_\mathrm{s}}{4\pi\,n_\mathrm{L}}
 ```
 
-$x_\mathrm{s}$ 是溶质摩尔分数。$N_\mathrm{s}$ 是水滴里溶质的物质的量。van 't Hoff 因子 $i$ 是一个溶质分子在水里分成的离子数。理想溶液里，氯化钠的 $i = 2$，硫酸铵的 $i = 3$。近似式假设溶液很稀，$x_\mathrm{s} \ll 1$。
+$x_\mathrm{s}$ 是溶质摩尔分数。$N_\mathrm{s}$ 是水滴里溶质的物质的量。近似式假设溶液很稀，$x_\mathrm{s} \ll 1$。
+
+van 't Hoff 因子 $i$ 描述一个溶质分子在水里变成几个粒子。完全电离时，氯化钠的 $i = 2$，硫酸铵的 $i = 3$。真实溶液不理想，有效的 $i$ 更小。云滴活化时，硫酸铵的有效 $i$ 约为 2.5，见 Rose 等，2008，[`doi:10.5194/acp-8-1153-2008`](https://doi.org/10.5194/acp-8-1153-2008)。
 
 ### Köhler 曲线
 
@@ -129,6 +131,7 @@ r_\mathrm{c} = \sqrt{\frac{3 b_\mathrm{s}}{a_\mathrm{K}}}, \qquad S_\mathrm{c} -
 | Kelvin 效应 | Kelvin effect | — |
 | Kelvin 系数 | Kelvin coefficient | $a_\mathrm{K}$ |
 | 滴半径 | drop radius | $r_\mathrm{d}$ |
+| 干颗粒半径 | dry particle radius | $r_0$ |
 | 表面张力 | surface tension | $\sigma_\mathrm{w}$ |
 | 液态水摩尔浓度 | molar concentration of liquid water | $n_\mathrm{L}$ |
 | 摩尔气体常数 | molar gas constant | $R^*$ |
@@ -283,7 +286,7 @@ cbar = fig.colorbar(pc, ax=axs, shrink=0.8, format="%g", label="日降水量 (mm
 
 本页用五个数据集：
 
-- NOAA GML 的二氧化碳月平均值。Mauna Loa 的记录从 1958 年 3 月开始，1974 年 4 月以前的数据来自 Scripps 海洋研究所的 Charles Keeling。数据集的引用是 Lan、Tans 和 Thoning，[doi:10.15138/9N0H-ZH07](https://doi.org/10.15138/9N0H-ZH07)。NOAA GML 允许自由使用数据，要求引用来源。
+- NOAA GML 的二氧化碳月平均值。Mauna Loa 的记录从 1958 年 3 月开始。1958 年 3 月到 1974 年 4 月的数据来自 Scripps 海洋研究所的 C. David Keeling。Mauna Loa 数据的引用是 NOAA GML 的 Xin Lan 和 Scripps 的 Ralph Keeling，见 [GML 的数据页](https://gml.noaa.gov/ccgg/trends/data.html)。全球平均值的引用是 Lan、Tans 和 Thoning，[doi:10.15138/9N0H-ZH07](https://doi.org/10.15138/9N0H-ZH07)。NOAA GML 允许自由使用数据，要求引用来源。
 - CAMS 全球预报。CAMS 是 Copernicus 大气监测服务，ECMWF 运行它。全球预报每天两次，网格是 0.4°。预报时效 0 h 是分析场，它同化了卫星观测的气溶胶光学厚度。数据集的 DOI 是 [10.24381/04a0b097](https://doi.org/10.24381/04a0b097)，许可是 CC BY 4.0。另一个常用的选择是 CAMS 的再分析 EAC4，网格 0.75°。2026 年 10 月，EAC4 只到 2025 年 12 月，所以本页用全球预报。
 - GPM IMERG 是 NASA 的全球降水数据集，网格 0.1°，每 30 min 一个值。它合并多颗卫星的微波观测和红外观测。Final 产品还用雨量计校准，约 3.5 个月以后发布。2026 年 10 月，GES DISC 上第 07 版的 Final 产品只到 2025 年 9 月。所以本页用 Late 产品的日数据，它约 14 h 以后发布。Late 产品的校准用气候态的系数，不用当月的雨量计数据。它的 DOI 是 [10.5067/GPM/IMERGDL/DAY/07](https://doi.org/10.5067/GPM/IMERGDL/DAY/07)。
 - ERA5 的总降水量 `tp`。ERA5 的论文是 Hersbach 等，2020，[doi:10.1002/qj.3803](https://doi.org/10.1002/qj.3803)。本页从 ARCO-ERA5 读取 ERA5，许可是 CC BY 4.0。
@@ -337,7 +340,7 @@ for r in [0.01, 0.1, 1.0, 10.0] * units.um:
 
 ### 溶质效应与 Köhler 曲线
 
-下面的颗粒是硫酸铵，干颗粒的半径是 0.05 μm。硫酸铵的密度取 1770 kg m⁻³，摩尔质量取 0.132 kg mol⁻¹，$i = 3$。函数先算颗粒里溶质的物质的量 $N_\mathrm{s}$，再算 $b_\mathrm{s}$。
+下面的颗粒是硫酸铵，干颗粒半径 $r_0$ 是 0.05 μm。硫酸铵的密度取 1770 kg m⁻³，摩尔质量取 0.132 kg mol⁻¹。本页取理想值 $i = 3$。临界过饱和度和 $\sqrt{i}$ 成反比，所以有效 $i$ 约为 2.5 时，它要高约 10%。函数先算颗粒里溶质的物质的量 $N_\mathrm{s}$，再算 $b_\mathrm{s}$。
 
 ```{code-cell} python
 AS = {"density": 1770 * units("kg/m^3"), "molar_mass": 0.13214 * units("kg/mol"), "i": 3}
@@ -360,7 +363,7 @@ $$
 S_\mathrm{eq} = \frac{r_\mathrm{d}^3 - r_0^3}{r_\mathrm{d}^3 - r_0^3 + b_\mathrm{s}} \exp\left(\frac{a_\mathrm{K}}{r_\mathrm{d}}\right)
 $$
 
-$r_0$ 是干颗粒的半径。分式等于 $1 - x_\mathrm{s}$，其中水的物质的量按水滴体积减去干颗粒体积计算。`scipy.optimize.minimize_scalar` 数值求这个函数的最大值。手算用 [](#eq-t1-critical)。
+$r_0$ 是干颗粒半径。分式等于 $1 - x_\mathrm{s}$，其中水的物质的量按水滴体积减去干颗粒体积计算。`scipy.optimize.minimize_scalar` 数值求这个函数的最大值。手算用 [](#eq-t1-critical)。
 
 ```{code-cell} python
 def s_eq(r, r0, a, b):
@@ -474,7 +477,11 @@ ax2.legend()
 fig.tight_layout()
 ```
 
-[](#fig-t1-co2-growth) 的左图显示，年增长率从 1960 年代的约 0.9 ppm a⁻¹ 升到 2010 年代的约 2.4 ppm a⁻¹。2016 年到 2025 年的平均年增长率约 2.5 ppm a⁻¹。年增长率每年都有波动。2024 年、2016 年和 1998 年最大，三年都在一次强 El Niño 之后。El Niño 使热带的陆地变暖变干，植物吸收的二氧化碳变少，火灾增加。
+[](#fig-t1-co2-growth) 的左图显示，年增长率从 1960 年代的约 0.9 ppm a⁻¹ 升到 2010 年代的约 2.4 ppm a⁻¹。2016 年到 2025 年的平均年增长率约 2.5 ppm a⁻¹。年增长率每年都有波动。
+
+按本页的定义，2024 年、2016 年和 1998 年最大。1998 年只比 2019 年大 0.03 ppm a⁻¹。NOAA 的 [官方年增长率](https://gml.noaa.gov/ccgg/trends/gr.html) 是每年 1 月到 12 月的增量。按它排序，最大的三年是 2024 年、2023 年和 2016 年。
+
+这几年都在一次强 El Niño 期间或紧随其后。El Niño 使热带的陆地变暖变干，植物吸收的二氧化碳变少，火灾增加。Betts 等估计，2016 年的增长约有 25% 来自 El Niño，[doi:10.1098/rstb.2017.0301](https://doi.org/10.1098/rstb.2017.0301)。WMO 把 2024 年的增长归因于化石燃料排放和更多的火灾排放。陆地和海洋吸收的二氧化碳也变少了，见 [WMO 温室气体公报第 21 期](https://wmo.int/sites/default/files/2025-10/GHG-21_en.pdf)。
 
 右图里，季节循环的峰谷差约 6.7 ppm。季节振幅是年增长率的 2 倍多，所以只看几个月的数据，看不出长期增长。比较不同年份时，要比较同一个月，或者先去掉季节循环。
 
@@ -604,7 +611,7 @@ leg = ax.legend()
 各个模型和评估框架怎样处理降水：
 
 - ERA5 的变量是 `tp`。WeatherBench 2 的变量是 `total_precipitation_6hr` 和 `total_precipitation_24hr`，真值是 ERA5。
-- WeatherBench 2 用 SEEPS 评估 24 h 降水量。SEEPS 按气候态把降水分成无雨、小雨和大雨三类，再比较预报和真值的类别。
+- WeatherBench 2 用 SEEPS 评估 24 h 降水量，见 Rasp 等，2024，[doi:10.1029/2023MS004019](https://doi.org/10.1029/2023MS004019)。日降水量低于 0.25 mm 算无雨。其余的降水按气候态分成小雨和大雨，小雨的天数是大雨的 2 倍。SEEPS 比较预报和真值的类别。很干和很湿的格点不参加评估。
 - GraphCast 输出 `total_precipitation_6hr`，但不把它作为输入。Pangu-Weather 不预报降水。
 - AIFS Single 输出 `tp`，它从起报开始累积。
 
@@ -627,7 +634,7 @@ for name, field in boxes.items():
     print(f"英格兰方框 {name:5s}：" + "，".join(f"{v:.1f} mm" for v in mean))
 ```
 
-AIFS 的结果和 ERA5 很像。AIFS 先用 ERA5 训练，再用 IFS 的业务分析场微调。比较的结果有四点：
+AIFS 的结果和 ERA5 很像。AIFS 先用 ERA5 预训练，再用 IFS 的业务分析场微调。2026 年 3 月运行的是 AIFS Single v1.1。它用 ［1979, 2022］ 年的 ERA5 预训练，用 ［2016, 2022］ 年的业务分析场微调，见它的 [模型卡](https://huggingface.co/ecmwf/aifs-single-1.1)。比较的结果有四点：
 
 1. 1° 方框上，AIFS 和 IMERG 的 correlation 是 0.80 和 0.82，比 ERA5 略低。AIFS 是 ［24, 72］ h 的预报，这个差别不大。
 2. 20 mm 以上的面积，AIFS 只有 IMERG 的 ［14, 30］ %。强降水明显偏弱。
@@ -644,7 +651,7 @@ AIFS 的结果和 ERA5 很像。AIFS 先用 ERA5 训练，再用 IFS 的业务�
 
 ### 气溶胶
 
-大多数 AI 天气模型不表示气溶胶。GraphCast、Pangu-Weather 和 AIFS 的输入里都没有气溶胶光学厚度或云凝结核。它们从 ERA5 学习，而 ERA5 的辐射计算用气溶胶的气候态，不用当天的气溶胶。ECMWF 的业务数值模式 IFS 也用气候态。所以 3 月 5 日的沙尘不在这些模型的输入里。
+大多数 AI 天气模型不表示气溶胶。GraphCast、Pangu-Weather 和 AIFS 的输入里都没有气溶胶光学厚度或云凝结核。它们从 ERA5 学习，而 ERA5 的辐射计算用月平均的气溶胶气候态，不用当天的气溶胶。ERA5 的对流层气溶胶主要来自 Tegen 等，1997 的气候态，[doi:10.1029/97JD01864](https://doi.org/10.1029/97JD01864)。ECMWF 的业务数值模式 IFS 从 2017 年起用 CAMS 的月平均气溶胶气候态，见 Bozzo 等，2020，[`doi:10.5194/gmd-13-1007-2020`](https://doi.org/10.5194/gmd-13-1007-2020)。所以 3 月 5 日的沙尘不在这些模型的输入里。
 
 沙尘通过两条途径影响天气。第一，它散射和吸收短波辐射，白天地面得到的阳光减少，2 m 温度降低。第二，它改变云凝结核和冰核的数目，从而改变云和降水。气溶胶的气候态里没有这次过程，所以模型按平均的气溶胶计算辐射。
 
@@ -673,7 +680,7 @@ AIFS 的结果和 ERA5 很像。AIFS 先用 ERA5 训练，再用 IFS 的业务�
 :::{solution} ex-t1-2
 :class: dropdown
 
-1960 年代的季节振幅约 5.8 ppm，2016 年到 2025 年约 6.7 ppm。振幅增大了约 15%。一种解释是北半球中高纬度的植物生长得更旺盛，夏季吸收和冬季释放的二氧化碳都更多。
+1960 年代的季节振幅约 5.8 ppm，2016 年到 2025 年约 6.7 ppm。振幅增大了约 15%。一种解释是北半球中高纬度的植物生长得更旺盛，夏季吸收和冬季释放的二氧化碳都更多。Graven 等，2013 把这个增大归因于北半球中高纬度的陆地生态系统，尤其是北方森林，[doi:10.1126/science.1239207](https://doi.org/10.1126/science.1239207)。
 :::
 
 :::{exercise}

@@ -396,6 +396,7 @@
 | 霾滴 | haze droplet | — | μm | — | — |
 | 滴半径 | drop radius | $r_\mathrm{d}$ | μm | — | — |
 | 临界半径 | critical radius | $r_\mathrm{c}$ | μm | — | — |
+| 干颗粒半径 | dry particle radius | $r_0$ | μm | — | — |
 | 平衡水汽压 | equilibrium vapour pressure | $e_\mathrm{eq}$ | hPa | — | — |
 | 平衡饱和比 | equilibrium saturation ratio | $S_\mathrm{eq}$ | — | — | — |
 | 临界过饱和度 | critical supersaturation | $S_\mathrm{c} - 1$ | % | — | — |
@@ -593,7 +594,7 @@
 23. 顺转和逆转：风随几何高度顺时针转动叫顺转，逆时针转动叫逆转。两个词只描述风随几何高度的转动，不描述风随时间的转动。风随时间的转动写“风向顺时针转了多少度”。
 24. 风矢端图：选它，不选“速端图”。它是 hodograph 的大气科学名词，图上画的是风向量的端点。
 25. 层平均温度：两个等压面之间的温度对 $\ln p$ 的平均，记作 $\langle T\rangle$。厚度正比于它。
-26. 滴半径：写 $r_\mathrm{d}$，沿用 METEO 300 第 5 课的符号。下标 d 表示滴。它和混合比 $r$ 是两个符号。表面张力写 $\sigma_\mathrm{w}$，因为 $\sigma$ 已经用于 Stefan–Boltzmann 定律。溶质系数写 $b_\mathrm{s}$，因为 METEO 300 的 $B$ 在本书表示浮力。
+26. 滴半径：写 $r_\mathrm{d}$，沿用 METEO 300 第 5 课的符号。下标 d 表示滴。它和混合比 $r$ 是两个符号。表面张力写 $\sigma_\mathrm{w}$，因为 $\sigma$ 已经用于 Stefan–Boltzmann 定律。溶质系数写 $b_\mathrm{s}$，因为 METEO 300 的 $B$ 在本书表示浮力。气溶胶文献常用下标 d 表示干颗粒。本书的 $r_\mathrm{d}$ 是滴半径，干颗粒半径写 $r_0$。
 27. 季节振幅：指一年里最高月和最低月的差，即峰谷差。二氧化碳的文献都这样定义。它是正弦振幅的 2 倍。
 28. 涡动协方差：选它，不选“涡度相关”。“涡度”在本书里只表示风的旋转，见“涡度与散度”一节。
 29. 幂律指数：符号写 $n$，不写风能文献常用的 $\alpha$。本书用 $\alpha$ 表示反照率。
