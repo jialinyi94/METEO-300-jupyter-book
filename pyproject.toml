@@ -42,7 +42,7 @@ dependencies = [
     "eccodes>=2.50.0",
     "earthkit-data>=1.3.0",
     "earthkit-geo>=1.2.0",
-    "earthkit-meteo>=1.2.1",
+    "earthkit-meteo[scores]>=1.2.1",
     "earthkit-plots>=1.0.4",
     "earthkit-transforms>=1.0.0",
     # "import earthkit.transforms" imports geopandas, but the package does not require it.

@@ -234,6 +234,7 @@
 | 中心差分 | centred difference | — | — | — | 中央差分 |
 | 网格 | grid | — | — | — | 格网 |
 | 格点 | grid point | — | — | — | 网格点、格网点 |
+| 网格间距 | grid spacing | $\Delta\lambda$, $\Delta\varphi$ | °, km | — | 格点间距、网格距 |
 | 分辨率 | resolution | — | ° | — | 解析度 |
 | 纬向 | zonal | $x$ | — | — | 东西向 |
 | 经向 | meridional | $y$ | — | — | 南北向 |
@@ -244,6 +245,10 @@
 | 大圆距离 | great-circle distance | $d$ | km | pyproj `Geod.inv` | — |
 | 地心夹角 | central angle | $\xi$ | rad | — | 圆心角 |
 | 地球半径 | Earth radius | $R_\mathrm{E}$ | km | MetPy `earth_avg_radius` | — |
+| 曲率项 | metric term | — | — | — | 度量项 |
+| 中点法 | midpoint method | — | — | — | 中点公式 |
+| 线性插值 | linear interpolation | — | — | — | — |
+| 双线性插值 | bilinear interpolation | — | — | — | — |
 
 ## 辐射
 
@@ -425,6 +430,8 @@
 | 连续分级概率评分 | continuous ranked probability score | CRPS | 与变量相同 | — | 连续排序概率评分、连续等级概率评分 |
 | 技巧评分 | skill score | — | — | — | 技巧分数 |
 | 纬度加权 | latitude weighting | — | — | — | — |
+| 均方根 | root mean square | RMS | 与变量相同 | — | — |
+| 损失函数 | loss function | — | — | — | 代价函数 |
 
 ## 数据约定
 
