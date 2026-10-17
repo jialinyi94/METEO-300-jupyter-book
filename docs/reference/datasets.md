@@ -47,8 +47,8 @@ uv run python -m meteo300.check_credentials
   用户登录 [EUMETSAT User Portal 的数据许可页](https://user.eumetsat.int/profile?activeTab=data-licenses)。
   在 Data licences 里，用户申请 General Licence，它的名称是 Meteosat > 1 hr latency & Metop。
   然后用户勾选 I accept these licensing terms and conditions。
-  接受以后，Data Store 仍可能返回这个 403 一段时间。服务器可能继续发回接受以前签发的旧 token。
-  仍是 403 时，等旧 token 过期以后再试。eumdac 申请的 token 有效期是 24 h，所以最长等 24 h。
+  接受 General Licence 以后仍返回 403 时，用户先确认 API key 属于接受协议的同一个 EUMETSAT 账户。
+  然后用户在 Data Store 网页上试下载一个文件。
 - NASA GES DISC 返回 `EULA Acceptance Failure`。读取 IMERG 时会遇到这个错误。
   用户登录 [Earthdata Login](https://urs.earthdata.nasa.gov)，打开 Applications 菜单的 Authorized Apps。
   用户点击 Approve More Applications，搜索 NASA GESDISC DATA ARCHIVE，再点击 Authorize。

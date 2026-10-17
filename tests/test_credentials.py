@@ -101,7 +101,7 @@ def test_licence_hint_eumetsat():
     hint = d.licence_hint(err)
     assert "https://user.eumetsat.int/profile?activeTab=data-licenses" in hint
     assert "Meteosat > 1 hr latency & Metop" in hint
-    assert "token expires" in hint  # an old token can keep the 403 for up to 24 h
+    assert "API key belongs to the EUMETSAT account" in hint
     # The hint also works through a chain of exceptions.
     try:
         raise RuntimeError("download failed") from err

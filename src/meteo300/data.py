@@ -2226,8 +2226,9 @@ LICENCE_HINTS = {
         "Do this once: log in at https://user.eumetsat.int/profile?activeTab=data-licenses, "
         "and under 'Data licences' request the licence 'Meteosat > 1 hr latency & Metop'. "
         "Tick 'I accept these licensing terms and conditions' and submit.\n"
-        "Accepted already? The Data Store can keep sending an access token from before the "
-        "acceptance. Try again when that token expires: eumdac asks for tokens valid 24 h.",
+        "Accepted already and still 403? Check that the API key belongs to the EUMETSAT "
+        "account that accepted the licence, and try to download one file on the Data Store "
+        "web page, https://data.eumetsat.int.",
     ),
 }
 
