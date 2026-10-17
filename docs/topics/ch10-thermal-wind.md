@@ -394,7 +394,9 @@ table.round(2)
 
 ## AI 天气连接
 
-AIFS、GraphCast 和 Pangu-Weather 都在 13 个等压面上输出温度和风。它们的 ERA5 短名是 `t`、`u` 和 `v`。WeatherBench 2 把它们叫作 `temperature`、`u_component_of_wind` 和 `v_component_of_wind`。模型把温度和风当作不同的输出通道，网络里没有热成风方程。所以热成风是检查 AI 预报的一个物理关系。[力与地转风](ch05-dynamics-geostrophic.md) 一页的地转平衡是另一个。
+AI 天气模型在等压面上输出温度和风。AIFS 和 Pangu-Weather 用 13 个等压面。GraphCast 论文的模型用 37 个等压面，业务版本 GraphCast_operational 用其中的 13 个。温度和风的 ERA5 短名是 `t`、`u` 和 `v`。WeatherBench 2 把它们叫作 `temperature`、`u_component_of_wind` 和 `v_component_of_wind`。
+
+模型把温度和风当作不同的输出通道，网络里没有热成风方程。所以热成风是检查 AI 预报的一个物理关系。[力与地转风](ch05-dynamics-geostrophic.md) 一页的地转平衡是另一个。
 
 ### 温度平流和未来的温度
 

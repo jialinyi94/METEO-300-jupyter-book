@@ -308,7 +308,7 @@ fig = ch05.plot_angles(angles, weights)
 
 ## AI 天气连接
 
-AIFS、GraphCast 和 Pangu-Weather 都在 13 个等压面上输入和输出位势和风。它们也输出海平面气压和 10 m 风。这些变量的 ERA5 短名是 `z`、`u`、`v`、`msl`、`u10` 和 `v10`。WeatherBench 2 把前三个叫作 `geopotential`、`u_component_of_wind` 和 `v_component_of_wind`。
+AIFS 和 Pangu-Weather 在 13 个等压面上输入和输出位势和风。GraphCast 论文的模型用 37 个等压面，业务版本 GraphCast_operational 用其中的 13 个。三个模型也输出海平面气压和 10 m 风。这些变量的 ERA5 短名是 `z`、`u`、`v`、`msl`、`u10` 和 `v10`。WeatherBench 2 把前三个叫作 `geopotential`、`u_component_of_wind` 和 `v_component_of_wind`。
 
 AI 天气模型把位势和风当作不同的输出通道。网络里没有方程要求风接近地转风。所以地转平衡是检查 AI 预报物理一致性的一个简单方法。一个预报的风和位势互相矛盾时，它的非地转风比例会明显大于 ERA5。
 

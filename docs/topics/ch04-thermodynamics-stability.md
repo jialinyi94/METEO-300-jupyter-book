@@ -388,7 +388,7 @@ assert abs(dq_col.m - dq_hand) < 0.2 * dq_hand
 
 WeatherBench 2 是评估 AI 天气模型的标准框架。它的核心评分包括 850 hPa 温度，记作 T850。在 ERA5 和 WeatherBench 2 的数据里，T850 是变量 `temperature` 在 `level=850` 上的值。ERA5 的短名是 `t`。核心评分的其他变量是 500 hPa 位势、700 hPa 比湿、850 hPa 风、2 m 温度、10 m 风速、海平面气压和 24 小时降水量。真实数据一节说明了 T850 的一个优点：它在大部分边界层的上面，日变化小，主要反映气团。
 
-GraphCast 和 Pangu-Weather 在 13 个等压面上预报温度。AIFS 的开放数据也在这些等压面上给出温度，参数名是 `t`。2 m 温度和地面气压的参数名是 `2t` 和 `sp`。
+Pangu-Weather 在 13 个等压面上预报温度。GraphCast 论文的模型用 37 个等压面，业务版本 GraphCast_operational 用其中的 13 个。AIFS 的开放数据也在这 13 个等压面上给出温度，参数名是 `t`。2 m 温度和地面气压的参数名是 `2t` 和 `sp`。
 
 最低的三个等压面是 1000 hPa、925 hPa 和 850 hPa。在本例里，它们离地约 120 m、780 m 和 1480 m。稳定边界层最稳定的部分只有约 100 m 厚，它在 1000 hPa 以下。模型只能用 2 m 温度和 1000 hPa 温度的差表示它。
 
