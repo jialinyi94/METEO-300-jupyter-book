@@ -168,6 +168,13 @@
 | 斜温图 | skew-T log-p diagram | — | — | MetPy `SkewT` | 斜 T 图、Skew-T 图 |
 | 层结曲线 | environmental temperature profile | — | — | — | 环境曲线 |
 | 状态曲线 | parcel temperature profile | — | — | MetPy `parcel_profile` | 气块曲线 |
+| 热力图 | thermodynamic diagram | — | — | — | 热力学图解、热力学图 |
+| 比熵 | specific entropy | $s$ | J kg⁻¹ K⁻¹ | — | — |
+| 等温线 | isotherm | — | — | — | — |
+| 等饱和混合比线 | saturation mixing ratio line | — | g kg⁻¹ | MetPy `plot_mixing_lines` | 等混合比线 |
+| 雷暴 | thunderstorm | — | — | — | 雷雨 |
+| 强对流 | severe convective weather | — | — | — | — |
+| 龙卷 | tornado | — | — | — | 龙卷风 |
 
 ## 垂直运动
 
