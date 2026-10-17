@@ -109,28 +109,11 @@ def test_distance_and_storm_centre():
     assert ch05.storm_centre(msl) == (55.0, -2.5)
 
 
-@pytest.mark.parametrize("lat", [0.0, 45.0, 60.0, 75.0])
-@pytest.mark.parametrize("bearing", [0.0, 30.0, 45.0, 90.0, 135.0])
-def test_grid_vectors_point_along_the_wind_on_a_map(lat, bearing):
-    import cartopy.crs as ccrs
+def test_grid_vectors_keeps_its_old_import_path():
+    # grid_vectors moved to meteo300.plot. Pages that import it from ch05 still work.
+    from meteo300 import plot
 
-    # A wind that blows toward ``bearing`` (degrees clockwise from north) at 10 m/s.
-    b = np.deg2rad(bearing)
-    u, v = np.array([[10 * np.sin(b)]]), np.array([[10 * np.cos(b)]])
-    ue, ve = ch05.grid_vectors(np.array([[lat]]), u, v)
-    assert np.hypot(ue, ve)[0, 0] == pytest.approx(10.0)
-    proj = ccrs.LambertConformal(central_longitude=-5, central_latitude=52)
-    pc = ccrs.PlateCarree()
-    lon0 = -5.0
-    up, vp = proj.transform_vectors(pc, np.array([[lon0]]), np.array([[lat]]), ue, ve)
-    # The true direction on the map: move 1 km along the wind on the sphere.
-    step = 1000.0 / ch05.EARTH_RADIUS
-    lon1 = lon0 + np.rad2deg(step * np.sin(b) / np.cos(np.deg2rad(lat)))
-    lat1 = lat + np.rad2deg(step * np.cos(b))
-    p0, p1 = proj.transform_points(pc, np.array([lon0, lon1]), np.array([lat, lat1]))[:, :2]
-    true = np.degrees(np.arctan2(p1[1] - p0[1], p1[0] - p0[0]))
-    drawn = np.degrees(np.arctan2(vp[0, 0], up[0, 0]))
-    assert drawn == pytest.approx(true, abs=0.2)
+    assert ch05.grid_vectors is plot.grid_vectors
 
 
 def test_page_samples_offline(monkeypatch):

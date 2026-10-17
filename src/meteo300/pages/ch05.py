@@ -18,7 +18,8 @@ write the samples again. The AWS mirror is the only mirror that keeps runs of 20
 The physics helpers keep the page short: :func:`latlon_grid` gives MetPy the spherical grid,
 :func:`cross_isobar_angle` turns two wind vectors into an angle, :func:`surface_masks` selects
 sea and low land, and :func:`ageostrophic_fraction` computes the ageostrophic wind fraction on
-each pressure level. :func:`grid_vectors` corrects wind arrows on cartopy maps.
+each pressure level. :func:`grid_vectors` corrects wind arrows on cartopy maps; it lives in
+:mod:`meteo300.plot`, and this module imports it under the same name.
 """
 
 from __future__ import annotations
@@ -31,6 +32,7 @@ import xarray as xr
 
 from meteo300 import data as d
 from meteo300 import plot as mplot  # sets a CJK font for the Chinese labels
+from meteo300.plot import grid_vectors  # moved to meteo300.plot; the old import path still works
 
 __all__ = [
     "AIFS_RUN",
@@ -296,20 +298,6 @@ def angle_statistics(ds: xr.Dataset, masks: dict) -> pd.DataFrame:
 # =============================================================================================
 # Figures
 # =============================================================================================
-
-
-def grid_vectors(lat, u, v):
-    """Turn east and north wind components into vectors that cartopy draws correctly.
-
-    Cartopy reads the components of a vector on ``PlateCarree`` as steps in degrees of
-    longitude and latitude. A degree of longitude is shorter than a degree of latitude by the
-    factor cos(latitude), so an eastward step must grow by 1/cos(latitude). The length of the
-    vector stays the same.
-    """
-    ue = u / np.cos(np.deg2rad(lat))
-    length = np.hypot(ue, v)
-    factor = np.divide(np.hypot(u, v), length, out=np.zeros_like(length), where=length > 0)
-    return ue * factor, v * factor
 
 
 def _quiver(ax, lon, lat, u, v, **kwargs):
