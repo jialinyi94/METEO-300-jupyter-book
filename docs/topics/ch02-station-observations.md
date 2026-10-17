@@ -19,7 +19,7 @@ kernelspec:
 
 ### 单位和量级
 
-METAR 用节报风速，用 °C 报温度，用 hPa 报修正海平面气压。物理计算用国际单位制：风速用 m s⁻¹，温度用 K，气压用 Pa。1 节是每小时 1 海里，1 海里正好是 1852 m。
+METAR 用 kt 报风速，用 °C 报温度，用 hPa 报修正海平面气压。物理计算用国际单位制：风速用 m s⁻¹，温度用 K，气压用 Pa。1 kt 是每小时 1 海里，1 海里正好是 1852 m。
 
 $$
 1\ \mathrm{kt} = \frac{1852\ \mathrm{m}}{3600\ \mathrm{s}} \approx 0.514\ \mathrm{m\,s^{-1}},
@@ -27,9 +27,9 @@ $$
 1\ \mathrm{mph} = \frac{1609.344\ \mathrm{m}}{3600\ \mathrm{s}} \approx 0.447\ \mathrm{m\,s^{-1}}
 $$
 
-节和英里每小时是两个不同的单位。把一个以节为单位的数当成英里每小时来换算，结果会小 13%。
+kt 和英里每小时是两个不同的单位。把一个以 kt 为单位的数当成英里每小时来换算，结果会小 13%。
 
-量级估计用一条简单的规则：以 m s⁻¹ 为单位的风速约等于以节为单位的风速的一半。10 m 风的典型风速约为 5 m s⁻¹，也就是 10 kt。500 hPa 和 250 hPa 的典型风速分别约为 25 m s⁻¹ 和 50 m s⁻¹。一个风速结果比这些量级大 10 倍或小 10 倍，计算多半有错。
+量级估计用一条简单的规则：以 m s⁻¹ 为单位的风速约等于以 kt 为单位的风速的一半。10 m 风的典型风速约为 5 m s⁻¹，也就是 10 kt。500 hPa 和 250 hPa 的典型风速分别约为 25 m s⁻¹ 和 50 m s⁻¹。一个风速结果比这些量级大 10 倍或小 10 倍，计算多半有错。
 
 有效数字跟着观测的精度走。METAR 的风速精确到 1 kt，风向精确到 10°。所以 51 kt 换算后写成 26 m s⁻¹，不写 26.2367 m s⁻¹。
 
@@ -70,11 +70,11 @@ METEO 300 把风向写作 $\delta$，把数学角写作 $\alpha$。本书的 $\d
 纬度差 1° 对应约 111 km 的距离。经度差 1° 对应的距离是 $111\ \mathrm{km} \times \cos\varphi$，$\varphi$ 是纬度。格拉斯哥在 55.9°N，那里的经度差 1° 只对应约 62 km。两个观测站之间的大圆距离用球面余弦定理计算：
 
 $$
-\Delta\sigma = \arccos\left(\sin\varphi_1 \sin\varphi_2 + \cos\varphi_1 \cos\varphi_2 \cos\Delta\lambda\right),
-\qquad d = R_\mathrm{E}\,\Delta\sigma
+\xi = \arccos\left(\sin\varphi_1 \sin\varphi_2 + \cos\varphi_1 \cos\varphi_2 \cos\Delta\lambda\right),
+\qquad d = R_\mathrm{E}\,\xi
 $$
 
-$\lambda$ 是经度，$\Delta\sigma$ 是两点对地心的夹角，单位是弧度。地球半径 $R_\mathrm{E}$ 取 6371 km。
+$\lambda$ 是经度，$\xi$ 是两点的地心夹角，单位是弧度。地心夹角是两点与地心的两条连线之间的夹角。地球半径 $R_\mathrm{E}$ 取 6371 km。
 
 ### 时间序列的导数
 
@@ -102,7 +102,7 @@ $$
 | 修正海平面气压 | QNH | — |
 | 海平面气压 | mean sea level pressure | $p_{\mathrm{msl}}$ |
 | 能见度 | visibility | — |
-| 节 | knot | kt |
+| kt | knot | kt |
 | 风速 | wind speed | $V$ |
 | 风向 | wind direction | $\chi$ |
 | 去向方位角 | bearing of travel | — |
@@ -116,6 +116,7 @@ $$
 | 观测站填图 | station plot | — |
 | 局地直角坐标系 | local Cartesian coordinate system | $x$, $y$, $z$ |
 | 大圆距离 | great-circle distance | $d$ |
+| 地心夹角 | central angle | $\xi$ |
 | 气压倾向 | pressure tendency | $\partial p / \partial t$ |
 | 有效数字 | significant figures | — |
 
@@ -286,9 +287,9 @@ assert fixed[columns].notna().all().all()
 
 48 条报文里有 38 条丢了温度和气压，风没有受影响。函数 `clean_metar` 删去这些云组后，所有报文都完整。
 
-### 一条报文：从节到 m s⁻¹
+### 一条报文：从 kt 到 m s⁻¹
 
-函数 `metpy.io.parse_metar_to_dataframe` 解析一条报文。它返回风速和阵风，单位是节。下面的代码用 pint 把它们换算成 m s⁻¹，然后用手算核对。
+函数 `metpy.io.parse_metar_to_dataframe` 解析一条报文。它返回风速和阵风，单位是 kt。下面的代码用 pint 把它们换算成 m s⁻¹，然后用手算核对。
 
 ```{code-cell} python
 from metpy.io import parse_metar_to_dataframe
@@ -303,10 +304,10 @@ speed_ms = speed.to("m/s")
 assert abs(speed_ms.m - 51 * 1852 / 3600) < 1e-9
 # 量级估计：m/s 约等于 kt 的一半
 assert abs(speed_ms.m - 51 / 2) / speed_ms.m < 0.05
-# 常见错误：把节当成英里每小时
+# 常见错误：把 kt 当成英里每小时
 wrong = (speed.m * units.mph).to("m/s")
 print(f"平均风速 {speed:~P} = {speed_ms:.0f~P}，阵风 {gust:~P} = {gust.to('m/s'):.0f~P}")
-print(f"把节当成英里每小时：{wrong:.1f~P}，偏小 {100 * (1 - wrong / speed_ms).m:.0f}%")
+print(f"把 kt 当成英里每小时：{wrong:.1f~P}，偏小 {100 * (1 - wrong / speed_ms).m:.0f}%")
 ```
 
 平均风速 26 m s⁻¹ 正好是 500 hPa 的典型风速。这说明它是一次很强的 10 m 风。
@@ -529,7 +530,7 @@ plt.show()
 
 格拉斯哥机场 12:50 UTC 的报文是 `24051G74KT`。一个同事的脚本报告这一刻的风速是 99 m s⁻¹。
 
-1. 用“节的一半”估计正确的风速。脚本错在哪里？
+1. 用“kt 的一半”估计正确的风速。脚本错在哪里？
 2. 有人把 51 kt 当成 51 mph。他得到的风速是多少 m s⁻¹？
 3. 新闻报道爱尔兰 Mace Head 测到 183 km h⁻¹ 的阵风。把它换算成 m s⁻¹ 和 kt。它比格拉斯哥的阵风大多少？
 :::
@@ -537,7 +538,7 @@ plt.show()
 :::{solution} ex-ch02-1
 :class: dropdown
 
-1. 51 kt 的一半约是 26 m s⁻¹。99 m s⁻¹ 大了约 4 倍，量级不对。脚本把 51 乘以 1.944，而 1.944 是从 m s⁻¹ 换算到节的系数。正确的做法是乘以 0.514。
+1. 51 kt 的一半约是 26 m s⁻¹。99 m s⁻¹ 大了约 4 倍，量级不对。脚本把 51 乘以 1.944，而 1.944 是从 m s⁻¹ 换算到 kt 的系数。正确的做法是乘以 0.514。
 2. 51 mph 是 $51 \times 0.447 = 22.8\ \mathrm{m\,s^{-1}}$，比正确值 26.2 m s⁻¹ 小 13%。
 3. $183\ \mathrm{km\,h^{-1}} = 183\,000\ \mathrm{m} / 3600\ \mathrm{s} = 50.8\ \mathrm{m\,s^{-1}}$，也就是 98.8 kt。格拉斯哥的阵风 74 kt 是 38 m s⁻¹。Mace Head 的阵风大约大 13 m s⁻¹。
 

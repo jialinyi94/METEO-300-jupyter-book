@@ -18,6 +18,7 @@ Rules:
     parentheses         Parentheses in prose.
     interval-format     An interval that is not written as ［下限, 上限］.
     unit-space          A number without a space before its unit, or the symbol ℃.
+    unit-symbol         The word 节 as the unit knot, for example "51 节". Write kt.
     rejected-term       A rejected synonym from glossary.md.
 
 Suppress a check only when the text must show a wrong form, for example in an exercise:
@@ -128,6 +129,9 @@ BOUND = rf"(?:{NUM}|{PH}|[-−]?∞)"
 GOOD_INTERVAL_RE = re.compile(rf"^［({BOUND}), ({BOUND})］$")
 UNITS = r"hPa|kPa|Pa|mb|dam|km|cm|mm|μm|nm|m|kg|g|K|°C|J|W|PVU|ppm|ppb|UTC|s|h|d"
 UNIT_GLUE_RE = re.compile(rf"(?<![\w.^]){NUM}({UNITS})(?![A-Za-z0-9_])")
+# 节 is a section of a document, for example "2.2 节" or "第 3 节". After an integer, or in
+# "单位是节" and "以节为单位", it is the unit knot. The book writes that unit as kt.
+KNOT_RE = re.compile(r"(?<![\d.])(?<!第)(?<!第 )\d+\s*节|单位是节|以节为单位")
 PAREN_PAIR_RE = re.compile(r"[(（][^()（）]*[)）]")
 PAREN_RE = re.compile(r"[()（）]")
 
@@ -483,6 +487,8 @@ def check_unit(unit: Unit, path: str, glossary: Glossary, cfg: dict) -> list[Vio
         )
     for m in re.finditer("℃", text):
         out.append(Violation(path, at(m.start()), "unit-space", "℃ → °C"))
+    for m in KNOT_RE.finditer(masked):
+        out.append(Violation(path, at(m.start()), "unit-symbol", f"{m.group(0)} → kt"))
 
     # Passive voice, Chinese.
     for m in ZH_PASSIVE_RE.finditer(text):

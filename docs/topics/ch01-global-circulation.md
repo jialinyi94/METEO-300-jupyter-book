@@ -36,10 +36,10 @@ $$
 经向质量流函数描述纬向平均的经圈环流：
 
 $$
-\psi(\varphi, p) = \frac{2\pi a \cos\varphi}{g_0} \int_0^{p} [v]\, \mathrm{d}p'
+\psi(\varphi, p) = \frac{2\pi R_\mathrm{E} \cos\varphi}{g_0} \int_0^{p} [v]\, \mathrm{d}p'
 $$
 
-式中 $a$ 是地球半径，$g_0$ 是标准重力加速度，$[v]$ 是纬向平均的经向风。$\psi$ 等于气压 $p$ 以上的整层空气穿过纬度 $\varphi$ 向北的质量通量，单位是 kg s⁻¹。$\psi$ 的等值线是经圈环流的流线。两条等值线的差值等于它们之间流过的质量通量。
+式中 $R_\mathrm{E}$ 是地球半径，$g_0$ 是标准重力加速度，$[v]$ 是纬向平均的经向风。$\psi$ 等于气压 $p$ 以上的整层空气穿过纬度 $\varphi$ 向北的质量通量，单位是 kg s⁻¹。$\psi$ 的等值线是经圈环流的流线。两条等值线的差值等于它们之间流过的质量通量。
 
 在纬度向右增大、气压向上减小的剖面图上，$\psi > 0$ 表示顺时针的环流。北半球的哈得来环流是顺时针的，所以它的 $\psi$ 为正。南半球的哈得来环流是逆时针的，它的 $\psi$ 为负。
 
@@ -65,7 +65,7 @@ $$
 | 纬向风 | zonal wind | $u$ |
 | 经向风 | meridional wind | $v$ |
 | 经向质量流函数 | meridional mass streamfunction | $\psi$ |
-| 地球半径 | Earth radius | $a$ |
+| 地球半径 | Earth radius | $R_\mathrm{E}$ |
 | 标准重力加速度 | standard gravity | $g_0$ |
 | 海平面气压 | mean sea level pressure | $p_{\mathrm{msl}}$ |
 | 亮温 | brightness temperature | $T_b$ |
@@ -194,12 +194,12 @@ print(dict(u_zm.sizes))
 from metpy.constants import earth_avg_radius, g
 from metpy.units import units
 
-a = earth_avg_radius.m_as("m")
+R_E = earth_avg_radius.m_as("m")
 g0 = g.m_as("m s^-2")
 
 v_p = v_zm.assign_coords(p=v_zm.level * 100.0).swap_dims(level="p")  # hPa -> Pa
 integral = v_p.cumulative_integrate("p")  # m s-1 Pa
-coef = 2 * np.pi * a * np.cos(np.deg2rad(v_zm.latitude)) / g0  # s2
+coef = 2 * np.pi * R_E * np.cos(np.deg2rad(v_zm.latitude)) / g0  # s2
 psi = (coef * integral).swap_dims(p="level").transpose("level", "latitude")  # kg s-1
 
 north = psi.sel(latitude=slice(0, 35)).max()  # Hadley cell of the northern hemisphere
@@ -242,7 +242,7 @@ assert abs(psi_hand.m - psi_pkg) < 1e-6 * abs(psi_pkg), (psi_hand, psi_pkg)
 print(f"xarray: {psi_pkg:.4e} kg/s, 手算: {psi_hand:.4e~P}")
 ```
 
-两个结果相同，约为 2.1×10¹¹ kg s⁻¹。再粗算一次量级。上层分支的 $[v]$ 约为 2 m s⁻¹，厚约 250 hPa。代入公式得 $2\pi a \cos 9° / g_0 \times 2 \times 25000 \approx 2 \times 10^{11}$ kg s⁻¹。粗算和积分是同一个量级。
+两个结果相同，约为 2.1×10¹¹ kg s⁻¹。再粗算一次量级。上层分支的 $[v]$ 约为 2 m s⁻¹，厚约 250 hPa。代入公式得 $2\pi R_\mathrm{E} \cos 9° / g_0 \times 2 \times 25000 \approx 2 \times 10^{11}$ kg s⁻¹。粗算和积分是同一个量级。
 
 最后检查质量守恒和风速。整层的 $[v]$ 积分应接近零，所以 1000 hPa 的 $\psi$ 应接近零。METEO 300 第 1 课 1.2 节说，250 hPa 的风速约为 50 m s⁻¹。纬向平均会削弱单个急流核，所以纬向平均的最大风速应该略小。
 
@@ -328,13 +328,13 @@ plt.show()
 :::{exercise}
 :label: ex-ch01-2
 
-粗算哈得来环流翻转一次热带大气需要多长时间。取地面气压 1000 hPa，$g_0 = 9.81$ m s⁻²，$a = 6.371 \times 10^6$ m。30°S 和 30°N 之间的面积是 $2\pi a^2$。用 $\psi$ 的最大值 2×10¹¹ kg s⁻¹ 作质量通量。
+粗算哈得来环流翻转一次热带大气需要多长时间。取地面气压 1000 hPa，$g_0 = 9.81$ m s⁻²，$R_\mathrm{E} = 6.371 \times 10^6$ m。30°S 和 30°N 之间的面积是 $2\pi R_\mathrm{E}^2$。用 $\psi$ 的最大值 2×10¹¹ kg s⁻¹ 作质量通量。
 :::
 
 :::{solution} ex-ch01-2
 :class: dropdown
 
-单位面积的空气质量是 $p_s / g_0 = 10^5 / 9.81 \approx 1.0 \times 10^4$ kg m⁻²。热带的面积是 $2\pi a^2 \approx 2.6 \times 10^{14}$ m²。热带大气的质量约为 $2.6 \times 10^{18}$ kg。翻转时间约为 $2.6 \times 10^{18} / (2 \times 10^{11}) \approx 1.3 \times 10^{7}$ s，也就是约 150 天。METEO 300 第 12 课 12.1 节说，大气用几个月把空气从赤道运到极地。这个粗算和它的量级一致。
+单位面积的空气质量是 $p_s / g_0 = 10^5 / 9.81 \approx 1.0 \times 10^4$ kg m⁻²。热带的面积是 $2\pi R_\mathrm{E}^2 \approx 2.6 \times 10^{14}$ m²。热带大气的质量约为 $2.6 \times 10^{18}$ kg。翻转时间约为 $2.6 \times 10^{18} / (2 \times 10^{11}) \approx 1.3 \times 10^{7}$ s，也就是约 150 天。METEO 300 第 12 课 12.1 节说，大气用几个月把空气从赤道运到极地。这个粗算和它的量级一致。
 :::
 
 :::{exercise}

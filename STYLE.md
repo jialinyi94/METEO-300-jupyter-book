@@ -91,6 +91,11 @@ README 的英文摘要和图的替代文字使用英文。英文使用 ASD-STE10
 
 例外：百分号和角度符号紧贴数字，例如 85%、30°N、0.25°。
 
+风速的单位 knot 只写符号 kt，和 hPa 一样。“节”只表示文档的节，例如“第 2 课 2.2 节”。自动检查数字后面的“节”。
+
+- 错误：平均风速 51 节、风速的单位是节
+- 正确：平均风速 51 kt、风速的单位是 kt
+
 公式里的单位写在 `\mathrm{}` 里，例如 $g_0 = 9.80665\ \mathrm{m\,s^{-2}}$。
 
 ### 3.3 代码字体
@@ -190,6 +195,7 @@ uv run python tools/ste_check.py docs/topics/ch03-pressure-hydrostatic.md
 | `parentheses` | 正文里的括号 |
 | `interval-format` | 区间不是 ［下限, 上限］ |
 | `unit-space` | 数字和单位之间没有空格，或使用 ℃ |
+| `unit-symbol` | 整数后面的“节”、“单位是节”和“以节为单位”，风速单位应写 kt |
 | `rejected-term` | 术语表的弃用词 |
 
 检查器跳过这些内容：frontmatter、代码单元、代码块、公式、行内代码、行内公式、角色、网址、注释和指令的选项行。

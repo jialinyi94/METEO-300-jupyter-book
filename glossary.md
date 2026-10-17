@@ -106,7 +106,7 @@
 | 风向 | wind direction | $\chi$ | ° | — | — |
 | 去向方位角 | bearing of travel | — | ° | MetPy `wind_direction` 的 `convention="to"` | — |
 | 数学角 | math angle | $\gamma$ | ° | — | — |
-| 节 | knot | kt | 1 kt ≈ 0.514 m s⁻¹ | — | — |
+| kt | knot | kt | 1 kt ≈ 0.514 m s⁻¹ | — | 海里每小时 |
 | 风羽 | wind barb | — | kt | MetPy `StationPlot.plot_barb` | — |
 | 纬向风 | zonal wind; u component | $u$ | m s⁻¹ | `u` / `u_component_of_wind` | u 风、东西风分量 |
 | 经向风 | meridional wind; v component | $v$ | m s⁻¹ | `v` / `v_component_of_wind` | v 风、南北风分量 |
@@ -216,9 +216,12 @@
 | 分辨率 | resolution | — | ° | — | 解析度 |
 | 纬向 | zonal | $x$ | — | — | 东西向 |
 | 经向 | meridional | $y$ | — | — | 南北向 |
+| 经度 | longitude | $\lambda$ | ° | 坐标 `longitude` | — |
+| 纬度 | latitude | $\varphi$ | ° | 坐标 `latitude` | — |
 | 纬向平均 | zonal mean | — | — | — | 带状平均、纬圈平均 |
 | 局地直角坐标系 | local Cartesian coordinate system | $x$, $y$, $z$ | m | — | 局地笛卡尔坐标系 |
 | 大圆距离 | great-circle distance | $d$ | km | pyproj `Geod.inv` | — |
+| 地心夹角 | central angle | $\xi$ | rad | — | 圆心角 |
 | 地球半径 | Earth radius | $R_\mathrm{E}$ | km | MetPy `earth_avg_radius` | — |
 
 ## 辐射
@@ -231,14 +234,15 @@
 | 射出长波辐射 | outgoing longwave radiation | OLR | W m⁻² | `ttr` 取负号 / `mean_top_net_long_wave_radiation_flux` 取负号 | 向外长波辐射、出射长波辐射 |
 | 净辐射 | net radiation | $R_n$ | W m⁻² | 地面：`ssr` 加 `str` | — |
 | 辐照度 | irradiance; radiative flux density | $F$ | W m⁻² | — | 辐射通量密度、辐射通量 |
-| 光谱辐照度 | spectral irradiance | $F_\lambda$ | W m⁻² μm⁻¹ | — | 单色辐照度、分光辐照度 |
+| 光谱辐照度 | spectral irradiance | $F_\Lambda$ | W m⁻² μm⁻¹ | — | 单色辐照度、分光辐照度 |
+| 波长 | wavelength | $\Lambda$ | μm | — | — |
 | 太阳常数 | solar constant | $S_0$ | W m⁻² | — | — |
 | 太阳天顶角 | solar zenith angle | — | ° | — | — |
 | 反照率 | albedo | $\alpha$ | — | `fal` / `forecast_albedo` | 反照度 |
 | 发射率 | emissivity | $\varepsilon$ | — | — | 比辐射率、发射本领 |
 | 吸收率 | absorptivity | $a$ | — | — | 吸收比 |
 | 黑体 | blackbody | — | — | — | 绝对黑体 |
-| 普朗克函数 | Planck function | $B_\lambda$ | W m⁻² sr⁻¹ μm⁻¹ | — | — |
+| 普朗克函数 | Planck function | $B_\Lambda$ | W m⁻² sr⁻¹ μm⁻¹ | — | — |
 | 亮温 | brightness temperature | $T_b$ | K | GOES ABI L2 `CMI` | 亮度温度 |
 | 斯特藩-玻尔兹曼定律 | Stefan–Boltzmann law | $\sigma$ | W m⁻² K⁻⁴ | — | 斯蒂芬-玻尔兹曼定律、斯特番-玻尔兹曼定律 |
 | 维恩位移定律 | Wien's displacement law | — | — | — | 维恩定律 |
@@ -407,7 +411,7 @@
 
 ## 难选的词
 
-下面每一条说明一个选择和它的理由。用户在 2026-10-17 批准了这些选择。
+下面每一条说明一个选择和它的理由。用户在 2026-10-17 批准了前 17 条。
 
 1. 等压面：选它，不选“气压层”和“气压面”。等压面是标准术语，也对应 ERA5 的 pressure levels。
 2. 位势高度：选它，不用单独的“高度”。单独的“高度”可以指位势高度，也可以指几何高度。几何意义的高度写“几何高度”。
@@ -426,3 +430,5 @@
 15. 压高公式：选它，不选“测高方程”。
 16. 锋：选它，不选“锋面”。冷锋、暖锋、锢囚锋都以“锋”结尾。
 17. 观测站：选它，不选“站点”和“测站”。
+18. 波长：写 $\Lambda$，不写 $\lambda$。本书按动力学的惯例，用 $\lambda$ 表示经度。
+19. kt：风速的单位 knot 只写符号 kt，和 hPa 一样。“节”只表示文档的节，例如“第 2 课 2.2 节”。

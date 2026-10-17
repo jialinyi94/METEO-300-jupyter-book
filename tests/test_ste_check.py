@@ -44,6 +44,9 @@ def test_good_sample_has_no_violation():
         "标准大气中六个等压面的位势高度分别是 111 m、1457 m、3012 m、5574 m、9164 m 和 11784 m。",
         "The air is saturated at this level.",
         "1990s 的数据更少。",
+        "本页取自第 1 课 1.2 节和第 8 课 8.2 节。",
+        "第 3 节和本节都讲风。每页有六节。",
+        "平均风速是 51 kt，阵风是 74 kt。",
     ],
 )
 def test_good_snippets(text):
@@ -71,6 +74,10 @@ def test_good_snippets(text):
         ("取值在 ［1000, 850］ hPa 之间。", "interval-format"),
         ("等压面是 500hPa。", "unit-space"),
         ("温度是 15℃。", "unit-space"),
+        ("平均风速是 51 节。", "unit-symbol"),
+        ("1节约等于 0.514 m s⁻¹。", "unit-symbol"),
+        ("METAR 风速的单位是节。", "unit-symbol"),
+        ("以节为单位的风速约是 m s⁻¹ 的两倍。", "unit-symbol"),
         ("2 m 气温升高。", "rejected-term"),
         ("500 hPa 高度升高。", "rejected-term"),
         ("ERA5 的气压层有 37 层。", "rejected-term"),
