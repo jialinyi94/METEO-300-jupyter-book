@@ -144,3 +144,47 @@ def test_graphcastgfs_outside_sample(offline):
         graphcastgfs_10m_wind("2025-01-23 00:00", steps=[54])
     with pytest.raises(SampleCoverageError):
         graphcastgfs_10m_wind("2025-01-23 00:00", steps=[24], area=(70, -12, 49, 4))
+
+
+def test_station_plot_barbs_point_along_the_wind(offline):
+    # The station plot of the page: 06 UTC reports on a Lambert conformal map. MetPy passes the
+    # barb components to cartopy as PlateCarree vectors. Uncorrected, the barbs turn by up to
+    # 18 degrees in Scotland. grid_vectors removes the error.
+    import cartopy.crs as ccrs
+    import metpy.calc as mpcalc
+    from metpy.plots import StationPlot
+    from metpy.units import units
+
+    from meteo300.pages.ch02 import parse_metars
+    from meteo300.plot import grid_vectors
+
+    when = pd.Timestamp("2025-01-24 06:00")
+    snap = metar_snapshot(when, networks=["GB__ASOS", "IE__ASOS"])
+    obs = nearest_reports(parse_metars(snap["metar"], year=2025, month=1), when)
+    obs = obs.dropna(subset=["wind_speed"])
+    obs = obs[obs["wind_speed"] > 0]
+    lon, lat = obs["longitude"].to_numpy(), obs["latitude"].to_numpy()
+    u, v = mpcalc.wind_components(
+        obs["wind_speed"].to_numpy() * units.knots, obs["wind_direction"].to_numpy() * units.deg
+    )
+    u, v = u.m, v.m
+
+    pc = ccrs.PlateCarree()
+    proj = ccrs.LambertConformal(central_longitude=-4, central_latitude=54)
+    # True direction on the map: a 1 km step along the wind on the sphere.
+    step = np.rad2deg(1000.0 / 6371229.0) / np.hypot(u, v)
+    p0 = proj.transform_points(pc, lon, lat)
+    p1 = proj.transform_points(pc, lon + step * u / np.cos(np.deg2rad(lat)), lat + step * v)
+    true = np.degrees(np.arctan2(p1[:, 1] - p0[:, 1], p1[:, 0] - p0[:, 0]))
+
+    def drawn_error(uu, vv):
+        fig = plt.figure()
+        ax = fig.add_subplot(projection=proj)
+        sp = StationPlot(ax, lon, lat, transform=pc, fontsize=8)
+        sp.plot_barb(uu, vv)
+        angle = np.degrees(np.arctan2(np.asarray(sp.barbs.v), np.asarray(sp.barbs.u)))
+        plt.close(fig)
+        return np.abs((angle - true + 180) % 360 - 180)
+
+    assert drawn_error(u, v).max() > 15
+    assert drawn_error(*grid_vectors(lat, u, v)).max() < 0.2

@@ -202,7 +202,7 @@ plt.show()
 
 [](#fig-ch02-egpf-day) 有三个要点。修正海平面气压从 986 hPa 降到 956 hPa，最低值出现在 08:50 到 09:50 UTC。风向从东风经南风转为西南偏西风，风的来向沿顺时针转了约 150°。最大的平均风速 51 kt 出现在 12:50 UTC，这时气压已经在回升。
 
-下一张图是 06 UTC 的观测站填图。英国的报文时刻是 05:50 UTC，爱尔兰是 06:00 UTC。为了让符号不重叠，代码去掉了相距不到 60 km 的部分观测站。MetPy 用修正海平面气压、温度和机场的几何高度估计海平面气压。在这张图的观测站上，两者相差不到 1 hPa。
+下一张图是 06 UTC 的观测站填图。英国的报文时刻是 05:50 UTC，爱尔兰是 06:00 UTC。为了让符号不重叠，代码去掉了相距不到 60 km 的部分观测站。代码用函数 `grid_vectors` 校正风的两个分量，否则地图上的风羽最多偏转 18°。MetPy 用修正海平面气压、温度和机场的几何高度估计海平面气压。在这张图的观测站上，两者相差不到 1 hPa。
 
 ```{code-cell} python
 :tags: [hide-input]
@@ -214,6 +214,8 @@ import cartopy.feature as cfeature
 import metpy.calc as mpcalc
 from metpy.plots import StationPlot, sky_cover
 from metpy.units import units
+
+from meteo300.plot import grid_vectors
 
 PLOT_TIME = pd.Timestamp("2025-01-24 06:00")
 KEY_STATIONS = ["EGPF", "EGPO", "EGPE", "EGPU"]
@@ -245,7 +247,8 @@ sp.plot_parameter("NW", s["air_temperature"].values, color="#e34948")
 sp.plot_parameter("SW", s["dew_point_temperature"].values, color="#008300")
 sp.plot_parameter("NE", s["air_pressure_at_sea_level"].values, formatter=pressure_code)
 sp.plot_symbol("C", s["cloud_coverage"].values, sky_cover)
-sp.plot_barb(u_kt.m, v_kt.m, length=6)
+# cartopy 把 PlateCarree 上的风分量当作经纬度的步长，grid_vectors 校正风羽的方向
+sp.plot_barb(*grid_vectors(s["latitude"].values, u_kt.m, v_kt.m), length=6)
 egpf = s[s["station_id"] == "EGPF"]
 ax.scatter(egpf["longitude"], egpf["latitude"], s=260, facecolor="none", edgecolor="#2a78d6",
            lw=2, transform=ccrs.PlateCarree(), zorder=5)
