@@ -1,16 +1,16 @@
 # The Atmosphere Pressure Structure
 
 ## Hydrostatic equilibrium
-假设气压是高度的函数: $P(z)$ 
+假设气压是高度的函数: $P(z)$
 想象一个边长为$\delta z$ 的立方体气团，位于高度为$z$ 的空中。它在竖直方向上会受到3个力的作用：
 - 来自上方空气，向下挤压的力$F_d = - P(z+\delta z)\delta z^2$  
-- 来自下方空气，向上挤压的力$F_u = P(z)\delta z^2$ 
-- 气团自身的重力 $G = -mg$ 
+- 来自下方空气，向上挤压的力$F_u = P(z)\delta z^2$
+- 气团自身的重力 $G = -mg$
 三种力达到平衡时 — hydrostatic equilibrium:
 $$
 P(z)\delta z^2 - P(z+\delta z)\delta z^2 - mg = 0
 $$
-如果我们认为气团的密度是$\rho$, 
+如果我们认为气团的密度是$\rho$,
 $$
 P(Z)\delta z^2 - P(z + \delta z)\delta z^2 = \rho \delta z^3 g
 $$

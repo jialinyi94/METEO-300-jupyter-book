@@ -11,9 +11,9 @@ $$
 PV = nRT
 $$
 - $P$: 压强 Pa
-- $V$: 体积 m^3 
+- $V$: 体积 m^3
 - $n$: 分子个数 mol
-- $R$: 一个常数 J mol^-1 K^-1 
+- $R$: 一个常数 J mol^-1 K^-1
 - $T$: 温度 K
 值得一提的是，这个方程对任何气体都成立。
 ## Dalton 定律
@@ -30,7 +30,7 @@ $$
 = \frac{P}{R_d T}$$ 其中$R_d=R/M$.
 -  气团的密度 等于各气体密度之和
 $$
-\rho_0 = \frac{m_0}{V} = \frac{\sum_i m_i}{V} = \sum_i \rho_i 
+\rho_0 = \frac{m_0}{V} = \frac{\sum_i m_i}{V} = \sum_i \rho_i
 $$
 
 ### Dry air 和 moist air
@@ -52,7 +52,7 @@ $$
 ### Virtual temperature
 除了比较同温度下的密度，也可以计算在什么温度条件下，不同的湿润程度的气体拥有和干空气在室温下一样的密度。这个温度就是virtual temperature.
 $$
-T_v = T(1+0.61q) 
+T_v = T(1+0.61q)
 $$
 其中
 $$q=\frac{\rho_{vapor}}{\rho_{vapor}+\rho_{dry}}$$

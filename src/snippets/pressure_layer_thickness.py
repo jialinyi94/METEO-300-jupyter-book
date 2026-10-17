@@ -34,15 +34,16 @@ def compute_avg_temperature(
     """
     delta_z = hight_b - hight_a
     delta_ln_p = np.log(pressure_level_a / pressure_level_b)
-    avg_temperature = ( gravity  * delta_z) / (air_gas_constant* delta_ln_p)
+    avg_temperature = (gravity * delta_z) / (air_gas_constant * delta_ln_p)
     return avg_temperature
+
 
 # Example usage:
 if __name__ == "__main__":
     p_a = 50000  # Pressure at level a in Pascals
-    z_a = 5600       # Height at level a in meters
-    p_b = 100000   # Pressure at level b in Pascals
-    z_b = 0    # Height at level b in meters
+    z_a = 5600  # Height at level a in meters
+    p_b = 100000  # Pressure at level b in Pascals
+    z_b = 0  # Height at level b in meters
 
     avg_temp = compute_avg_temperature(p_a, z_a, p_b, z_b)
     print(f"Average Temperature between the two pressure levels: {avg_temp:.2f} K")

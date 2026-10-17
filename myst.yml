@@ -5,7 +5,7 @@ project:
   title: METEO 300 Fundamentals of Atmospheric Science, But for AI Traders
   description: An AI Trader's Jupyter Book for METEO 300 Fundamentals of Atmospheric Science at Pennsylvania State University
   keywords: ["METEO 300", "Atmospheric Science", "PSU", "AI Trading"]
-  authors: 
+  authors:
     - name: Jialin Yi
       affiliation: "Citadel"
     - name: GPT 5.1
@@ -17,6 +17,7 @@ project:
     # Paths in the TOC are relative to the myst.yml file location
     - file: intro.md
       title: Introduction
+    - file: docs/smoke-test.md
     - file: docs/thermo/overview.md
       title: Thermodynamics
       children:
@@ -47,7 +48,7 @@ project:
     - format: pdf
       template: lapreprint-typst
       articles: intro.md
-    
+
 site:
   template: book-theme
   # options:

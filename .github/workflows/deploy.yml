@@ -1,48 +1,82 @@
-# This file was created automatically with `jupyter-book init --gh-pages` 🪄 💚
-# Ensure your GitHub Pages settings for this repository are set to deploy with **GitHub Actions**.
+# Build the book with notebook execution, then deploy it to GitHub Pages.
+# GitHub Pages settings: Source = GitHub Actions.
 
-name: Jupyter Book (via myst) GitHub Pages Deploy
+name: Book
+
 on:
   push:
-    # Runs on pushes targeting the default branch
     branches: [main]
+  pull_request:
+  workflow_dispatch:
+
 env:
-  # `BASE_URL` determines, relative to the root of the domain, the URL that your site is served from.
-  # E.g., if your site lives at `https://mydomain.org/myproject`, set `BASE_URL=/myproject`.
-  # If, instead, your site lives at the root of the domain, at `https://mydomain.org`, set `BASE_URL=''`.
+  # BASE_URL is the path of the site under the domain.
+  # https://<user>.github.io/<repo> needs BASE_URL=/<repo>. A site at the domain root needs BASE_URL=''.
   BASE_URL: /${{ github.event.repository.name }}
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
-  pages: write
-  id-token: write
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+
 concurrency:
-  group: 'pages'
-  cancel-in-progress: false
+  group: book-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
+  build:
+    name: Build site (execute notebooks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+
+      - name: Install the environment
+        run: uv sync --frozen
+
+      # mystmd keys its execution cache on the code of each page.
+      # The key also holds the lock file, the package code and the data samples,
+      # because a change to them can change the outputs of unchanged pages.
+      - name: Restore the notebook execution cache
+        uses: actions/cache@v6
+        with:
+          path: _build/execute
+          key: myst-exec-${{ hashFiles('uv.lock', 'src/**', 'data/samples/**') }}-${{ hashFiles('docs/**/*.md', '*.md') }}
+          restore-keys: |
+            myst-exec-${{ hashFiles('uv.lock', 'src/**', 'data/samples/**') }}-
+
+      - name: Build HTML with notebook execution
+        run: uv run --frozen jupyter-book build --html --execute --strict
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./_build/html
+
   deploy:
+    name: Deploy to GitHub Pages
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18.x
-      - name: Install Jupyter Book (via myst)
-        run: npm install -g jupyter-book
-      - name: Build HTML Assets
-        run: jupyter-book build --html
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './_build/html'
-      - name: Deploy to GitHub Pages
+      - name: Set up Pages
+        uses: actions/configure-pages@v6
+
+      - name: Deploy
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

@@ -1,27 +1,52 @@
 [project]
-name = "meteo-300-jupyter-book"
+name = "meteo300"
 version = "0.1.0"
-description = "A jupyter book for PSU METEO-300"
-authors = [
-    {name = "Jialin Yi",email = "jialinyi@sas.upenn.edu"}
-]
-license = {text = "Apache-2.0"}
+description = "A data book: atmospheric science with real data, for AI weather analysts"
+authors = [{ name = "Jialin Yi" }]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.13"
 dependencies = [
-    "numpy (>=2.4.0,<3.0.0)",
-    "matplotlib (>=3.10.8,<4.0.0)",
-    "metpy (>=1.7.1,<2.0.0)",
-    "pandas (>=2.3.3,<3.0.0)",
-    "xarray (>=2025.12.0,<2026.0.0)"
+    "numpy",
+    "pandas",
+    "xarray",
+    "matplotlib",
+    "metpy",
+    "pint",
+    "pint-xarray",
+    "cartopy",
+    "netcdf4",
+    "zarr",
+    "gcsfs",
+    "ipykernel",
+    "jupyter-book>=2,<3",
 ]
-
-
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
 
 [dependency-groups]
 dev = [
-    "ipykernel (>=7.1.0,<8.0.0)"
+    "pytest",
+    "ruff",
+    "pre-commit",
+    "jupytext",
 ]
+
+[build-system]
+requires = ["uv_build>=0.9,<0.13"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "meteo300"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-include = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "NPY"]
+
+[tool.ruff.lint.per-file-ignores]
+# Code cells of a notebook page import packages in later cells, as notebooks do.
+"docs/**" = ["E402"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
