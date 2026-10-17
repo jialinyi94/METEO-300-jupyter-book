@@ -42,6 +42,9 @@ dependencies = [
     "earthkit-transforms>=1.0.0",
     # "import earthkit.transforms" imports geopandas, but the package does not require it.
     "geopandas>=1.0",
+    # Without ipywidgets, "import tqdm.auto" in a notebook warns "IProgress not found".
+    # "import metpy.calc" imports pooch, and pooch imports tqdm.auto.
+    "ipywidgets>=8",
 ]
 
 [dependency-groups]

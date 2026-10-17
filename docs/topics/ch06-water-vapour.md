@@ -135,7 +135,6 @@ c_p\,(T - T_w) = L_v\,\left[r_s(T_w, p) - r\right]
 冷锋前后，最高温度只降低 ［5, 8］ K，混合比却减少一半多。所以这一周适合区分说明水汽多少的量和说明饱和程度的量。
 
 ```{code-cell} python
-:tags: [remove-stderr]
 import cartopy.crs as ccrs
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt

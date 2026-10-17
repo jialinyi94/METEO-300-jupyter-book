@@ -1,12 +1,8 @@
 """meteo300: data access and plotting helpers of the data book."""
 
-import warnings
 from pathlib import Path
 
 _NATURAL_EARTH = Path(__file__).resolve().parents[2] / "data" / "natural_earth"
-
-# tqdm.auto warns in notebooks without ipywidgets. The warning adds noise to the book pages.
-warnings.filterwarnings("ignore", message="IProgress not found")
 
 
 def _use_bundled_natural_earth() -> None:
