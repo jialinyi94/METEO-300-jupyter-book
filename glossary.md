@@ -56,6 +56,7 @@
 | 海表温度 | sea surface temperature | SST | K | `sst` / `sea_surface_temperature` | 海温、海面温度 |
 | 位温 | potential temperature | $\theta$ | K | — | 势温、潜在温度 |
 | 虚温 | virtual temperature | $T_v$ | K | — | 虚拟温度 |
+| 层平均温度 | layer-mean temperature | $\langle T\rangle$ | K | — | 平均层温度、气层平均温度 |
 | 虚位温 | virtual potential temperature | $\theta_v$ | K | — | 虚拟位温 |
 | 露点温度 | dewpoint temperature | $T_d$ | K | `d2m` / `2m_dewpoint_temperature` | 露点 |
 | 温度露点差 | dewpoint depression | $T - T_d$ | K | — | 露点差 |
@@ -125,6 +126,10 @@
 | 穿越角 | cross-isobar angle | $\gamma - \gamma_g$ | ° | — | 越等压线角 |
 | 非地转风比例 | ageostrophic wind fraction | — | — | — | — |
 | 热成风 | thermal wind | $\mathbf{v}_T$ | m s⁻¹ | — | 热风 |
+| 热成风方程 | thermal wind equation | — | — | — | 热风方程 |
+| 顺转 | veering | — | — | — | 顺时针转向 |
+| 逆转 | backing | — | — | — | 逆时针转向 |
+| 风矢端图 | hodograph | — | m s⁻¹ | MetPy `Hodograph` | 风速矢端图、速端图 |
 | 垂直风切变 | vertical wind shear | $\partial \mathbf{v}_h / \partial z$ | s⁻¹ | — | 风切、垂直切变 |
 | 急流 | jet stream | — | — | — | 喷流 |
 | 副热带急流 | subtropical jet | — | m s⁻¹ | — | — |
@@ -428,6 +433,9 @@
 | 均方误差 | mean squared error | MSE | — | — | — |
 | 均方根误差 | root mean squared error | RMSE | 与变量相同 | — | 均方误差根、均方根差、均方差 |
 | 偏差 | bias | — | 与变量相同 | — | — |
+| 相关系数 | Pearson correlation coefficient | — | — | earthkit-meteo `score.pearson_correlation` | 皮尔逊相关系数 |
+| 百分位数 | percentile | — | 与变量相同 | — | 百分位、分位点 |
+| 标准误差 | standard error | — | 与变量相同 | — | 标准误 |
 | 距平相关系数 | anomaly correlation coefficient | ACC | — | — | 异常相关系数、距平相关 |
 | 连续分级概率评分 | continuous ranked probability score | CRPS | 与变量相同 | — | 连续排序概率评分、连续等级概率评分 |
 | 技巧评分 | skill score | — | — | — | 技巧分数 |
@@ -477,3 +485,6 @@
 20. 人名术语：写英文人名加中文通用词，例如 Coriolis 力、Hadley 环流、Clausius–Clapeyron 方程。一个人名有多种中文音译，英文人名只有一种写法。英文人名和中文之间留一个半角空格。旧的音译词都是弃用词，例如“科里奥利力”和“哈得来环流”。用户在 2026-10-17 做了这个决定。
 21. Bergeron 过程和 Monin–Obukhov 长度：人名取自原来的中文术语“贝吉龙过程”和“莫宁-奥布霍夫长度”。English term 一列保留文献的常用名。
 22. 西风带和两种急流：中纬度的西风叫“西风带”，不另立“中纬度西风带”。对流层上部、纬度 30° 附近的急流叫“副热带急流”。温带气旋维持的、从地面伸到对流层顶的急流叫“涡驱动急流”，不叫“极锋急流”。
+23. 顺转和逆转：风随几何高度顺时针转动叫顺转，逆时针转动叫逆转。两个词只描述风随几何高度的转动，不描述风随时间的转动。风随时间的转动写“风向顺时针转了多少度”。
+24. 风矢端图：选它，不选“速端图”。它是 hodograph 的大气科学名词，图上画的是风向量的端点。
+25. 层平均温度：两个等压面之间的温度对 $\ln p$ 的平均，记作 $\langle T\rangle$。厚度正比于它。
