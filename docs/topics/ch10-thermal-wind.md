@@ -120,6 +120,8 @@ $(u_1, v_1)$ 是 $p_1$ 上的地转风，$(u_2, v_2)$ 是 $p_2$ 上的地转风�
 | 预报时效 | lead time | — |
 | 有效时间 | valid time | — |
 | 分析场 | analysis | — |
+| MSE | mean squared error | MSE |
+| MAE | mean absolute error | MAE |
 
 ## 真实数据
 
@@ -395,7 +397,7 @@ table.round(2)
 
 ## AI 天气连接
 
-AI 天气模型在等压面上输出温度和风。AIFS 和 Pangu-Weather 用 13 个等压面。GraphCast 论文的模型用 37 个等压面，业务版本 GraphCast_operational 用其中的 13 个。温度和风的 ERA5 短名是 `t`、`u` 和 `v`。WeatherBench 2 把它们叫作 `temperature`、`u_component_of_wind` 和 `v_component_of_wind`。
+AI 天气模型在等压面上输出温度和风。AIFS Single v1 和 Pangu-Weather 用 13 个等压面。2026-05-12 起，AIFS Single v2 增加了 10 hPa，共 14 个。GraphCast 论文的模型用 37 个等压面，业务版本 GraphCast_operational 用其中的 13 个。温度和风的 ERA5 短名是 `t`、`u` 和 `v`。WeatherBench 2 把它们叫作 `temperature`、`u_component_of_wind` 和 `v_component_of_wind`。
 
 模型把温度和风当作不同的输出通道，网络里没有热成风方程。所以热成风是检查 AI 预报的一个物理关系。[力与地转风](ch05-dynamics-geostrophic.md) 一页的地转平衡是另一个。
 
@@ -447,7 +449,9 @@ print(f"最大冷平流：ERA5 {float(an.min()):.1f} K/h，AIFS {float(fc.min())
 
 ### 急流强度的 bias
 
-AI 模型用 MSE 训练。未来不确定时，MSE 最小的预报是各种可能的平均，这个平均比真实的场平滑。WeatherBench 2 沿纬圈对预报场做 Fourier 变换，比较了多个模型在各个尺度上的方差。从 6 h 到 3 天，AI 模型的 850 hPa 纬向风在小尺度上的方差明显减少。急流核是一条窄的强风带，平滑会削弱它。下面检查 AIFS 的 250 hPa 急流是否比 IFS 的弱。
+确定性的 AI 模型用 MSE 或 MAE 训练。未来不确定时，MSE 最小的预报是各种可能的平均。MAE 最小的预报是各种可能的中位数。两者都比真实的场平滑。
+
+WeatherBench 2 沿纬圈对预报场做 Fourier 变换，比较各个尺度上的方差。它在两个半球纬度 ［30, 60］° 的带上取平均，见 Rasp 等，2024，[doi:10.1029/2023MS004019](https://doi.org/10.1029/2023MS004019)。在头 3 天里，Pangu-Weather 和 GraphCast 的 850 hPa 纬向风在小尺度上的方差明显减少。急流核是一条窄的强风带，平滑会削弱它。下面检查 AIFS 的 250 hPa 急流是否比 IFS 的弱。
 
 样本是 2026 年 1 月和 2 月的 30 个有效时间，都是 00 UTC，每 2 天一个。区域是北大西洋和欧洲：纬度 ［35, 70］ °N，经度从 60°W 到 20°E。每个有效时间有 6 个预报时效：0、2、4、6、8 和 10 天，一共来自 35 次起报。急流强度是区域内 250 hPa 风速的第 99 百分位数，每个格点的权重是 $\cos\varphi$。一个格点的噪声改变最大值，但几乎不改变第 99 百分位数。每个模型都和自己 0 h 的场比较，这个场就是分析场。
 
