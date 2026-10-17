@@ -15,10 +15,16 @@ title: 工具包
 | [xarray](https://pypi.org/project/xarray/) | 带坐标的多维数组，读写 netCDF 和 Zarr | 稳定 | 2026.9.0 | 2026-09-29 | 2026-10-17 | 2026.9.0 | — |
 | [zarr](https://pypi.org/project/zarr/) | 云存储上的分块数组格式 | 成熟 | 3.4.1 | 2026-10-08 | 2026-10-17 | 3.4.1 | — |
 | [netCDF4](https://pypi.org/project/netCDF4/) | 读写 netCDF 文件 | Alpha | 1.7.5 | 2026-10-15 | 2026-10-17 | 1.7.5 | h5netcdf |
+| [h5netcdf](https://pypi.org/project/h5netcdf/) | 通过 h5py 读写 netCDF4 文件，也能打开远程文件对象 | 稳定 | 1.8.1 | 2026-01-23 | 2026-10-17 | 1.8.1 | netCDF4 |
+| [h5py](https://pypi.org/project/h5py/) | 读写 HDF5 文件 | 稳定 | 3.16.0 | 2026-03-06 | 2026-10-17 | 3.16.0 | — |
 | [gcsfs](https://pypi.org/project/gcsfs/) | 读取 Google Cloud Storage | Beta | 2026.10.1 | 2026-10-16 | 2026-10-17 | 2026.10.1 | — |
 | [s3fs](https://pypi.org/project/s3fs/) | 读取 AWS S3 | Beta | 2026.9.0 | 2026-09-18 | 2026-10-17 | 2026.9.0 | boto3 |
 | [Pint](https://pypi.org/project/Pint/) | 物理单位 | Beta | 0.26.1 | 2026-09-10 | 2026-10-17 | 0.26.1 | — |
 | [pint-xarray](https://pypi.org/project/pint-xarray/) | 让 xarray 对象带 Pint 单位 | Alpha | 0.6.1 | 2026-03-23 | 2026-10-17 | 0.6.1 | MetPy 的 `.metpy.quantify()` |
+
+`ceres_ebaf` 用 h5netcdf 引擎打开远程文件对象。`imerg` 用这个引擎打开 IMERG 的 HDF5 文件。
+h5netcdf 1.8 和更新的版本不再依赖 h5py。没有 h5py 时，`engine="h5netcdf"` 打不开文件。
+所以本书安装 `h5netcdf[h5py]`。
 
 ## GRIB 和卫星数据
 
@@ -84,8 +90,10 @@ earthkit-data 读取 GRIB 时加载 eccodes。earthkit-geo 加载 eckit，eckit 
 | [MetPy](https://pypi.org/project/MetPy/) | 气象计算、斜温图和观测站填图 | 稳定 | 1.7.1 | 2025-08-29 | 2026-10-17 | 1.7.1 | — |
 | [tephi](https://pypi.org/project/tephi/) | 温熵图 | Beta | 0.4.0.post0 | 2026-01-30 | 2026-10-17 | 0.4.0.post0 | MetPy 的斜温图 |
 | [xeofs](https://pypi.org/project/xeofs/) | 用 xarray 计算经验正交函数 | 未标注 | 3.0.4 | 2024-10-28 | 2026-10-17 | 3.0.4 | — |
-| [climlab](https://pypi.org/project/climlab/) | 简单的辐射和能量平衡气候模式 | 未标注 | 0.9.2 | 2026-03-18 | 2026-10-17 | 未安装 | — |
-| [pvlib](https://pypi.org/project/pvlib/) | 太阳位置和地面短波辐射 | Beta | 0.16.1 | 2026-09-26 | 2026-10-17 | 未安装 | — |
+| [climlab](https://pypi.org/project/climlab/) | 简单的辐射和能量平衡气候模式 | 未标注 | 0.9.2 | 2026-03-18 | 2026-10-17 | 0.9.2 | — |
+| [pvlib](https://pypi.org/project/pvlib/) | 太阳位置和地面短波辐射 | Beta | 0.16.1 | 2026-09-26 | 2026-10-17 | 0.16.1 | — |
+
+[t2](../topics/t2-radiation.md) 用 climlab 计算单柱辐射模式，用 pvlib 计算 Cabauw 的太阳位置。
 
 ## 画图
 
@@ -101,13 +109,30 @@ MetPy 发布修复后，本书再升级 Matplotlib。
 
 | 软件包 | 用途 | 成熟度 | 最新版本 | 发布日期 | 检查日期 | 本书 | 替代 |
 |---|---|---|---|---|---|---|---|
-| [scores](https://pypi.org/project/scores/) | 预报评分，包括连续分级概率评分 | 未标注 | 2.7.0 | 2026-09-05 | 2026-10-17 | 未安装 | xskillscore |
+| [scores](https://pypi.org/project/scores/) | 预报评分，包括连续分级概率评分 | 未标注 | 2.7.0 | 2026-09-05 | 2026-10-17 | 2.7.0 | xskillscore |
 | [xskillscore](https://pypi.org/project/xskillscore/) | 基于 xarray 的预报评分 | 稳定 | 0.0.29 | 2026-02-18 | 2026-10-17 | 未安装 | scores |
 | [WeatherBench 2](https://github.com/google-research/weatherbench2) | AI 天气模型的评估代码和数据 | 未标注 | v0.2.0 | 2023-12-04 | 2026-10-17 | 未安装 | scores |
+
+本书通过 `earthkit-meteo[scores]` 安装 scores。`earthkit.meteo.score` 的部分评分函数调用 scores。
+[ch08](../topics/ch08-geopotential-thickness.md) 也直接调用 `scores.continuous.rmse`。
 
 WeatherBench 2 不在 PyPI 上。用户从 GitHub 安装它。
 它最后的版本号是 v0.2.0，但仓库在 2026 年 10 月仍有提交。
 本书的 `weatherbench2` 和 `wb2_scores` 函数直接读取它的 Zarr 存储，不需要安装它。
+
+## 辅助软件包
+
+本书安装下面的软件包，因为别的软件包需要它们，却没有把它们列为依赖。
+
+| 软件包 | 用途 | 成熟度 | 最新版本 | 发布日期 | 检查日期 | 本书 | 替代 |
+|---|---|---|---|---|---|---|---|
+| [geopandas](https://pypi.org/project/geopandas/) | 带几何形状的表格，读写矢量地理数据 | 稳定 | 1.2.0 | 2026-09-28 | 2026-10-17 | 1.2.0 | — |
+| [ipywidgets](https://pypi.org/project/ipywidgets/) | Jupyter 的交互控件和进度条 | 未标注 | 8.1.9 | 2026-08-18 | 2026-10-17 | 8.1.9 | — |
+| [six](https://pypi.org/project/six/) | Python 2 和 Python 3 的兼容层 | 稳定 | 1.17.0 | 2024-12-04 | 2026-10-17 | 1.17.0 | — |
+
+- `import earthkit.transforms` 导入 geopandas。
+- `import metpy.calc` 导入 pooch，pooch 导入 `tqdm.auto`。没有 ipywidgets 时，`tqdm.auto` 在 notebook 里发出警告。
+- climlab 导入 six。
 
 ## 不再活跃的软件包
 
