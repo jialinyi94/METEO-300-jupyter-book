@@ -59,6 +59,8 @@
 | 露点温度 | dewpoint temperature | $T_d$ | K | `d2m` / `2m_dewpoint_temperature` | 露点 |
 | 温度露点差 | dewpoint depression | $T - T_d$ | K | — | 露点差 |
 | 湿球温度 | wet-bulb temperature | $T_w$ | K | — | — |
+| 体感温度 | apparent temperature | — | °C | MetPy `apparent_temperature` | 表观温度、感觉温度 |
+| 热指数 | heat index | HI | °C | MetPy `heat_index` | 炎热指数 |
 | 相当位温 | equivalent potential temperature | $\theta_e$ | K | — | 等效位温、当量位温 |
 | 饱和相当位温 | saturation equivalent potential temperature | $\theta_{es}$ | K | — | — |
 | 有效发射温度 | effective emission temperature | $T_e$ | K | — | 有效温度、有效辐射温度、发射温度 |
@@ -69,6 +71,7 @@
 |---|---|---|---|---|---|
 | 理想气体定律 | ideal gas law | — | — | — | 理想气体状态方程 |
 | 干空气气体常数 | gas constant for dry air | $R_d$ | J kg⁻¹ K⁻¹ | MetPy `Rd` | — |
+| 水汽气体常数 | gas constant for water vapour | $R_v$ | J kg⁻¹ K⁻¹ | MetPy `Rv` | 水蒸气气体常数 |
 | 热力学第一定律 | first law of thermodynamics | — | — | — | — |
 | 内能 | internal energy | — | J kg⁻¹ | — | — |
 | 定压比热容 | specific heat capacity at constant pressure | $c_p$ | J kg⁻¹ K⁻¹ | MetPy `Cp_d` | 定压比热、比定压热容 |
@@ -88,6 +91,7 @@
 | 饱和比 | saturation ratio | $S$ | — | — | — |
 | 过饱和度 | supersaturation | $S - 1$ | % | — | 超饱和度 |
 | 可降水量 | precipitable water; total column water vapour | $W$ | kg m⁻² | `tcwv` / `total_column_water_vapour` | 整层水汽、整层水汽含量、柱水汽、大气可降水量 |
+| 整层总水量 | total column water | — | kg m⁻² | `tcw` / `total_column_water` | 柱总水量 |
 | 整层水汽输送 | integrated vapour transport | IVT | kg m⁻¹ s⁻¹ | `integrated_vapor_transport` | — |
 | 潜热 | latent heat | $L_v$ | J kg⁻¹ | — | — |
 | 凝结 | condensation | — | — | — | 冷凝 |
