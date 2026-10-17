@@ -88,6 +88,10 @@ s = c_p \ln \theta + \text{常数}
 5. 等饱和混合比线：紫色点线，线上的饱和混合比相同，单位是 g kg⁻¹。
 
 ```{code-cell} python
+from meteo300 import data as d
+from meteo300 import plot as mplot
+from meteo300.pages import ch07
+
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 import metpy.calc as mpcalc
@@ -97,10 +101,6 @@ import pandas as pd
 from metpy.plots import SkewT
 from metpy.units import units
 from tephi.transforms import convert_pT2Tt
-
-from meteo300 import data as d
-from meteo300 import plot as mplot
-from meteo300.pages import ch07
 
 
 def tephi_text(ax, p, t, text, **kw):

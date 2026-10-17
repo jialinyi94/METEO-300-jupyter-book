@@ -1,11 +1,11 @@
 """Tests for the helpers and samples of the page ch06-water-vapour."""
 
+from meteo300 import data as d
+from meteo300.pages import ch06
+
 import numpy as np
 import pandas as pd
 import xarray as xr
-
-from meteo300 import data as d
-from meteo300.pages import ch06
 
 
 def test_to_page_grid_orders_latitude_and_wraps_longitude():

@@ -125,10 +125,6 @@ $$
 2025-01-24，风暴 Éowyn 经过爱尔兰和英国。英国气象局对北爱尔兰和苏格兰中南部发布了风的红色预警。格拉斯哥在预警区之内。本页看两份真实数据：格拉斯哥机场这一天的 48 条 METAR 报文，以及 06 UTC 英国和爱尔兰的全部 METAR 报文。
 
 ```{code-cell} python
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-
 from meteo300.pages.ch02 import (
     clean_metar,
     direction_error,
@@ -140,6 +136,10 @@ from meteo300.pages.ch02 import (
     parse_metars,
     pressure_code,
 )
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 plt.rcParams["figure.dpi"] = 120
 
@@ -209,13 +209,13 @@ plt.show()
 #| label: fig-ch02-station-plot
 #| caption: 2025-01-24 06 UTC，英国和爱尔兰的观测站填图。风羽的单位是 kt。红色数字是温度，绿色数字是露点温度，单位是 °C。右上方是海平面气压的三位码。蓝圈是格拉斯哥机场。数据来源：Iowa Environmental Mesonet。
 
+from meteo300.plot import grid_vectors
+
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import metpy.calc as mpcalc
 from metpy.plots import StationPlot, sky_cover
 from metpy.units import units
-
-from meteo300.plot import grid_vectors
 
 PLOT_TIME = pd.Timestamp("2025-01-24 06:00")
 KEY_STATIONS = ["EGPF", "EGPO", "EGPE", "EGPU"]

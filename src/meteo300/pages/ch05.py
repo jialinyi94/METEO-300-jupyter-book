@@ -24,15 +24,15 @@ each pressure level. :func:`grid_vectors` corrects wind arrows on cartopy maps; 
 
 from __future__ import annotations
 
+from meteo300 import data as d
+from meteo300 import plot as mplot  # sets a CJK font for the Chinese labels
+from meteo300.plot import grid_vectors  # moved to meteo300.plot; the old import path still works
+
 import matplotlib.pyplot as plt
 import metpy.calc as mpcalc
 import numpy as np
 import pandas as pd
 import xarray as xr
-
-from meteo300 import data as d
-from meteo300 import plot as mplot  # sets a CJK font for the Chinese labels
-from meteo300.plot import grid_vectors  # moved to meteo300.plot; the old import path still works
 
 __all__ = [
     "AIFS_RUN",

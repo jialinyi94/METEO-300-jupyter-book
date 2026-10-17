@@ -24,6 +24,8 @@ kernelspec:
 % 图、表、式和练习的 label 以页面短名开头，例如 fig-ch03-z500、ex-ch03-1。
 % 读取数据用 src/meteo300/data.py 的函数。CI 没有网络，函数读取 data/samples/ 的样本。
 % 用法见 docs/reference/data-access-demo.md。
+% 导入规则：第一个代码单元先导入 meteo300，再导入其他非标准库的软件包。
+% meteo300 在 eccodes 之前加载 pyproj。顺序反了，内核可能在退出时崩溃。tests/test_page_cells.py 检查这条规则。
 % 以 % 开头的行是注释，网站不显示。填写完成后，删去本模板的注释。
 
 ## 知识点
@@ -73,6 +75,8 @@ $$
 MetPy 计算 850 hPa、288.15 K 的气块的位温。手算用 $R_d / c_p = 0.2857$。
 
 ```{code-cell} python
+import meteo300
+
 import metpy.calc as mpcalc
 from metpy.units import units
 

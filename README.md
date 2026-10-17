@@ -42,6 +42,13 @@ uv add <package>
 
 uv 同时更新 `pyproject.toml` 和 `uv.lock`。两个文件一起提交。
 
+## 导入顺序
+
+页面、脚本和测试先导入 meteo300 或 pyproj，再导入 eccodes、cfgrib 或 earthkit。
+eccodes 和 pyproj 各带有一份 PROJ 库。eccodes 的那一份先加载时，Python 在退出时崩溃。
+`import meteo300` 第一个加载的软件包是 pyproj。导入顺序反了时，meteo300 发出 `RuntimeWarning`。
+`tests/test_page_cells.py` 检查每页的第一个代码单元。
+
 ## 目录
 
 | 路径 | 内容 |

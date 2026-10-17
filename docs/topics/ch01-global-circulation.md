@@ -26,13 +26,13 @@ Coriolis 力使运动的空气在北半球向右偏，在南半球向左偏。[]
 #| label: fig-ch01-inertial
 #| caption: f 平面上只受 Coriolis 力的气块的轨迹。气块从原点出发，初速度 10 m s⁻¹，方向向东。左图在 50°N，右图在 50°S。蓝色箭头是每隔四分之一个惯性周期的速度，红色箭头是出发时的 Coriolis 力。数据来源：本页的数值积分。
 
-import cartopy.crs as ccrs
-import matplotlib.pyplot as plt
-import numpy as np
-
 from meteo300 import data as d
 from meteo300 import plot as mplot
 from meteo300.pages import ch01
+
+import cartopy.crs as ccrs
+import matplotlib.pyplot as plt
+import numpy as np
 
 U0, LAT = 10.0, 50.0  # initial speed towards the east (m s-1), latitude (degrees)
 f = 2 * ch01.OMEGA * np.sin(np.deg2rad(LAT))  # Coriolis parameter, s-1

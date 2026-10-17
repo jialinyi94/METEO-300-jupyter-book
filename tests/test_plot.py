@@ -4,13 +4,13 @@ import matplotlib
 
 matplotlib.use("Agg")
 
+from meteo300.plot import grid_vectors  # noqa: E402
+
 import cartopy.crs as ccrs  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import pytest  # noqa: E402
 import xarray as xr  # noqa: E402
-
-from meteo300.plot import grid_vectors  # noqa: E402
 
 EARTH_RADIUS = 6371229.0  # m
 PC = ccrs.PlateCarree()

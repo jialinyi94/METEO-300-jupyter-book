@@ -24,13 +24,13 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+from meteo300 import data as d
+from meteo300 import plot as mplot  # sets a CJK font for the Chinese labels
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import xarray as xr
-
-from meteo300 import data as d
-from meteo300 import plot as mplot  # sets a CJK font for the Chinese labels
 
 __all__ = [
     "CAMBORNE",

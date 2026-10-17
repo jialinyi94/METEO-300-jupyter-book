@@ -135,6 +135,10 @@ c_p\,(T - T_w) = L_v\,\left[r_s(T_w, p) - r\right]
 冷锋前后，最高温度只降低 ［5, 8］ K，混合比却减少一半多。所以这一周适合区分说明水汽多少的量和说明饱和程度的量。
 
 ```{code-cell} python
+from meteo300 import data as d
+from meteo300 import plot as mplot
+from meteo300.pages import ch06
+
 import cartopy.crs as ccrs
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
@@ -142,10 +146,6 @@ import metpy.calc as mpcalc
 import numpy as np
 import pandas as pd
 from metpy.units import units
-
-from meteo300 import data as d
-from meteo300 import plot as mplot
-from meteo300.pages import ch06
 
 obs = d.page_data(ch06.SAMPLE_FILES["metar"], ch06.station_week)
 elev = obs.attrs["elevation_m"] * units.m  # Heathrow 观测站的几何高度

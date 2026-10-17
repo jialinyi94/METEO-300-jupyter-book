@@ -18,11 +18,11 @@ again.
 
 from __future__ import annotations
 
+from meteo300 import data as d
+
 import numpy as np
 import pandas as pd
 import xarray as xr
-
-from meteo300 import data as d
 
 __all__ = [
     "AIFS_LEVELS",

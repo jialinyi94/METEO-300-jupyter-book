@@ -11,11 +11,11 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+import meteo300  # noqa: F401  - points cartopy to the bundled Natural Earth files
+
 import matplotlib as mpl
 import numpy as np
 from matplotlib import font_manager
-
-import meteo300  # noqa: F401  - points cartopy to the bundled Natural Earth files
 
 CJK_FONTS = [
     "Noto Sans CJK SC",

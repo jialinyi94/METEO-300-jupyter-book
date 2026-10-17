@@ -4,12 +4,12 @@ import matplotlib
 
 matplotlib.use("Agg")
 
+from meteo300 import data as d  # noqa: E402
+from meteo300.pages import ch05  # noqa: E402
+
 import numpy as np  # noqa: E402
 import pytest  # noqa: E402
 import xarray as xr  # noqa: E402
-
-from meteo300 import data as d  # noqa: E402
-from meteo300.pages import ch05  # noqa: E402
 
 OMEGA = 7.292115e-5  # s-1, the MetPy value
 LAT = np.arange(60.0, 39.9, -0.25)

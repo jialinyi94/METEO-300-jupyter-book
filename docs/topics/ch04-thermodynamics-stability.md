@@ -122,16 +122,16 @@ $N$ 是浮力频率，单位是 s⁻¹。$N^2 > 0$ 时，气块在原来的位�
 这一天，一个高压位于爱尔兰附近。12 UTC，ERA5 的海平面气压最高约 1027 hPa。ERA5 在 Camborne 附近的 10 m 风速约 3 m s⁻¹。夜间没有低云，只有高空的薄云。上午天空转晴。这样的天气让夜间的地面冷却，白天的地面加热，所以两次探空正好是边界层日变化的两端。
 
 ```{code-cell} python
+from meteo300 import data as d
+from meteo300 import plot as mplot
+from meteo300.pages import ch04
+
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 import metpy.calc as mpcalc
 import metpy.constants as mpconst
 import numpy as np
 from metpy.units import units
-
-from meteo300 import data as d
-from meteo300 import plot as mplot
-from meteo300.pages import ch04
 
 # 两次探空在一个表里。列 time 是名义时间，一行是一层。
 raw = d.page_data(ch04.SAMPLE_FILES["soundings"], ch04.camborne_soundings)

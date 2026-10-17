@@ -24,9 +24,6 @@ dependencies = [
     "siphon>=0.11.0",
     "ecmwf-opendata>=0.3.35",
     "cfgrib>=0.9.15.1",
-    # eccodes >= 2.43 needs eckitlib, which bundles its own PROJ and crashes with pyproj.
-    # 2.42.0 is the last wheel that bundles libeccodes alone.
-    "eccodes==2.42.0",
     "s3fs>=2026.9.0",
     "satpy>=0.60.0",
     "h5netcdf>=1.8.1",
@@ -36,10 +33,17 @@ dependencies = [
     "requests>=2.34.2",
     "xeofs>=3.0.4",
     "tephi>=0.4.0",
-    # earthkit: only the packages without eccodes. earthkit-data and earthkit-plots need
-    # eccodes >= 2.48, which conflicts with the pin above. earthkit-geo needs eckit and
-    # mir-python, and crashes at exit when pyproj is imported too.
+    # Import rule: import meteo300 (or pyproj) before eccodes, cfgrib or earthkit.
+    # eccodes >= 2.43 and earthkit-geo load eckitlib, which brings its own copy of the PROJ
+    # and SQLite libraries. pyproj brings another copy. When the eckitlib copy loads first,
+    # the process crashes at exit (double free or segmentation fault). When pyproj loads
+    # first, it does not. meteo300/__init__.py imports pyproj first, and warns when eccodes
+    # came before it. tests/test_environment.py checks both orders.
+    "eccodes>=2.50.0",
+    "earthkit-data>=1.3.0",
+    "earthkit-geo>=1.2.0",
     "earthkit-meteo>=1.2.1",
+    "earthkit-plots>=1.0.4",
     "earthkit-transforms>=1.0.0",
     # "import earthkit.transforms" imports geopandas, but the package does not require it.
     "geopandas>=1.0",
@@ -70,6 +74,16 @@ extend-include = ["*.ipynb"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "NPY"]
+
+[tool.ruff.lint.isort]
+# meteo300 imports come before all third-party imports: meteo300 loads pyproj before eccodes.
+# See the import rule in the dependencies above.
+sections = { "meteo300" = ["meteo300"] }
+section-order = ["future", "standard-library", "meteo300", "third-party", "first-party", "local-folder"]
+
+[tool.ruff.lint.pyflakes]
+# "import meteo300" alone is useful: it loads pyproj before eccodes.
+allowed-unused-imports = ["meteo300"]
 
 [tool.ruff.lint.per-file-ignores]
 # Code cells of a notebook page import packages in later cells, as notebooks do.

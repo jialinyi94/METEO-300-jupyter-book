@@ -4,15 +4,15 @@ import matplotlib
 
 matplotlib.use("Agg")
 
+from meteo300 import data as d
+from meteo300.pages import ch07
+
 import matplotlib.pyplot as plt
 import metpy.calc as mpcalc
 import numpy as np
 import pandas as pd
 import pytest
 from metpy.units import units
-
-from meteo300 import data as d
-from meteo300.pages import ch07
 
 
 def test_sounding_arrays_sorts_drops_and_fills():

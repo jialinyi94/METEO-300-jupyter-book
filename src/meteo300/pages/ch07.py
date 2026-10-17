@@ -20,13 +20,13 @@ parcel, and :func:`tephigram` draws the empty tephigram.
 
 from __future__ import annotations
 
+from meteo300 import data as d
+
 import metpy.calc as mpcalc
 import numpy as np
 import pandas as pd
 import xarray as xr
 from metpy.units import units
-
-from meteo300 import data as d
 
 __all__ = [
     "AIFS_RUN",

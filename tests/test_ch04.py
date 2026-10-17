@@ -1,11 +1,11 @@
 """Tests for the helpers and samples of the page ch04-thermodynamics-stability."""
 
+from meteo300 import data as d
+from meteo300.pages import ch04
+
 import numpy as np
 from metpy.constants import Rd, g
 from metpy.units import units
-
-from meteo300 import data as d
-from meteo300.pages import ch04
 
 
 def test_sounding_heights_isothermal_dry():

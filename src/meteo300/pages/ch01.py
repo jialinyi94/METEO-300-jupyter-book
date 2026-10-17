@@ -29,11 +29,11 @@ Coriolis force alone.
 
 from __future__ import annotations
 
+from meteo300 import data as d
+
 import numpy as np
 import pandas as pd
 import xarray as xr
-
-from meteo300 import data as d
 
 CASE_TIME = "2025-01-24T00:00"
 # Centre of Storm Éowyn at CASE_TIME: the minimum of ERA5 msl on the 0.25° grid, 941.7 hPa.

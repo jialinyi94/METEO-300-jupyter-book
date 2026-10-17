@@ -15,14 +15,14 @@ The page computes the physics with MetPy. Two helpers hold the plumbing:
 
 from __future__ import annotations
 
+from meteo300 import data as d
+
 import metpy.calc as mpcalc
 import numpy as np
 import pandas as pd
 import xarray as xr
 from metpy.constants import Rd, g
 from metpy.units import units
-
-from meteo300 import data as d
 
 __all__ = [
     "AIFS_RUN",

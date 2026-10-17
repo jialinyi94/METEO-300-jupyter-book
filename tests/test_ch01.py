@@ -1,11 +1,11 @@
 """Tests for the helpers and page samples of the page ch01-global-circulation."""
 
+from meteo300 import data as d
+from meteo300.pages import ch01
+
 import numpy as np
 import pytest
 import xarray as xr
-
-from meteo300 import data as d
-from meteo300.pages import ch01
 
 MAX_SAMPLE_BYTES = 5 * 1024 * 1024
 # The 13 levels of WeatherBench 2, the same as the levels of AIFS Single v1.0.

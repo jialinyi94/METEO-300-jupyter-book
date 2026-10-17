@@ -4,11 +4,6 @@ import matplotlib
 
 matplotlib.use("Agg")
 
-import matplotlib.pyplot as plt  # noqa: E402
-import numpy as np  # noqa: E402
-import pandas as pd  # noqa: E402
-import pytest  # noqa: E402
-
 from meteo300.pages.ch02 import (  # noqa: E402
     SampleCoverageError,
     clean_metar,
@@ -21,6 +16,11 @@ from meteo300.pages.ch02 import (  # noqa: E402
     nearest_reports,
     pressure_code,
 )
+
+import matplotlib.pyplot as plt  # noqa: E402
+import numpy as np  # noqa: E402
+import pandas as pd  # noqa: E402
+import pytest  # noqa: E402
 
 REPORT = "EGPF 241250Z AUTO 24051G74KT 2700 -RA BKN025/// OVC040/// //////TCU 06/06 Q0963"
 
@@ -150,13 +150,13 @@ def test_station_plot_barbs_point_along_the_wind(offline):
     # The station plot of the page: 06 UTC reports on a Lambert conformal map. MetPy passes the
     # barb components to cartopy as PlateCarree vectors. Uncorrected, the barbs turn by up to
     # 18 degrees in Scotland. grid_vectors removes the error.
+    from meteo300.pages.ch02 import parse_metars
+    from meteo300.plot import grid_vectors
+
     import cartopy.crs as ccrs
     import metpy.calc as mpcalc
     from metpy.plots import StationPlot
     from metpy.units import units
-
-    from meteo300.pages.ch02 import parse_metars
-    from meteo300.plot import grid_vectors
 
     when = pd.Timestamp("2025-01-24 06:00")
     snap = metar_snapshot(when, networks=["GB__ASOS", "IE__ASOS"])

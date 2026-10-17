@@ -10,13 +10,13 @@ import io
 import os
 from pathlib import Path
 
+from meteo300 import check_credentials
+from meteo300 import data as d
+
 import numpy as np
 import pandas as pd
 import pytest
 import xarray as xr
-
-from meteo300 import check_credentials
-from meteo300 import data as d
 
 
 @pytest.fixture
@@ -160,11 +160,11 @@ def test_bundled_natural_earth_and_station_plot():
     import matplotlib
 
     matplotlib.use("Agg")
+    import meteo300
+
     import matplotlib.pyplot as plt
     from cartopy.io import shapereader
     from metpy.plots import StationPlot
-
-    import meteo300
 
     path = shapereader.natural_earth("110m", "physical", "coastline")
     assert Path(path).is_relative_to(meteo300._NATURAL_EARTH)

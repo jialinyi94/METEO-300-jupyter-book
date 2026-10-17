@@ -24,13 +24,15 @@ title: 工具包
 
 | 软件包 | 用途 | 成熟度 | 最新版本 | 发布日期 | 检查日期 | 本书 | 替代 |
 |---|---|---|---|---|---|---|---|
-| [eccodes](https://pypi.org/project/eccodes/) | ECMWF 的 GRIB 和 BUFR 库 | Beta | 2.50.0 | 2026-10-15 | 2026-10-17 | 2.42.0 | — |
+| [eccodes](https://pypi.org/project/eccodes/) | ECMWF 的 GRIB 和 BUFR 库 | Beta | 2.50.0 | 2026-10-15 | 2026-10-17 | 2.50.0 | — |
 | [cfgrib](https://pypi.org/project/cfgrib/) | 用 xarray 打开 GRIB 文件 | Beta | 0.9.15.1 | 2025-09-30 | 2026-10-17 | 0.9.15.1 | earthkit-data |
 | [satpy](https://pypi.org/project/satpy/) | 读取和处理气象卫星数据 | 稳定 | 0.60.0 | 2026-03-04 | 2026-10-17 | 0.60.0 | — |
 | [pyresample](https://pypi.org/project/pyresample/) | 卫星数据的投影和重采样 | 稳定 | 1.35.0 | 2025-12-02 | 2026-10-17 | 1.35.0 | — |
 
-本书把 eccodes 固定为 2.42.0。
-更新的 eccodes 带有自己的 PROJ 库。它和 pyproj 一起导入时，程序崩溃。
+eccodes 2.43 和更新的版本带有自己的 PROJ 库，pyproj 也带有一份 PROJ 库。
+eccodes 的那一份先加载时，程序在退出时崩溃。pyproj 的那一份先加载时，程序正常退出。
+所以先导入 meteo300 或 pyproj，再导入 eccodes、cfgrib 或 earthkit。
+`import meteo300` 第一个加载的软件包是 pyproj。
 
 ## 数据访问
 
@@ -51,30 +53,29 @@ ECMWF 把 `ecmwf-datastores-client` 作为新的客户端，但不要求用户�
 
 ## earthkit
 
+本书优先用 earthkit。earthkit 没有的功能，本书再用 MetPy、cartopy 等软件包。
+
 earthkit 是 ECMWF 的一组软件包。它们处理数据访问、气象计算、统计汇总、画图和插值。
 全部 earthkit 软件包都使用 Apache-2.0 许可证。
 
 | 软件包 | 用途 | 成熟度 | 最新版本 | 发布日期 | 检查日期 | 本书 | 替代 |
 |---|---|---|---|---|---|---|---|
 | [earthkit](https://pypi.org/project/earthkit/) | 一次安装全部 earthkit 软件包 | 稳定 | 1.0.0 | 2026-06-29 | 2026-10-17 | 未安装 | — |
-| [earthkit-data](https://pypi.org/project/earthkit-data/) | 用一个接口读取 GRIB、netCDF、CDS 和 MARS 数据 | 稳定 | 1.3.0 | 2026-10-15 | 2026-10-17 | 未安装 | cfgrib、climetlab |
+| [earthkit-data](https://pypi.org/project/earthkit-data/) | 用一个接口读取 GRIB、netCDF、CDS 和 MARS 数据 | 稳定 | 1.3.0 | 2026-10-15 | 2026-10-17 | 1.3.0 | cfgrib、climetlab |
 | [earthkit-meteo](https://pypi.org/project/earthkit-meteo/) | 气象计算，例如热力学量、风和太阳位置 | 稳定 | 1.2.1 | 2026-10-15 | 2026-10-17 | 1.2.1 | MetPy |
 | [earthkit-transforms](https://pypi.org/project/earthkit-transforms/) | 按时间、区域和集合成员做统计，例如日平均和气候态 | 稳定 | 1.0.0 | 2026-06-29 | 2026-10-17 | 1.0.0 | xarray |
 | [earthkit-utils](https://pypi.org/project/earthkit-utils/) | earthkit 软件包共用的工具 | 稳定 | 1.0.3 | 2026-10-15 | 2026-10-17 | 1.0.3 | — |
-| [earthkit-plots](https://pypi.org/project/earthkit-plots/) | 气象地图和图表 | Beta | 1.0.4 | 2026-08-26 | 2026-10-17 | 未安装 | cartopy |
-| [earthkit-geo](https://pypi.org/project/earthkit-geo/) | 地理计算 | 稳定 | 1.2.0 | 2026-10-15 | 2026-10-17 | 未安装 | pyproj |
+| [earthkit-plots](https://pypi.org/project/earthkit-plots/) | 气象地图和图表 | Beta | 1.0.4 | 2026-08-26 | 2026-10-17 | 1.0.4 | cartopy |
+| [earthkit-geo](https://pypi.org/project/earthkit-geo/) | 地理计算 | 稳定 | 1.2.0 | 2026-10-15 | 2026-10-17 | 1.2.0 | pyproj |
 | [earthkit-regrid](https://pypi.org/project/earthkit-regrid/) | 网格之间的插值 | Pre-Alpha | 0.5.1 | 2025-12-11 | 2026-10-17 | 未安装 | xESMF |
 
-本书安装 earthkit-meteo 和 earthkit-transforms。它们不依赖 eccodes。
+本书安装 earthkit-data、earthkit-geo、earthkit-meteo、earthkit-plots 和 earthkit-transforms。
+本书不安装软件包 earthkit 和 earthkit-regrid。
 `import earthkit.transforms` 要导入 geopandas，但 earthkit-transforms 没有把 geopandas 列为依赖。
 所以本书另外安装 geopandas。
 
-本书暂时不安装 earthkit-data、earthkit-plots 和 earthkit-geo：
-
-- earthkit-data 1.3.0 要求 eccodes 2.48.0 或更新的版本。本书把 eccodes 固定为 2.42.0，原因见“GRIB 和卫星数据”一节。
-- earthkit-plots 依赖 earthkit-data，所以有同样的冲突。
-- earthkit-geo 依赖 eckit 和 mir-python。它和 pyproj 一起导入时，程序在退出时崩溃。
-- 软件包 earthkit 安装全部 earthkit 软件包，包括上面三个。
+earthkit-data 读取 GRIB 时加载 eccodes。earthkit-geo 加载 eckit，eckit 也带有自己的 PROJ 库。
+所以导入 earthkit 之前，先导入 meteo300。原因见“GRIB 和卫星数据”一节。
 
 ## 气象计算
 

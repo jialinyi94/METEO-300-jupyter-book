@@ -4,14 +4,14 @@ import matplotlib
 
 matplotlib.use("Agg")
 
+from meteo300 import data as d  # noqa: E402
+from meteo300.pages import ch03  # noqa: E402
+
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 import pytest  # noqa: E402
 import xarray as xr  # noqa: E402
-
-from meteo300 import data as d  # noqa: E402
-from meteo300.pages import ch03  # noqa: E402
 
 # Geopotential heights of the U.S. Standard Atmosphere 1976 tables.
 STD1976_TABLE = [(1013.25, 0.0), (500.0, 5574.0), (226.3206, 11000.0), (100.0, 16180.0)]

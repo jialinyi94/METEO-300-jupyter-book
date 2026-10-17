@@ -36,12 +36,12 @@ ERA5 的 0.25° 数据分块很大。一个等压面变量的一个时刻约 150
 环境变量 `METEO300_MAX_CHUNK_READS` 可以改变这个上限。
 
 ```{code-cell} python
+from meteo300 import data as d
+from meteo300 import plot as mplot
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
-from meteo300 import data as d
-from meteo300 import plot as mplot
 
 print("离线模式:", d.is_offline())
 print("中文字体:", mplot.cjk_font())
@@ -464,5 +464,12 @@ CI 安装 `fonts-noto-cjk`。在自己的电脑上，可以用环境变量 `METE
 
 `pyproject.toml` 把 Matplotlib 限制在 3.10。
 MetPy 1.7.1 的 `StationPlot` 在 Matplotlib 3.11 上出错。
-`pyproject.toml` 把 eccodes 固定为 2.42.0。
-更新的 eccodes 带有自己的 PROJ 库，和 pyproj 一起导入时程序崩溃。
+
+## 导入顺序
+
+先导入 meteo300 或 pyproj，再导入 eccodes、cfgrib 或 earthkit。
+eccodes 和 pyproj 各带有一份 PROJ 库。eccodes 的那一份先加载时，Python 在退出时崩溃。
+`import meteo300` 第一个加载的软件包是 pyproj。
+所以每页的第一个代码单元先导入 meteo300，再导入其他软件包。
+
+eccodes 在 meteo300 之前导入时，meteo300 发出 `RuntimeWarning`。这时重启内核，并改正导入顺序。
