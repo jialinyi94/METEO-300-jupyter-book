@@ -65,3 +65,12 @@ project:
 
 site:
   template: book-theme
+  options:
+    # Logo files come from tools/make_logo.py. favicon.ico is the logo at 16, 32 and 48 px.
+    logo: assets/logo.svg
+    logo_dark: assets/logo-dark.svg
+    logo_text: 从 ERA5 到 AI 天气模型
+    favicon: assets/favicon.ico
+  parts:
+    # Replaces "Made with MyST" at the bottom of the left sidebar.
+    primary_sidebar_footer: assets/sidebar-footer.md
