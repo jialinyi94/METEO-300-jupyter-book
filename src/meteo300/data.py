@@ -2221,11 +2221,13 @@ LICENCE_HINTS = {
     ),
     "eumetsat": (
         ("generallicense required", "general licence required", "general license required"),
-        "EUMETSAT Data Store answered HTTP 403 'GeneralLicense required': your EUMETSAT "
-        "account has not accepted the General Licence.\n"
+        "EUMETSAT Data Store answered HTTP 403 'GeneralLicense required': it sees no "
+        "accepted General Licence for your EUMETSAT account.\n"
         "Do this once: log in at https://user.eumetsat.int/profile?activeTab=data-licenses, "
         "and under 'Data licences' request the licence 'Meteosat > 1 hr latency & Metop'. "
-        "Tick 'I accept these licensing terms and conditions' and submit.",
+        "Tick 'I accept these licensing terms and conditions' and submit.\n"
+        "Accepted already? The Data Store can keep sending an access token from before the "
+        "acceptance. Try again when that token expires: eumdac asks for tokens valid 24 h.",
     ),
 }
 
