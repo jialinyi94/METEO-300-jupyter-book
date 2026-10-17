@@ -74,6 +74,18 @@ jobs:
       - name: Build HTML with notebook execution
         run: uv run --frozen jupyter-book build --html --execute --strict
 
+      # mystmd writes sitemap.xml and robots.txt with the address of its local server,
+      # http://localhost:3000, and without BASE_URL. Point them to the published site.
+      # The page URLs get a trailing slash: GitHub Pages redirects ".../page" to ".../page/".
+      - name: Point sitemap.xml and robots.txt to the site URL
+        working-directory: _build/html
+        run: |
+          site="https://${GITHUB_REPOSITORY_OWNER,,}.github.io${BASE_URL}"
+          sed -i -E "s#<loc>http://localhost:3000(/[^<]*)?</loc>#<loc>${site}\1/</loc>#" sitemap.xml
+          sed -i "s#http://localhost:3000#${site}#g" sitemap.xml robots.txt
+          if grep -n "localhost" sitemap.xml robots.txt; then exit 1; fi
+          grep -m 3 "<loc>" sitemap.xml
+
       - name: Upload the site
         uses: actions/upload-pages-artifact@v5
         with:
