@@ -12,8 +12,8 @@ The case is Storm Amy on 2025-10-03 18 UTC. The page reads four samples through
   ``data.ecmwf_forecast``.
 
 All four samples have the same 0.25° grid. Run ``python -m meteo300.pages.ch05`` online to
-write the samples again. The AWS mirror is the only mirror that keeps runs of 2025; set
-``METEO300_ECMWF_SOURCES=aws`` to go there directly.
+write the samples again. The reader tries the Google mirror of ECMWF open data first. On
+2026-10-17 it kept the run of 2025-10-01 18 UTC and answered faster than the AWS mirror.
 
 The physics helpers keep the page short: :func:`latlon_grid` gives MetPy the spherical grid,
 :func:`cross_isobar_angle` turns two wind vectors into an angle, :func:`surface_masks` selects

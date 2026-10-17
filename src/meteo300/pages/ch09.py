@@ -11,8 +11,8 @@ reads three samples through :func:`meteo300.data.page_data`. The builders below 
 - :func:`aifs_850`: two AIFS Single forecasts of temperature and wind at 850 hPa on the grid of
   the ERA5 sample, both valid at ``MAP_TIME``, with the lead times of ``AIFS_RUNS``.
 
-Run ``python -m meteo300.pages.ch09`` online to write the samples again. The AWS mirror is the
-only mirror of ECMWF open data that keeps old runs; set ``METEO300_ECMWF_SOURCES=aws``.
+Run ``python -m meteo300.pages.ch09`` online to write the samples again. The reader tries the
+Google mirror of ECMWF open data first. On 2026-10-17 it kept both AIFS runs of this page.
 
 The physics helpers: :func:`latlon_grid` gives MetPy the spherical grid, :func:`trajectories`
 integrates parcel paths on the sphere in a wind that changes with time, :func:`kinematics` and

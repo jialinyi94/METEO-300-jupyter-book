@@ -170,7 +170,9 @@ ECMWF 公开一部分业务预报。IFS 是数值模式，AIFS Single 是 AI 天
 注意事项：
 
 - ECMWF 门户只保留最近 12 次起报，约 ［2, 3］ 天。读取函数先试 Google 镜像，再试 AWS 镜像，最后试 ECMWF 门户。
-- 旧的起报只在 AWS 镜像上。AWS 镜像常常返回 503 Slow Down。读取函数对 AWS 最多重试 6 次，每次间隔 20 s。环境变量 `METEO300_ECMWF_SOURCES=aws` 让函数直接读取 AWS。
+- Google 镜像和 AWS 镜像都保留多年的起报。2026-10-17 检查时，Google 镜像有本书页面用到的 2025 年和 2026 年的起报。Google 镜像的回答比 AWS 镜像快。
+- Google 镜像缺少少数旧的起报，例如 2025 年 1 月下旬的试验版 AIFS。ch03 用的 2025-01-22 起报只在 AWS 镜像上。
+- AWS 镜像常常返回 503 Slow Down。读取函数对 AWS 最多重试 6 次，每次间隔 20 s。环境变量 `METEO300_ECMWF_SOURCES=aws` 让函数直接读取 AWS。
 - ECMWF 门户在请求过多时返回 429。
 - cfgrib 把位势高度的单位写成 `gpm`。读取函数把它改成 `m`。
 - 页面要写明 `run`。不写时，函数读取最新的起报，页面的结果每天都会变。

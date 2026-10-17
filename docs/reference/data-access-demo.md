@@ -216,9 +216,11 @@ print(f"最低 QNH: {met['altimeter'].min():.0f} hPa，时间 {met['altimeter'].
 `d.ecmwf_forecast` 读取 ECMWF 开放数据。`model="ifs"` 是数值模式。
 `model="aifs-single"` 是 ECMWF 的 AI 天气模型。
 
-开放数据的镜像只保留一段时间的起报时间。所以页面要写明 `run`。
-旧的起报时间只在 AWS 镜像上。AWS 镜像常常返回 503。
-读取函数对 AWS 多次重试，每次间隔 20 s。
+不写 `run` 时，函数读取最新的起报，页面的结果每天都会变。所以页面要写明 `run`。
+
+Google 镜像和 AWS 镜像都保留多年的起报。读取函数先试 Google 镜像。
+Google 镜像缺少少数旧的起报，例如 2025 年 1 月下旬的试验版 AIFS。ch03 用的 2025-01-22 起报只在 AWS 镜像上。
+AWS 镜像常常返回 503。读取函数对 AWS 多次重试，每次间隔 20 s。
 
 ```{code-cell} python
 run = "2026-10-15T00"

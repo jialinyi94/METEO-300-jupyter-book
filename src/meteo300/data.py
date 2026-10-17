@@ -1613,14 +1613,17 @@ def ecmwf_forecast(
 
 
 # Retries per mirror: (number of retries, seconds between retries). The default of the
-# client (500 retries, 120 s apart) hangs on a slow mirror. The AWS mirror keeps the runs of
-# the past years, so it is the only mirror for old runs. It often answers "503 Slow Down";
-# the longer wait lets the byte-range downloads of the client succeed on a retry.
+# client (500 retries, 120 s apart) hangs on a slow mirror. The Google and AWS mirrors both
+# keep the runs of the past years (checked 2026-10-17: Google has the 2025 and 2026 runs of
+# the pages). Google lacks a few old runs, for example the experimental AIFS of late January
+# 2025, such as the ch03 run of 2025-01-22; only AWS has them. AWS often answers
+# "503 Slow Down"; the longer wait lets the byte-range downloads of the client succeed on a
+# retry.
 ECMWF_RETRIES = {"google": (2, 5), "aws": (6, 20), "ecmwf": (2, 10)}
 
 
 def _ecmwf_sources() -> tuple[str, ...]:
-    """Mirror order. Set METEO300_ECMWF_SOURCES=aws to go to AWS directly for old runs."""
+    """Mirror order. Set METEO300_ECMWF_SOURCES=aws for the runs that only AWS keeps."""
     env = os.environ.get("METEO300_ECMWF_SOURCES", "")
     sources = tuple(s.strip() for s in env.split(",") if s.strip())
     return sources or ECMWF_SOURCES
