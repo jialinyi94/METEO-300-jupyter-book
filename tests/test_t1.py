@@ -393,7 +393,12 @@ def test_imerg_rejects_unknown_product():
         d.imerg("2026-03-05", frequency="monthly", run="late")
 
 
-def test_cams_and_imerg_need_the_network_offline(offline):
+def test_cams_and_imerg_need_the_network_offline(offline, monkeypatch):
+    # The readers check the account first; CI has no credentials.
+    monkeypatch.setattr(
+        d, "ads_credentials", lambda: ("https://ads.atmosphere.copernicus.eu/api", "x")
+    )
+    monkeypatch.setattr(d, "earthdata_credentials", lambda: "environment")
     with pytest.raises(d.DataAccessError, match="offline"):
         d.cams("aod550", "2026-03-04T00:00", dataset="forecast")
     with pytest.raises(d.DataAccessError, match="offline"):
