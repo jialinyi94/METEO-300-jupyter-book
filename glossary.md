@@ -263,6 +263,7 @@
 | 纬向平均 | zonal mean | — | — | — | 带状平均、纬圈平均 |
 | 纬圈 | latitude circle | — | — | — | — |
 | 局地直角坐标系 | local Cartesian coordinate system | $x$, $y$, $z$ | m | — | 局地笛卡尔坐标系 |
+| Lambert 投影 | Lambert conformal conic projection | — | — | cartopy `LambertConformal` | 兰伯特投影、兰勃特投影 |
 | 大圆距离 | great-circle distance | $d$ | km | pyproj `Geod.inv` | — |
 | 地心夹角 | central angle | $\xi$ | rad | — | 圆心角 |
 | 地球半径 | Earth radius | $R_\mathrm{E}$ | km | MetPy `earth_avg_radius` | — |
