@@ -78,10 +78,10 @@ def test_jet_bias_on_a_toy_table():
     valid = ch10.JET_VALID[:3]
     rows = []
     for i, v in enumerate(valid):
-        rows.append({"model": "AIFS", "lead_h": 0, "valid": str(v), "p99": 60.0 + i})
-        rows.append({"model": "AIFS", "lead_h": 48, "valid": str(v), "p99": 58.0 + 2 * i})
+        rows.append({"model": "AIFS", "lead_h": 0, "valid": v, "p99": 60.0 + i})
+        rows.append({"model": "AIFS", "lead_h": 48, "valid": v, "p99": 58.0 + 2 * i})
     # A valid time outside JET_VALID does not count.
-    rows.append({"model": "AIFS", "lead_h": 48, "valid": "2025-12-30 00:00:00", "p99": 0.0})
+    rows.append({"model": "AIFS", "lead_h": 48, "valid": pd.Timestamp("2025-12-30"), "p99": 0.0})
     out = ch10.jet_bias(pd.DataFrame(rows)).set_index("lead_h")
     assert out.loc[0, "bias"] == 0.0
     # Differences -2, -1, 0: mean -1, standard deviation 1, standard error 1/sqrt(3).

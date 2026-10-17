@@ -292,10 +292,10 @@ def jet_bias(table: pd.DataFrame, metric: str = "p99") -> pd.DataFrame:
 
     The analysis of each model is its own step 0 at the same valid time. Only valid times in
     ``JET_VALID`` count. Columns: model, lead_h, bias, se, n. ``bias`` and ``se`` in m s-1.
-    The standard error treats the valid times as independent samples.
+    The standard error treats the valid times as independent samples. The column ``valid``
+    holds datetimes: :func:`meteo300.data.page_data` reads it as datetimes from the CSV sample.
     """
-    t = table.assign(valid=pd.to_datetime(table["valid"]))  # a CSV sample holds strings
-    t = t[t["valid"].isin(JET_VALID)]
+    t = table[table["valid"].isin(JET_VALID)]
     ref = t[t["lead_h"] == 0].set_index(["model", "valid"])[metric]
     rows = []
     for (model, lead), grp in t.groupby(["model", "lead_h"]):

@@ -453,7 +453,6 @@ earthkit-meteo 的 `score.mean_error` 沿有效时间平均预报和分析场的
 ```{code-cell} python
 metric = "p99"  # 也可以用 "mean" 或 "max"
 jet = d.page_data(ch10.SAMPLES["jet"], ch10.jet_strength)
-jet["valid"] = pd.to_datetime(jet["valid"])
 keep = jet[jet["valid"].isin(ch10.JET_VALID)]
 cube = keep.set_index(["model", "lead_h", "valid"])[metric].to_xarray()  # m/s
 bias_ek = ekscore.mean_error(cube, cube.sel(lead_h=0, drop=True), over="valid")
