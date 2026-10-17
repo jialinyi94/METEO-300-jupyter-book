@@ -204,6 +204,8 @@
 | 上升运动 | ascent | — | — | — | — |
 | 下沉运动 | descent; subsidence | — | — | — | — |
 | 连续方程 | continuity equation | — | — | — | 连续性方程 |
+| 运动学方法 | kinematic method | — | — | — | 运动学法 |
+| O'Brien 订正 | O'Brien correction | — | — | — | — |
 
 ## 涡度与散度
 
@@ -221,6 +223,9 @@
 | 环流 | circulation | $C$ | m² s⁻¹ | — | — |
 | 气旋式 | cyclonic | — | — | — | — |
 | 反气旋式 | anticyclonic | — | — | — | — |
+| 涡度方程 | vorticity equation | — | s⁻² | — | — |
+| 无辐散层 | level of nondivergence | — | hPa | — | 无辐散高度 |
+| 动态对流层顶 | dynamical tropopause | — | PVU | 2 PVU 等值面 | 动力对流层顶 |
 
 ## 平流与向量微积分
 
@@ -234,6 +239,9 @@
 | 梯度 | gradient | $\nabla$ | — | — | — |
 | 旋度 | curl | $\nabla \times$ | — | — | — |
 | Laplace 算子 | Laplacian | $\nabla^2$ | — | — | 拉普拉斯算子、拉普拉斯算符 |
+| Fourier 变换 | Fourier transform | — | — | NumPy `fft.rfft` | 傅里叶变换、傅立叶变换 |
+| Parseval 定理 | Parseval's theorem | — | — | — | 帕塞瓦尔定理 |
+| 球谐函数 | spherical harmonics | — | — | pyshtools | 球面调和函数 |
 | 偏导数 | partial derivative | $\partial$ | — | — | 偏微分 |
 | 偏微分方程 | partial differential equation | — | — | — | — |
 | 随体导数 | material derivative | $D/Dt$ | — | — | 物质导数、个别导数 |
@@ -253,6 +261,7 @@
 | 经度 | longitude | $\lambda$ | ° | 坐标 `longitude` | — |
 | 纬度 | latitude | $\varphi$ | ° | 坐标 `latitude` | — |
 | 纬向平均 | zonal mean | — | — | — | 带状平均、纬圈平均 |
+| 纬圈 | latitude circle | — | — | — | — |
 | 局地直角坐标系 | local Cartesian coordinate system | $x$, $y$, $z$ | m | — | 局地笛卡尔坐标系 |
 | 大圆距离 | great-circle distance | $d$ | km | pyproj `Geod.inv` | — |
 | 地心夹角 | central angle | $\xi$ | rad | — | 圆心角 |
@@ -529,6 +538,9 @@
 | 纬度加权 | latitude weighting | — | — | — | — |
 | 均方根 | root mean square | RMS | 与变量相同 | — | — |
 | 损失函数 | loss function | — | — | — | 代价函数 |
+| 动能谱 | kinetic energy spectrum | $E(k)$ | m² s⁻² | — | 能谱 |
+| 纬向波数 | zonal wavenumber | $k$ | — | — | — |
+| 有效分辨率 | effective resolution | — | km | — | — |
 
 ## 数据约定
 
