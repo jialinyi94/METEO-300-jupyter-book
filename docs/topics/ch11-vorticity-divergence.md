@@ -328,11 +328,11 @@ score = ch11.score_omega(era["w"], versions, lowland, [850, 700, 500, 300, 200, 
 high = ~lowland & (era["sp"] > 850e2)  # 地面气压在 850 hPa 到 980 hPa 之间
 hills = ch11.score_omega(era["w"], {"运动学": omega_k}, high, [700])
 assert (score.loc[[500, 300, 200], "O'Brien 订正"] < score.loc[[500, 300, 200], "运动学"]).all()
-print(f"地面气压在 850 hPa 到 980 hPa 之间的格点，700 hPa 的均方根误差：{float(hills.iloc[0, 0]):.3f} Pa s-1")
+print(f"地面气压在 850 hPa 到 980 hPa 之间的格点，700 hPa 的 RMSE：{float(hills.iloc[0, 0]):.3f} Pa s-1")
 score.round(3)
 ```
 
-表中是三种 $\omega$ 和 ERA5 的均方根误差，单位 Pa s⁻¹。不订正时，误差从 850 hPa 的 0.069 Pa s⁻¹ 增大到 100 hPa 的 0.085 Pa s⁻¹。订正后，100 hPa 的 $\omega$ 是零，误差只剩 ERA5 本身的 $\omega$，是 0.022 Pa s⁻¹。订正的权重从地面向上增大，所以越往上，误差降得越多，850 hPa 几乎不变。
+表中是三种 $\omega$ 和 ERA5 的 RMSE，单位 Pa s⁻¹。不订正时，误差从 850 hPa 的 0.069 Pa s⁻¹ 增大到 100 hPa 的 0.085 Pa s⁻¹。订正后，100 hPa 的 $\omega$ 是零，误差只剩 ERA5 本身的 $\omega$，是 0.022 Pa s⁻¹。订正的权重从地面向上增大，所以越往上，误差降得越多，850 hPa 几乎不变。
 
 在这个个例里，一次方的订正比 O'Brien 订正稍好。所以这里的散度误差不是随 $p_s - p$ 线性增大，而是更接近各层相同。地面气压在 850 hPa 到 980 hPa 之间的格点上，700 hPa 的误差是 0.26 Pa s⁻¹，是低地的近 4 倍。山地上的空气沿坡面上下运动，所以 $\omega(p_s)$ 不是零。
 
@@ -397,10 +397,10 @@ r = float(xr.corr(pv300, pv_era5))
 assert r > 0.95
 print(f"50°N、10°W：MetPy {float(pv300.sel(point)):.2f} PVU，主要项 {pv_hand:.2f} PVU，", end="")
 print(f"ERA5 {float(pv_era5.sel(point)):.2f} PVU")
-print(f"相关系数 {r:.3f}；区域平均：MetPy {float(pv300.mean()):.2f} PVU，ERA5 {float(pv_era5.mean()):.2f} PVU")
+print(f"correlation {r:.3f}；区域平均：MetPy {float(pv300.mean()):.2f} PVU，ERA5 {float(pv_era5.mean()):.2f} PVU")
 ```
 
-在槽里，MetPy 给 4.70 PVU，主要项给 4.84 PVU，相差 3%。这 3% 来自另外两项。ERA5 的 `pv` 是 4.86 PVU。整个区域上，MetPy 和 ERA5 的相关系数是 0.99，MetPy 的区域平均大 6%。差别可能来自垂直导数：本页在 300 hPa 用 250 hPa 和 350 hPa 的差分，跨度是 100 hPa。
+在槽里，MetPy 给 4.70 PVU，主要项给 4.84 PVU，相差 3%。这 3% 来自另外两项。ERA5 的 `pv` 是 4.86 PVU。整个区域上，MetPy 和 ERA5 的 correlation 是 0.99，MetPy 的区域平均大 6%。差别可能来自垂直导数：本页在 300 hPa 用 250 hPa 和 350 hPa 的差分，跨度是 100 hPa。
 
 ```{code-cell} python
 #| label: fig-ch11-pv
@@ -493,7 +493,7 @@ ratio.round(2)
 
 在 130 km 到 260 km 的波长上，AIFS 的 24 h 预报只剩 0 h 能量的 10%，72 h 以后只剩 ［3, 5］ %。在 430 km 到 640 km 的波长上，24 h 还剩一半，72 h 以后只剩 ［15, 28］ %。IFS 在这两段上保留了 ［0.87, 1.39］ 倍的能量。在 1290 km 到 2570 km 的波长上，两个模型的比值都在 ［0.6, 1.6］ 之间，没有一致的减小。
 
-AIFS 用均方误差训练。预报时效越长，预报越不确定，均方误差最小的预报就是许多可能的天气的平均。平均把位置不确定的小尺度结构抹平了。所以用均方误差训练的 AI 模型都会随预报时效变平滑，这不是 AIFS 一个模型的问题。
+AIFS 用 MSE 训练。预报时效越长，预报越不确定，MSE 最小的预报就是许多可能的天气的平均。平均把位置不确定的小尺度结构抹平了。所以用 MSE 训练的 AI 模型都会随预报时效变平滑，这不是 AIFS 一个模型的问题。
 
 ### 小尺度的涡度
 
@@ -515,7 +515,7 @@ w = np.cos(np.deg2rad(z0["latitude"])) * xr.ones_like(z0)
 
 
 def rms(z):
-    """以 cos(lat) 为权重的均方根。"""
+    """以 cos(lat) 为权重的 RMS。"""
     return float(np.sqrt((w * z**2).sum() / w.sum()))
 
 
@@ -523,15 +523,15 @@ over = ["latitude", "longitude"]
 stats = pd.DataFrame(
     {
         k: {
-            "均方根 / ERA5": rms(z) / rms(z0),
+            "RMS / ERA5": rms(z) / rms(z0),
             "最大值 / ERA5": float(z.max() / z0.max()),
-            "相关系数": float(ekscore.pearson_correlation(z, z0, over=over, weights=w)),
+            "correlation": float(ekscore.pearson_correlation(z, z0, over=over, weights=w)),
         }
         for k, z in vort.items()
     }
 ).T
-assert stats.loc[f"AIFS {lead} h", "均方根 / ERA5"] < 0.9 < stats.loc[f"IFS {lead} h", "均方根 / ERA5"]
-print(f"ERA5 的均方根 {rms(z0):.2e} s-1，最大值 {float(z0.max()):.2e} s-1")
+assert stats.loc[f"AIFS {lead} h", "RMS / ERA5"] < 0.9 < stats.loc[f"IFS {lead} h", "RMS / ERA5"]
+print(f"ERA5 的 RMS {rms(z0):.2e} s-1，最大值 {float(z0.max()):.2e} s-1")
 stats.round(2)
 ```
 
@@ -541,9 +541,9 @@ stats.round(2)
 fig = ch11.plot_vorticity_maps(vort)
 ```
 
-[](#fig-ch11-vorticity) 里，三张图的槽在同一个位置。ERA5 和 IFS 的槽里有许多窄的涡度带。AIFS 只有一条宽而平滑的涡度带。AIFS 的涡度均方根是 ERA5 的 0.85 倍，最大值小 12%。IFS 的小尺度结构比 ERA5 还多，因为它的网格更细。
+[](#fig-ch11-vorticity) 里，三张图的槽在同一个位置。ERA5 和 IFS 的槽里有许多窄的涡度带。AIFS 只有一条宽而平滑的涡度带。AIFS 的涡度 RMS 是 ERA5 的 0.85 倍，最大值小 12%。IFS 的小尺度结构比 ERA5 还多，因为它的网格更细。
 
-上面的表里还有一个反直觉的结果：AIFS 和 ERA5 的相关系数是 0.76，比 IFS 的 0.66 高。IFS 的窄涡度带只要错开几十 km，就会在两个地方产生误差。平滑的场没有这样的误差。所以平滑的预报在相关系数这样的得分上更高，但它丢掉了真实存在的强涡度。
+上面的表里还有一个反直觉的结果：AIFS 和 ERA5 的 correlation 是 0.76，比 IFS 的 0.66 高。IFS 的窄涡度带只要错开几十 km，就会在两个地方产生误差。平滑的场没有这样的误差。所以平滑的预报在 correlation 这样的得分上更高，但它丢掉了真实存在的强涡度。
 
 ### 分析师可以做的检查
 
@@ -582,7 +582,7 @@ fig = ch11.plot_vorticity_maps(vort)
 :::{exercise}
 :label: ex-ch11-3
 
-改动运动学方法一节的代码，把 O'Brien 订正的顶层从 100 hPa 改成 200 hPa，也就是 `ch11.obrien(omega_k, era["sp"], top=200.0)`。500 hPa 的均方根误差变大还是变小？为什么？
+改动运动学方法一节的代码，把 O'Brien 订正的顶层从 100 hPa 改成 200 hPa，也就是 `ch11.obrien(omega_k, era["sp"], top=200.0)`。500 hPa 的 RMSE 变大还是变小？为什么？
 :::
 
 :::{solution} ex-ch11-3
@@ -593,19 +593,19 @@ c200 = ch11.obrien(omega_k, era["sp"], top=200.0)
 ch11.score_omega(era["w"], {"top 100": versions["O'Brien 订正"], "top 200": c200}, lowland, [500])
 ```
 
-500 hPa 的均方根误差从 0.059 Pa s⁻¹ 变成 0.064 Pa s⁻¹，变大了。订正假设顶层的真值是零。200 hPa 在急流附近，有的地方还在对流层里。在低地的格点上，ERA5 的 $\omega$ 在 200 hPa 的均方根是 0.077 Pa s⁻¹，在 100 hPa 只有 0.021 Pa s⁻¹。订正把 200 hPa 真实的垂直运动也当作了误差。
+500 hPa 的 RMSE 从 0.059 Pa s⁻¹ 变成 0.064 Pa s⁻¹，变大了。订正假设顶层的真值是零。200 hPa 在急流附近，有的地方还在对流层里。在低地的格点上，ERA5 的 $\omega$ 在 200 hPa 的 RMS 是 0.077 Pa s⁻¹，在 100 hPa 只有 0.021 Pa s⁻¹。订正把 200 hPa 真实的垂直运动也当作了误差。
 :::
 
 :::{exercise}
 :label: ex-ch11-4
 
-`ai` 里还有预报时效 120 h 的预报。改动小尺度的涡度一节的代码，把 `lead = 24` 改成 `lead = 120`，再运行下面画图的单元。AIFS 和 IFS 的涡度均方根各是 ERA5 的几倍？相关系数怎样变化？图上的槽还在同一个位置吗？
+`ai` 里还有预报时效 120 h 的预报。改动小尺度的涡度一节的代码，把 `lead = 24` 改成 `lead = 120`，再运行下面画图的单元。AIFS 和 IFS 的涡度 RMS 各是 ERA5 的几倍？correlation 怎样变化？图上的槽还在同一个位置吗？
 :::
 
 :::{solution} ex-ch11-4
 :class: dropdown
 
-AIFS 的涡度均方根是 ERA5 的 0.72 倍，最大值只有 ERA5 的 0.54 倍。IFS 的均方根是 ERA5 的 1.05 倍，它没有变平滑。相关系数降到 0.16 和 0.33，因为两个预报的槽都在 ERA5 的槽的西边。
+AIFS 的涡度 RMS 是 ERA5 的 0.72 倍，最大值只有 ERA5 的 0.54 倍。IFS 的 RMS 是 ERA5 的 1.05 倍，它没有变平滑。它们和 ERA5 的 correlation 降到 0.16 和 0.33，因为两个预报的槽都在 ERA5 的槽的西边。
 
 120 h 的预报有两种误差：槽放错了位置，场也变平滑了。只看涡度图，两种误差混在一起。动能谱能把它们分开，因为谱不管槽在哪里。
 :::

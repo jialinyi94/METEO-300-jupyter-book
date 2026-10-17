@@ -340,7 +340,7 @@ table
 
 ```{code-cell} python
 #| label: fig-ch03-residual
-#| caption: 2025-01-24 00 UTC，北大西洋东部和欧洲各层静力残差的均方根。AIFS 的起报时间是 2025-01-22 00 UTC。数据来源：ERA5，ECMWF 开放数据。
+#| caption: 2025-01-24 00 UTC，北大西洋东部和欧洲各层静力残差的 RMS。AIFS 的起报时间是 2025-01-22 00 UTC。数据来源：ERA5，ECMWF 开放数据。
 fig = ch03.plot_residual(table)
 ```
 
@@ -351,7 +351,7 @@ AIFS 的静力残差和 13 层 ERA5 的残差一样小。所以这次 AIFS 预�
 ```{code-cell} python
 err_z500 = np.sqrt(((aifs["z"] - era5pl["z"]).sel(level=500) ** 2).mean()) / g0.m
 assert 5 < float(err_z500) < 50
-print(f"AIFS 和 ERA5 的 500 hPa 位势高度之差，均方根 {float(err_z500):.1f} m")
+print(f"AIFS 和 ERA5 的 500 hPa 位势高度之差，RMS {float(err_z500):.1f} m")
 ```
 
 分析师可以对每次 AI 预报做这个检查。先算出 ERA5 的残差，作为基线。某一层的残差远大于基线时，这一层的 `z` 和 `t` 至少有一个不可信。WeatherBench 2 的指标比较预报和 ERA5。这些指标不检查同一个预报里的 `z` 和 `t` 是否一致。
@@ -391,7 +391,7 @@ print(f"AIFS 和 ERA5 的 500 hPa 位势高度之差，均方根 {float(err_z500
 :::{solution} ex-ch03-3
 :class: dropdown
 
-在计算残差以前加一行 `aifs_warm = aifs.assign(t=aifs["t"] + 1)`，再用 `aifs_warm` 算残差。压高公式给的厚度增大 $R_d / g_0 \times 1\ \mathrm{K} \times \ln(p_1 / p_2)$。这个值和 $\ln(p_1 / p_2)$ 成正比，所以 ［50, 100］ hPa 层增大最多。这一层的 $\ln 2 = 0.69$，厚度增大 20.3 m，残差的均方根从约 12 m 增大到约 26 m。［925, 1000］ hPa 层只增大 2.3 m。
+在计算残差以前加一行 `aifs_warm = aifs.assign(t=aifs["t"] + 1)`，再用 `aifs_warm` 算残差。压高公式给的厚度增大 $R_d / g_0 \times 1\ \mathrm{K} \times \ln(p_1 / p_2)$。这个值和 $\ln(p_1 / p_2)$ 成正比，所以 ［50, 100］ hPa 层增大最多。这一层的 $\ln 2 = 0.69$，厚度增大 20.3 m，残差的 RMS 从约 12 m 增大到约 26 m。［925, 1000］ hPa 层只增大 2.3 m。
 :::
 
 :::{exercise}
@@ -403,5 +403,5 @@ print(f"AIFS 和 ERA5 的 500 hPa 位势高度之差，均方根 {float(err_z500
 :::{solution} ex-ch03-4
 :class: dropdown
 
-用式 [](#eq-ch03-hypsometric)，厚度的变化是 $R_d / g_0 \times 2\ \mathrm{K} \times \ln 2 = 29.3 \times 2 \times 0.693 = 40.6\ \mathrm{m}$。所以静力残差约为 41 m。13 层 ERA5 在 ［500, 1000］ hPa 的五层里，每层残差的均方根不到 4 m。所以分析师能发现它。
+用式 [](#eq-ch03-hypsometric)，厚度的变化是 $R_d / g_0 \times 2\ \mathrm{K} \times \ln 2 = 29.3 \times 2 \times 0.693 = 40.6\ \mathrm{m}$。所以静力残差约为 41 m。13 层 ERA5 在 ［500, 1000］ hPa 的五层里，每层残差的 RMS 不到 4 m。所以分析师能发现它。
 :::

@@ -531,7 +531,7 @@ swap = ch07.parcel_summary(s["p"], t_swap, td_swap)
 print(f"探空的廓线，ERA5 的地面值：CAPE {swap['cape']:.0f~P}，CIN {swap['cin']:.0f~P}")
 ```
 
-CAPE 从 3186 J kg⁻¹ 降到 1847 J kg⁻¹。地面值解释了 ERA5 偏差的大部分。Taszarek 等在 2021 年比较了 ERA5 和欧洲、北美的探空，论文发表在 [Journal of Climate](https://doi.org/10.1175/JCLI-D-20-0484.1)。他们发现 ERA5 常常低估 CAPE 和低层的水汽，CAPE 很大时尤其明显。大多数 AI 天气模型用 ERA5 训练，它们可能继承这个偏差。本例里 AIFS 的 CAPE 也接近 ERA5。
+CAPE 从 3186 J kg⁻¹ 降到 1847 J kg⁻¹。地面值解释了 ERA5 的 bias 的大部分。Taszarek 等在 2021 年比较了 ERA5 和欧洲、北美的探空，论文发表在 [Journal of Climate](https://doi.org/10.1175/JCLI-D-20-0484.1)。他们发现 ERA5 常常低估 CAPE 和低层的水汽，CAPE 很大时尤其明显。大多数 AI 天气模型用 ERA5 训练，它们可能继承这个 bias。本例里 AIFS 的 CAPE 也接近 ERA5。
 
 分析师可以对 AI 天气模型的预报做四项检查：
 

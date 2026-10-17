@@ -145,6 +145,60 @@ def test_old_eponym_transliteration_is_rejected(old, new):
     assert rules(f"本页讲 {new}。") == []
 
 
+# Metric names are written in English. The Chinese names are rejected terms.
+# User decision, 2026-10-17.
+METRICS = {
+    "均方根误差": "RMSE",
+    "均方误差": "MSE",
+    "平均绝对误差": "MAE",
+    "均方根": "RMS",
+    "偏差": "bias",
+    "距平相关系数": "ACC",
+    "相关系数": "correlation",
+    "命中": "hit",
+    "漏报": "miss",
+    "空报": "false alarm",
+    "连续分级概率评分": "CRPS",
+    "SEEPS 评分": "SEEPS",
+    "技巧评分": "skill score",
+    "集合离散度": "spread",
+}
+
+
+@pytest.mark.parametrize(("old", "new"), METRICS.items())
+def test_chinese_metric_name_is_rejected(old, new):
+    (v,) = ste_check.check_text(f"本页讲{old}。", "x.md", GLOSSARY)
+    assert str(v) == f"x.md:1: rejected-term: {old} → {new}"
+    assert rules(f"本页讲 {new}。") == []
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "AIFS 的 RMSE 是 2.1 K，bias 是 −0.3 K，correlation 是 0.9。",
+        "MSE 最小的预报最平滑。ACC 衡量两个距平场的形状有多像。",
+        "AIFS 的 14 个预报里有 13 个 hit，IFS 有 7 个 miss。",
+        "hit rate 和 false alarm 要一起报告。",
+        "WeatherBench 2 用 SEEPS 和 CRPS 评估降水。",
+        "探空报告的位势高度和积分的位势高度相差不到 6 m。",
+        "标准误差是标准差除以样本数的平方根。",
+    ],
+)
+def test_english_metric_names_pass(text):
+    assert rules(text) == []
+
+
+def test_words_that_contain_a_metric_name():
+    # "标准偏差" is the standard deviation, not the bias.
+    (v,) = ste_check.check_text("标准偏差。", "x.md", GLOSSARY)
+    assert str(v) == "x.md:1: rejected-term: 标准偏差 → 标准差"
+    # The allow list of pyproject.toml keeps the other correlation coefficients.
+    cfg = ste_check.load_config(ROOT)
+    glossary = ste_check.load_glossary(ROOT / cfg["glossary"], list(cfg["allow"]))
+    for text in ["自相关系数衡量一个序列的记忆。", "偏相关系数去掉第三个变量的影响。"]:
+        assert ste_check.check_text(text, "x.md", glossary, cfg) == []
+
+
 def test_every_rejected_word_is_found():
     missed = [w for w in GLOSSARY.rejected if "rejected-term" not in rules(f"{w}。")]
     assert missed == []

@@ -151,7 +151,7 @@ r_\mathrm{c} = \sqrt{\frac{3 b_\mathrm{s}}{a_\mathrm{K}}}, \qquad S_\mathrm{c} -
 | 降水量 | precipitation amount | — |
 | 降水率 | precipitation rate | — |
 | 雨量计 | rain gauge | — |
-| SEEPS 评分 | stable equitable error in probability space | SEEPS |
+| SEEPS | stable equitable error in probability space | SEEPS |
 
 ## 真实数据
 
@@ -525,7 +525,7 @@ stats = t1.box_stats(boxes, reference="IMERG")
 print(stats.round(3).to_string())
 ```
 
-`t1.box_stats` 给出区域平均、两个阈值以上的面积比例、最大值和相关系数。主评分用 earthkit-meteo 的 `score` 模块，真值是 IMERG，每个方框按纬度的余弦计权。`box_stats` 里手写的加权相关系数和 earthkit 的结果核对，均方根误差也用手算核对。
+`t1.box_stats` 给出区域平均、两个阈值以上的面积比例、最大值和 correlation。主评分用 earthkit-meteo 的 `score` 模块，真值是 IMERG，每个方框按纬度的余弦计权。`box_stats` 里手写的加权 correlation 和 earthkit 的结果核对，RMSE 也用手算核对。
 
 ```{code-cell} python
 W = np.cos(np.deg2rad(boxes["IMERG"].latitude))
@@ -533,13 +533,13 @@ OVER = ["latitude", "longitude"]
 
 
 def scores(name):
-    """earthkit-meteo 的三个评分，真值是 IMERG。偏差是预报减真值。"""
+    """earthkit-meteo 的三个评分，真值是 IMERG。bias 是预报减真值。"""
     fc, ob = boxes[name], boxes["IMERG"]
     return pd.DataFrame(
         {
-            "相关系数": eks.pearson_correlation(fc, ob, over=OVER, weights=W).values,
-            "偏差": eks.mean_error(fc, ob, over=OVER, weights=W).values,
-            "均方根误差": eks.root_mean_squared_error(fc, ob, over=OVER, weights=W).values,
+            "correlation": eks.pearson_correlation(fc, ob, over=OVER, weights=W).values,
+            "bias": eks.mean_error(fc, ob, over=OVER, weights=W).values,
+            "RMSE": eks.root_mean_squared_error(fc, ob, over=OVER, weights=W).values,
         },
         index=pd.Index(t1.CASE_DAYS, name=name),
     )
@@ -548,8 +548,8 @@ def scores(name):
 era_scores = scores("ERA5")
 print(era_scores.round(3).to_string())
 rmse_hand = np.sqrt(((boxes["ERA5"] - boxes["IMERG"]) ** 2).weighted(W).mean(OVER))
-np.testing.assert_allclose(era_scores["相关系数"], stats.xs("ERA5", level=1)["corr"], atol=1e-6)
-np.testing.assert_allclose(era_scores["均方根误差"], rmse_hand, rtol=1e-6)
+np.testing.assert_allclose(era_scores["correlation"], stats.xs("ERA5", level=1)["corr"], atol=1e-6)
+np.testing.assert_allclose(era_scores["RMSE"], rmse_hand, rtol=1e-6)
 ```
 
 ```{code-cell} python
@@ -582,7 +582,7 @@ leg = ax.legend()
 
 读 [](#fig-t1-precip) 和上面的两个表时看五件事：
 
-1. 两个数据集的大雨区位置一致。1° 方框上，两天的相关系数是 0.83 和 0.88。
+1. 两个数据集的大雨区位置一致。1° 方框上，两天的 correlation 是 0.83 和 0.88。
 2. IMERG 的降水更强。区域平均降水量，IMERG 比 ERA5 多 ［18, 34］ %。
 3. 10 mm 以上的面积，IMERG 是 ERA5 的 ［1.4, 2.0］ 倍。1 mm 以上的面积，ERA5 反而更大。
 4. 格点上的最大日降水量，IMERG 是 87 mm 和 110 mm，ERA5 是 42 mm 和 51 mm。
@@ -598,13 +598,13 @@ leg = ax.legend()
 
 1. 降水量不是大气的状态变量，而是一段时间里的累积量。模型不能从一个时刻的场直接读出它。
 2. 降水取决于本页的过程：云滴活化、碰并和 Bergeron 过程。这些过程的尺度远小于 0.25° 的网格。
-3. 降水量的分布很偏。大部分格点是 0，少数格点很大。用均方误差训练的模型倾向于把降水抹平，小雨的面积太大，强降水太弱。
+3. 降水量的分布很偏。大部分格点是 0，少数格点很大。用 MSE 训练的模型倾向于把降水抹平，小雨的面积太大，强降水太弱。
 4. 真值也不确定。ERA5 的降水量是数据同化中短期预报的输出，不是观测。
 
 各个模型和评估框架怎样处理降水：
 
 - ERA5 的变量是 `tp`。WeatherBench 2 的变量是 `total_precipitation_6hr` 和 `total_precipitation_24hr`，真值是 ERA5。
-- WeatherBench 2 用 SEEPS 评分评估 24 h 降水量。SEEPS 评分按气候态把降水分成无雨、小雨和大雨三类，再比较预报和真值的类别。
+- WeatherBench 2 用 SEEPS 评估 24 h 降水量。SEEPS 按气候态把降水分成无雨、小雨和大雨三类，再比较预报和真值的类别。
 - GraphCast 输出 `total_precipitation_6hr`，但不把它作为输入。Pangu-Weather 不预报降水。
 - AIFS Single 输出 `tp`，它从起报开始累积。
 
@@ -629,7 +629,7 @@ for name, field in boxes.items():
 
 AIFS 的结果和 ERA5 很像。AIFS 先用 ERA5 训练，再用 IFS 的业务分析场微调。比较的结果有四点：
 
-1. 1° 方框上，AIFS 和 IMERG 的相关系数是 0.80 和 0.82，比 ERA5 略低。AIFS 是 ［24, 72］ h 的预报，这个差别不大。
+1. 1° 方框上，AIFS 和 IMERG 的 correlation 是 0.80 和 0.82，比 ERA5 略低。AIFS 是 ［24, 72］ h 的预报，这个差别不大。
 2. 20 mm 以上的面积，AIFS 只有 IMERG 的 ［14, 30］ %。强降水明显偏弱。
 3. 1 mm 以上的面积，AIFS 比 IMERG 大。6 日，AIFS 是 49%，IMERG 是 40%。
 4. 6 日，雨带穿过英格兰。英格兰方框的平均降水量，IMERG 是 2.5 mm，ERA5 是 1.9 mm，AIFS 是 1.3 mm。

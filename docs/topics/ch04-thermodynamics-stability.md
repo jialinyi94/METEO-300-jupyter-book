@@ -392,7 +392,7 @@ Pangu-Weather 在 13 个等压面上预报温度。GraphCast 论文的模型用 
 
 最低的三个等压面是 1000 hPa、925 hPa 和 850 hPa。在本例里，它们离地约 120 m、780 m 和 1480 m。稳定边界层最稳定的部分只有约 100 m 厚，它在 1000 hPa 以下。模型只能用 2 m 温度和 1000 hPa 温度的差表示它。
 
-下面先看 T850。AIFS 在 2026-08-21 00 UTC 起报。预报时效是 48 h 和 60 h，有效时间是 2026-08-23 00 UTC 和 12 UTC。代码用纬度加权计算地图区域上的 RMSE 和偏差，真值是 ERA5。
+下面先看 T850。AIFS 在 2026-08-21 00 UTC 起报。预报时效是 48 h 和 60 h，有效时间是 2026-08-23 00 UTC 和 12 UTC。代码用纬度加权计算地图区域上的 RMSE 和 bias，真值是 ERA5。
 
 ```{code-cell} python
 ai = d.page_data(ch04.SAMPLE_FILES["aifs"], ch04.aifs_forecast)
@@ -405,7 +405,7 @@ rmse = np.sqrt((diff**2).weighted(weights).mean(["latitude", "longitude"]))
 bias = diff.weighted(weights).mean(["latitude", "longitude"])
 for t in diff.time.values:
     print(f"有效时间 {str(t)[:16]}: T850 RMSE {float(rmse.sel(time=t)):.2f} K, "
-          f"偏差 {float(bias.sel(time=t)):+.2f} K")
+          f"bias {float(bias.sel(time=t)):+.2f} K")
 ```
 
 两个有效时间的 RMSE 都小于 1 K。T850 的误差小，但这不能保证边界层的垂直结构正确。分析师可以从预报的温度算出位温，检查层结。下图比较 Camborne 格点上的三个位温廓线：探空、ERA5 和 AIFS。格点在 50.25°N、5.25°W。

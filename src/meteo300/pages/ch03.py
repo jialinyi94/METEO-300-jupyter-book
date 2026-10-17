@@ -397,7 +397,7 @@ def plot_residual(table: pd.DataFrame):
     for i, col in enumerate(table.columns):
         ax.barh(y - (i - (n - 1) / 2) * width, table[col], height=width, label=col, color=f"C{i}")
     ax.set_yticks(y, table.index)
-    ax.set(xlabel="静力残差的均方根 (m)", ylabel="层 (hPa)")
+    ax.set(xlabel="静力残差的 RMS (m)", ylabel="层 (hPa)")
     ax.legend(frameon=False)
     _style(ax)
     return fig

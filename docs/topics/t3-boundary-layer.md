@@ -474,13 +474,13 @@ v80 = interpolate(speed[40.0], speed[140.0], 40, 140, 80)
 v80_linear = speed[40.0] + (speed[140.0] - speed[40.0]) * (80 - 40) / (140 - 40)
 for label, est in [("幂律", v80), ("线性", v80_linear)]:
     err = est - speed[80.0]
-    print(f"{label}插值到 80 m：偏差 {err.mean():+.2f} m s⁻¹，均方根误差 {np.sqrt((err**2).mean()):.2f} m s⁻¹")
+    print(f"{label}插值到 80 m：bias {err.mean():+.2f} m s⁻¹，RMSE {np.sqrt((err**2).mean()):.2f} m s⁻¹")
 v100 = interpolate(speed[80.0], speed[140.0], 80, 140, 100)
 print(f"15 天的平均风速：80 m {speed[80.0].mean():.2f}，100 m {v100.mean():.2f}，"
       f"140 m {speed[140.0].mean():.2f} m s⁻¹")
 ```
 
-幂律插值的均方根误差是 0.35 m s⁻¹，线性插值是 0.48 m s⁻¹。幂律插值的偏差也更小。80 m 到 140 m 的间隔比 40 m 到 140 m 短，所以 100 m 的插值误差应当更小。下一节把这个 100 m 风当作观测。
+幂律插值的 RMSE 是 0.35 m s⁻¹，线性插值是 0.48 m s⁻¹。幂律插值的 bias 也更小。80 m 到 140 m 的间隔比 40 m 到 140 m 短，所以 100 m 的插值误差应当更小。下一节把这个 100 m 风当作观测。
 
 ## AI 天气连接
 
@@ -501,7 +501,7 @@ $A$ 是叶片扫过的面积，$C_p$ 是风电机组的效率，它不超过 16/
 
 所以三次方的放大只出现在中等风速。英国的风电出力很大，它决定燃气电厂要补多少电，也影响电价和天然气需求。
 
-### AIFS 和 IFS 的日变化偏差
+### AIFS 和 IFS 的日变化 bias
 
 上一节说明，100 m 风的日变化取决于稳定度。夜间的稳定层让 100 m 风变大、2 m 温度变低。这正是数值模式和 AI 天气模型难预报的地方。
 
@@ -539,13 +539,13 @@ for name, df in models.items():
     ds = xr.Dataset.from_dataframe(df)
     diurnal[name] = climatology.mean(ds, frequency="hour").to_dataframe()
     assert np.allclose(diurnal[name]["v100_err"], df["v100_err"].groupby(df.index.hour).mean())
-    print(f"{name}：{len(df)} 个有效时间；100 m 风速的偏差 {df['v100_err'].mean():+.2f} m s⁻¹，"
-          f"2 m 温度的偏差 {df['t2m_err'].mean():+.2f} K")
+    print(f"{name}：{len(df)} 个有效时间；100 m 风速的 bias {df['v100_err'].mean():+.2f} m s⁻¹，"
+          f"2 m 温度的 bias {df['t2m_err'].mean():+.2f} K")
 ```
 
 ```{code-cell} python
 #| label: fig-t3-diurnal-bias
-#| caption: 2026-04-16 到 2026-04-30，Cabauw 的 100 m 风速和 2 m 温度的日变化。左列：15 天的平均值，黑线是塔的观测。右列：模型减去观测的偏差。AIFS Single 和 IFS 在每天 00 UTC 起报，预报时效在 ［24, 45］ h 之间。ERA5 每 3 h 取一个值。数据来源：KNMI Cabauw、ERA5、ECMWF 开放数据。
+#| caption: 2026-04-16 到 2026-04-30，Cabauw 的 100 m 风速和 2 m 温度的日变化。左列：15 天的平均值，黑线是塔的观测。右列：模型减去观测，再按小时平均，得到 bias。AIFS Single 和 IFS 在每天 00 UTC 起报，预报时效在 ［24, 45］ h 之间。ERA5 每 3 h 取一个值。数据来源：KNMI Cabauw、ERA5、ECMWF 开放数据。
 styles = {"ERA5": ("0.4", "s"), "IFS": ("tab:blue", "o"), "AIFS Single": ("tab:red", "D")}
 fig, axs = plt.subplots(2, 2, figsize=(11, 7), sharex=True)
 obs_diurnal = diurnal["IFS"]
@@ -572,14 +572,14 @@ fig.tight_layout()
 
 [](#fig-t3-diurnal-bias) 说明了下面四点：
 
-1. 三个模型在每个小时都低估 100 m 风速。15 天的平均偏差是：ERA5 −0.42 m s⁻¹，IFS −0.80 m s⁻¹，AIFS Single −0.66 m s⁻¹。
+1. 三个模型在每个小时都低估 100 m 风速。15 天的 bias 是：ERA5 −0.42 m s⁻¹，IFS −0.80 m s⁻¹，AIFS Single −0.66 m s⁻¹。
 2. 低估最多的时间是 18 UTC，接近日落。这时塔的 100 m 风速增大得最快。ERA5、IFS 和 AIFS Single 分别低估 0.71、1.30 和 1.06 m s⁻¹。所以模型的 100 m 风的日变化比观测弱。
-3. 2 m 温度的偏差随时间变化。IFS 在 09 UTC 到 18 UTC 偏冷 ［0.56, 0.90］ K，在 21 UTC 偏暖 0.47 K。ERA5 在傍晚偏暖，21 UTC 偏暖 0.82 K。AIFS Single 的偏差在 ［−0.46, 0.42］ K 之间，平均偏差最小。它在 18 UTC 偏暖 0.42 K，和 ERA5 相近，和 IFS 相反。
-4. 样本很小。每个小时只有 15 个值，每个小时的平均偏差的标准误差在 ［0.2, 0.3］ m s⁻¹ 或 K 之间。两个模型相差不到约 0.5 m s⁻¹ 或 0.5 K 时，这 15 天的数据不能说明哪个模型更好。
+3. 2 m 温度的 bias 随时间变化。IFS 在 09 UTC 到 18 UTC 偏冷 ［0.56, 0.90］ K，在 21 UTC 偏暖 0.47 K。ERA5 在傍晚偏暖，21 UTC 偏暖 0.82 K。AIFS Single 的 bias 在 ［−0.46, 0.42］ K 之间，全天平均的 bias 最小。它在 18 UTC 偏暖 0.42 K，和 ERA5 相近，和 IFS 相反。
+4. 样本很小。每个小时只有 15 个值，每个小时的 bias 的标准误差在 ［0.2, 0.3］ m s⁻¹ 或 K 之间。两个模型相差不到约 0.5 m s⁻¹ 或 0.5 K 时，这 15 天的数据不能说明哪个模型更好。
 
 全天都有的低估可能有一部分来自格点和观测点的差别。模型的值是一个格子的平均值，格子宽约 9 km 到 31 km。格子里有村庄、树木和城镇，它们的粗糙度长度比 Cabauw 的草地大。所以格子平均的风速可能比塔上的风速小。
 
-18 UTC 的额外低估和稳定层有关。数值模式在稳定层里常常混合得太强，所以低空急流太弱，地面太暖。Sandu 等，2013 说明了 IFS 的这个问题，[doi:10.1002/jame.20013](https://doi.org/10.1002/jame.20013)。AIFS 从 ERA5 和 IFS 的分析场学习，所以它也会学到这些数据在稳定层里的偏差。本页只有一个观测点和 15 天，不能证明这个原因。
+18 UTC 的额外低估和稳定层有关。数值模式在稳定层里常常混合得太强，所以低空急流太弱，地面太暖。Sandu 等，2013 说明了 IFS 的这个问题，[doi:10.1002/jame.20013](https://doi.org/10.1002/jame.20013)。AIFS 从 ERA5 和 IFS 的分析场学习，所以它也会学到这些数据在稳定层里的 bias。本页只有一个观测点和 15 天，不能证明这个原因。
 
 ### 从风速的误差到风电出力的误差
 
@@ -623,7 +623,7 @@ assert abs((7 / 8) ** 3 - 1 + 0.33) < 0.01
 
 英国的风电装机容量约 30 GW。假设全国的预报都像 AIFS Single 在 Cabauw 这样，把容量系数低估 4.7 个百分点。对 30 GW 来说，这是约 1.4 GW 的出力，要由燃气电厂或进口电力补上。所以英国的电网运营者和能源交易者都关心 100 m 风的预报，特别是傍晚和夜间的预报。这些时间的稳定层最难预报，三次方关系又放大风速的误差。
 
-分析师可以对任何一个 AI 天气模型做同样的检查。第一，按一天中的小时分组计算 100 m 风速和 2 m 温度的偏差。夜间和白天的偏差常常符号相反，全天平均会掩盖它们。第二，用模型的 100 m 风和 10 m 风计算夜间的幂律指数，和塔的观测比较。$n$ 太小说明模型的夜间混合太强。
+分析师可以对任何一个 AI 天气模型做同样的检查。第一，按一天中的小时分组计算 100 m 风速和 2 m 温度的 bias。夜间和白天的 bias 常常符号相反，全天平均会掩盖它们。第二，用模型的 100 m 风和 10 m 风计算夜间的幂律指数，和塔的观测比较。$n$ 太小说明模型的夜间混合太强。
 
 ## 练习
 

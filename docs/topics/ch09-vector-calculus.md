@@ -151,8 +151,8 @@ $\beta$ 是风和温度梯度的夹角。风从冷的一侧吹向暖的一侧时
 | 预报时效 | lead time | — |
 | 有效时间 | valid time | — |
 | 纬度加权 | latitude weighting | — |
-| 均方根 | root mean square | RMS |
-| 均方根误差 | root mean squared error | RMSE |
+| RMS | root mean square | RMS |
+| RMSE | root mean squared error | RMSE |
 | 损失函数 | loss function | — |
 
 ## 真实数据
@@ -431,17 +431,17 @@ truth = kin["div"].isel(latitude=slice(1, -1), longitude=slice(1, -1))
 rms = float(np.sqrt((truth**2).mean()))
 for name, flat in variants.items():
     diff = flat.where(ok).isel(latitude=slice(1, -1), longitude=slice(1, -1)) - truth
-    print(f"{name}：均方根误差占散度均方根的 {float(np.sqrt((diff**2).mean())) / rms:.1%}")
+    print(f"{name}：RMSE 占散度 RMS 的 {float(np.sqrt((diff**2).mean())) / rms:.1%}")
 print(f"50°N、5°W：平面网格 {float(variants['平面网格'].sel(point)):.2e}，MetPy {div_pkg:.2e} s-1")
 ```
 
-平面网格的写法误差很大，均方根误差是散度均方根的 37%。在 50°N、5°W，它把散度算小了 35%。原因是纬向的网格间距在 50°N 只有赤道的 64%。加上 $\cos\varphi$ 以后，误差降到 4.3%，剩下的误差就是曲率项。纬度越高，这两种误差越大。物理约束项用错了算子，就会惩罚正确的预报。
+平面网格的写法误差很大，RMSE 是散度 RMS 的 37%。在 50°N、5°W，它把散度算小了 35%。原因是纬向的网格间距在 50°N 只有赤道的 64%。加上 $\cos\varphi$ 以后，误差降到 4.3%，剩下的误差就是曲率项。纬度越高，这两种误差越大。物理约束项用错了算子，就会惩罚正确的预报。
 
 ### 检查 AI 预报的导数场
 
-多数 AI 天气模型用均方误差训练，所以它们的预报比真实大气平滑。平滑的场在温度和风上看不太出来，在导数上很明显。下面用 AIFS 的两个预报计算同样的四个场，并和 ERA5 比较。
+多数 AI 天气模型用 MSE 训练，所以它们的预报比真实大气平滑。平滑的场在温度和风上看不太出来，在导数上很明显。下面用 AIFS 的两个预报计算同样的四个场，并和 ERA5 比较。
 
-函数 `ch09.kinematics` 用和上面相同的 MetPy 函数。函数 `ch09.compare` 对每个场算出两个数。第一个是 AIFS 的加权均方根和 ERA5 的加权均方根之比。第二个是两个场的加权相关系数。
+函数 `ch09.kinematics` 用和上面相同的 MetPy 函数。函数 `ch09.compare` 对每个场算出两个数。第一个是 AIFS 的加权 RMS 和 ERA5 的加权 RMS 之比。第二个是两个场的加权 correlation。
 
 ```{code-cell} python
 aifs = d.page_data(ch09.SAMPLES["aifs"], ch09.aifs_850)
@@ -464,11 +464,11 @@ table
 fig = ch09.plot_divergence(fields, centre=centre)
 ```
 
-表中 `rms_ratio` 小于 1，表示 AIFS 的场比 ERA5 弱。`correlation` 是两个场的形状有多像。风速的均方根比值在两个预报时效都接近 1。散度的比值在 6 h 是 0.75，在 48 h 是 0.62。温度平流和相对涡度介于两者之间。
+表中 `rms_ratio` 小于 1，表示 AIFS 的场比 ERA5 弱。`correlation` 是两个场的形状有多像。风速的 RMS 比值在两个预报时效都接近 1。散度的比值在 6 h 是 0.75，在 48 h 是 0.62。温度平流和相对涡度介于两者之间。
 
 [](#fig-ch09-aifs) 显示了同样的结果。6 h 的预报有锋上的辐合带，但辐合带更宽、更弱。48 h 的预报只剩下英吉利海峡上的一段。ERA5 的许多小尺度的散度特征在 AIFS 里没有，预报时效越长，场越平滑。6 h 的预报已经偏弱，所以平滑不只来自预报误差的增长。
 
-这个检查对分析师有两个用处。第一，用 AI 预报的风算锋附近的辐合或温度平流时，强度会偏弱，预报时效越长偏得越多。第二，比较两个 AI 模型时，导数场的均方根比值能显示哪个模型更平滑。这个检查只需要 850 hPa 的 `t`、`u` 和 `v`。
+这个检查对分析师有两个用处。第一，用 AI 预报的风算锋附近的辐合或温度平流时，强度会偏弱，预报时效越长偏得越多。第二，比较两个 AI 模型时，导数场的 RMS 比值能显示哪个模型更平滑。这个检查只需要 850 hPa 的 `t`、`u` 和 `v`。
 
 ## 练习
 

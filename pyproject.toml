@@ -112,4 +112,4 @@ max_sentences = 6
 # A sentence with this many numbers or more is a number list. Its numbers do not count.
 number_list_min = 3
 # Words that contain a rejected term but have a different meaning.
-allow = ["陆地表面"]
+allow = ["陆地表面", "自相关系数", "偏相关系数"]

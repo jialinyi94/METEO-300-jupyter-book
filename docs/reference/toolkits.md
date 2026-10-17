@@ -109,7 +109,7 @@ MetPy 发布修复后，本书再升级 Matplotlib。
 
 | 软件包 | 用途 | 成熟度 | 最新版本 | 发布日期 | 检查日期 | 本书 | 替代 |
 |---|---|---|---|---|---|---|---|
-| [scores](https://pypi.org/project/scores/) | 预报评分，包括连续分级概率评分 | 未标注 | 2.7.0 | 2026-09-05 | 2026-10-17 | 2.7.0 | xskillscore |
+| [scores](https://pypi.org/project/scores/) | 预报评分，包括 CRPS | 未标注 | 2.7.0 | 2026-09-05 | 2026-10-17 | 2.7.0 | xskillscore |
 | [xskillscore](https://pypi.org/project/xskillscore/) | 基于 xarray 的预报评分 | 稳定 | 0.0.29 | 2026-02-18 | 2026-10-17 | 未安装 | scores |
 | [WeatherBench 2](https://github.com/google-research/weatherbench2) | AI 天气模型的评估代码和数据 | 未标注 | v0.2.0 | 2023-12-04 | 2026-10-17 | 未安装 | scores |
 

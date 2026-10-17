@@ -110,9 +110,9 @@ $\rho$ 是密度，$f$ 是 Coriolis 参数，$\mathbf{v}_g$ 是地转风，$\mat
 | 再分析 | reanalysis | — |
 | 气候态 | climatology | — |
 | 距平 | anomaly | — |
-| 均方根 | root mean square | RMS |
-| 均方根误差 | root mean squared error | RMSE |
-| 距平相关系数 | anomaly correlation coefficient | ACC |
+| RMS | root mean square | RMS |
+| RMSE | root mean squared error | RMSE |
+| ACC | anomaly correlation coefficient | ACC |
 | 纬度加权 | latitude weighting | — |
 | 起报时间 | initialization time | — |
 | 预报时效 | lead time | — |
@@ -368,7 +368,7 @@ AI 天气模型最常报告两个指标：500 hPa 位势的 RMSE 和 ACC。下�
 
 $F$ 是预报，$O$ 是真值。$F' = F - C$ 和 $O' = O - C$ 是距平，$C$ 是有效时间的气候态。$w_i$ 是格点 $i$ 的权重，它正比于格点代表的面积。在两极以外，面积正比于纬度的余弦，这就是纬度加权。没有纬度加权时，高纬度的格点太多，评分偏向极地。
 
-ACC 衡量预报距平和真值距平的形状有多像。两个距平场的形状完全相同时，ACC 等于 1。WeatherBench 2 的 ACC 不减去区域平均的距平。另一种常见的 ACC 先减去区域平均的距平，再求相关系数。
+ACC 衡量预报距平和真值距平的形状有多像。两个距平场的形状完全相同时，ACC 等于 1。WeatherBench 2 的 ACC 不减去区域平均的距平。另一种常见的 ACC 先减去区域平均的距平，再求 correlation。
 
 下面用持续性预报做例子。持续性预报把起报时间的 ERA5 当作以后的预报。起报时间是 2021-01-15 12 UTC，有效时间是 2021-01-20 12 UTC，预报时效是 120 h。区域是 WeatherBench 2 的欧洲区域：纬度 ［35, 75］ °N，经度 ［−12.5, 42.5］ °E。
 
@@ -431,7 +431,7 @@ Z500 是 AI 天气模型报告最多的变量。WeatherBench 2 的记分板、Gr
 
 函数 `ch08.case_scores` 读取 GraphCast 和 IFS HRES 在 2021-01-15 12 UTC 起报的预报。预报时效是 ［0, 240］ h，间隔 6 h。它用上一节的 earthkit 函数算出三个区域的评分：全球、北半球和欧洲。真值是 ERA5。IFS HRES 还和它自己的分析场比较，WeatherBench 2 把这个真值叫作 `hres_t0`。样本只保存评分，不保存预报。
 
-WeatherBench 2 先对每个起报时间求加权的均方误差，再对全年平均，最后开平方。本页只有一个起报时间，所以本页的 RMSE 和 WeatherBench 2 的定义一致。函数还读取 WeatherBench 2 算好的 2020 年平均评分，用于比较。样本还保存了 scores 和手算的结果，下面的代码检查它们。
+WeatherBench 2 先对每个起报时间求加权的 MSE，再对全年平均，最后开平方。本页只有一个起报时间，所以本页的 RMSE 和 WeatherBench 2 的定义一致。函数还读取 WeatherBench 2 算好的 2020 年平均评分，用于比较。样本还保存了 scores 和手算的结果，下面的代码检查它们。
 
 ```{code-cell} python
 checks = skill.dropna(subset=["rmse_m_hand"])
@@ -467,7 +467,7 @@ GraphCast 的 ACC 在 180 h 降到 0.8 以下，IFS HRES 在 210 h 降到 0.8 �
 
 真值的选择也影响评分。预报时效为 0 时，IFS HRES 和 `hres_t0` 的 RMSE 是 0，和 ERA5 的 RMSE 是 2.0 m。在 120 h，两种真值给出的 RMSE 是 34.7 m 和 35.5 m。所以预报时效越短，真值的选择越重要。WeatherBench 2 用 ERA5 评 GraphCast，用 `hres_t0` 评 IFS HRES。
 
-最后一个检查是预报距平的强度。下面的表列出预报距平的均方根和 ERA5 距平的均方根之比。比值小于 1 时，预报比真值平滑。
+最后一个检查是预报距平的强度。下面的表列出预报距平的 RMS 和 ERA5 距平的 RMS 之比。比值小于 1 时，预报比真值平滑。
 
 ```{code-cell} python
 act = skill[(skill["region"] == "europe") & (skill["truth"] == "era5")]
@@ -476,7 +476,7 @@ act = act[act["lead_h"].isin([24, 72, 120, 168, 186, 240])]
 act.pivot(index="lead_h", columns="source", values="activity").round(2)
 ```
 
-IFS HRES 的比值在 ［0.85, 1.02］ 之内。GraphCast 的比值随预报时效减小，在 186 h 降到 0.74。这时 GraphCast 的 RMSE 也比 IFS HRES 大。GraphCast 用均方误差训练，所以不确定时，它倾向于给出平滑的预报。在 240 h，比值又回到 0.95。所以这个结论要用很多次预报的平均来确认。
+IFS HRES 的比值在 ［0.85, 1.02］ 之内。GraphCast 的比值随预报时效减小，在 186 h 降到 0.74。这时 GraphCast 的 RMSE 也比 IFS HRES 大。GraphCast 用 MSE 训练，所以不确定时，它倾向于给出平滑的预报。在 240 h，比值又回到 0.95。所以这个结论要用很多次预报的平均来确认。
 
 分析师拿到一个 AI 预报，可以照本页的方法自己算 Z500 的 RMSE 和 ACC。和论文的数比较以前，先核对五件事：
 
@@ -539,5 +539,5 @@ RMSE 从 196.4 m 降到 119.3 m。热带的位势高度变化小，所以全球�
 
 每个格点的误差都是 30 m，所以 RMSE 是 30 m。
 
-减去区域平均的 ACC 先去掉 30 m 的偏差，所以它仍等于 1。WeatherBench 2 的 ACC 不去掉偏差，所以它小于 1。例如，ERA5 距平的区域平均是 0，均方根是 150 m。这时 WeatherBench 2 的 ACC 是 $150 / \sqrt{150^2 + 30^2} = 0.98$。
+减去区域平均的 ACC 先去掉 30 m 的 bias，所以它仍等于 1。WeatherBench 2 的 ACC 不去掉 bias，所以它小于 1。例如，ERA5 距平的区域平均是 0，RMS 是 150 m。这时 WeatherBench 2 的 ACC 是 $150 / \sqrt{150^2 + 30^2} = 0.98$。
 :::

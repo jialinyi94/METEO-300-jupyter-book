@@ -4,7 +4,7 @@
 
 表格的列：
 
-- 中文术语：本书使用的唯一说法。人名术语写英文人名加中文通用词，例如 Coriolis 力。
+- 中文术语：本书使用的唯一说法。人名术语写英文人名加中文通用词，例如 Coriolis 力。评分指标写常见的英文名，例如 RMSE 和 bias，见难选的词第 32 条。
 - English term：英文术语。
 - 符号：公式里的符号。本书一个符号只表示一个量。
 - 单位：正文使用的单位。
@@ -521,23 +521,25 @@
 | 集合预报 | ensemble forecast | — | — | — | 系综预报、集成预报 |
 | 集合成员 | ensemble member | — | — | `number` | 系综成员 |
 | 集合平均 | ensemble mean | — | — | — | 系综平均 |
-| 集合离散度 | ensemble spread | — | — | — | 系综离散度、集合发散度 |
-| 均方误差 | mean squared error | MSE | — | — | — |
-| 均方根误差 | root mean squared error | RMSE | 与变量相同 | — | 均方误差根、均方根差、均方差 |
-| 偏差 | bias | — | 与变量相同 | — | — |
-| 平均绝对误差 | mean absolute error | MAE | 与变量相同 | — | 平均绝对偏差 |
+| spread | ensemble spread | — | — | — | 集合离散度、系综离散度、集合发散度 |
+| MSE | mean squared error | MSE | — | — | 均方误差 |
+| RMSE | root mean squared error | RMSE | 与变量相同 | — | 均方根误差、均方误差根、均方根差、均方差 |
+| bias | bias | — | 与变量相同 | — | 偏差 |
+| MAE | mean absolute error | MAE | 与变量相同 | — | 平均绝对误差、平均绝对偏差 |
 | 路径误差 | track error | — | km | — | 轨迹误差、位置误差 |
-| 命中 | hit | — | — | — | — |
-| 漏报 | miss | — | — | — | 未命中 |
-| 相关系数 | Pearson correlation coefficient | — | — | earthkit-meteo `score.pearson_correlation` | 皮尔逊相关系数 |
+| hit | hit | — | — | — | 命中 |
+| miss | miss | — | — | — | 漏报、未命中 |
+| false alarm | false alarm | — | — | — | 空报 |
+| correlation | Pearson correlation coefficient | — | — | earthkit-meteo `score.pearson_correlation` | 相关系数、皮尔逊相关系数 |
 | 百分位数 | percentile | — | 与变量相同 | — | 百分位、分位点 |
 | 标准误差 | standard error | — | 与变量相同 | — | 标准误 |
-| 距平相关系数 | anomaly correlation coefficient | ACC | — | — | 异常相关系数、距平相关 |
-| 连续分级概率评分 | continuous ranked probability score | CRPS | 与变量相同 | — | 连续排序概率评分、连续等级概率评分 |
-| SEEPS 评分 | stable equitable error in probability space | SEEPS | — | WeatherBench 2 的降水评分 | — |
-| 技巧评分 | skill score | — | — | — | 技巧分数 |
+| 标准差 | standard deviation | — | 与变量相同 | — | 标准偏差 |
+| ACC | anomaly correlation coefficient | ACC | — | — | 距平相关系数、异常相关系数、距平相关 |
+| CRPS | continuous ranked probability score | CRPS | 与变量相同 | — | 连续分级概率评分、连续排序概率评分、连续等级概率评分 |
+| SEEPS | stable equitable error in probability space | SEEPS | — | WeatherBench 2 的降水评分 | SEEPS 评分 |
+| skill score | skill score | — | — | — | 技巧评分、技巧分数 |
 | 纬度加权 | latitude weighting | — | — | — | — |
-| 均方根 | root mean square | RMS | 与变量相同 | — | — |
+| RMS | root mean square | RMS | 与变量相同 | — | 均方根 |
 | 损失函数 | loss function | — | — | — | 代价函数 |
 | 动能谱 | kinetic energy spectrum | $E(k)$ | m² s⁻² | — | 能谱、能量谱 |
 | 纬向波数 | zonal wavenumber | $k$ | — | — | — |
@@ -593,4 +595,5 @@
 28. 涡动协方差：选它，不选“涡度相关”。“涡度”在本书里只表示风的旋转，见“涡度与散度”一节。
 29. 幂律指数：符号写 $n$，不写风能文献常用的 $\alpha$。本书用 $\alpha$ 表示反照率。
 30. 低空急流：选它，不选“夜间急流”。低空急流常在夜间出现，但白天也可以出现。“急流”单独使用时指对流层上部的急流。
-31. 低压中心和气旋中心：低压中心是天气图上海平面气压的局地极小值。描述天气图、气压场和个例时，写“低压中心”。气旋中心是气旋追踪器找到并跟踪的低压中心。写气旋路径、气旋追踪、命中、漏报和中心的移动时，写“气旋中心”。同一个低压，在一个时刻的天气图上叫低压中心，在追踪的结果里叫气旋中心。不写“风暴中心”。用户在 2026-10-17 做了这个决定。
+31. 低压中心和气旋中心：低压中心是天气图上海平面气压的局地极小值。描述天气图、气压场和个例时，写“低压中心”。气旋中心是气旋追踪器找到并跟踪的低压中心。写气旋路径、气旋追踪、hit、miss 和中心的移动时，写“气旋中心”。同一个低压，在一个时刻的天气图上叫低压中心，在追踪的结果里叫气旋中心。不写“风暴中心”。用户在 2026-10-17 做了这个决定。
+32. 评分指标：写常见的英文名，不写中文。缩写全部大写：MAE、MSE、RMSE、RMS、ACC、CRPS 和 SEEPS。普通英文词在句中小写：bias、hit、miss、false alarm、correlation、skill score 和 spread。英文和中文之间留一个空格，和 ERA5 的写法一样。正文第一次出现时也不加中文。“偏差”“均方根”“相关系数”等中文名是弃用词。用户在 2026-10-17 做了这个决定。

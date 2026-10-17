@@ -317,7 +317,7 @@ $$
 | 亮温 | brightness temperature | $T_b$ |
 | 全圆盘图像 | full disk image | — |
 | 纬度加权 | latitude weighting | — |
-| 均方根误差 | root mean squared error | RMSE |
+| RMSE | root mean squared error | RMSE |
 
 ## 真实数据
 
@@ -509,7 +509,7 @@ GraphCast 的论文是 Lam 等，2023，[doi:10.1126/science.adi2336](https://do
 
 两个模型都把大气顶入射太阳辐射当作输入。它随纬度和季节变化，这个分布驱动大气环流。模型从训练数据里学到 Hadley 环流和急流，不需要显式的环流方程。
 
-WeatherBench 2 是评估 AI 天气模型的公共框架。它用 ERA5 当作真值，用本页的同一个气候态当作基线预报。气候态预报每天都给出这一天的多年平均值。一个模型的误差小于气候态的误差，这个模型才有技巧。WeatherBench 2 的均方根误差用纬度加权，权重正比于每行格点的面积。
+WeatherBench 2 是评估 AI 天气模型的公共框架。它用 ERA5 当作真值，用本页的同一个气候态当作基线预报。气候态预报每天都给出这一天的多年平均值。一个模型的误差小于气候态的误差，这个模型才有技巧。WeatherBench 2 的 RMSE 用纬度加权，权重正比于每行格点的面积。
 
 下面算一次气候态预报的误差。真值是 ERA5 在 2025-01-24 00 UTC 的海平面气压。距平等于真值减去气候态。
 

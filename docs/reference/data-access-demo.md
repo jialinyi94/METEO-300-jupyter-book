@@ -259,7 +259,7 @@ scores = d.wb2_scores("graphcast")  # rmse 和 acc，按预报时效排列
 
 离线时，下图用 ECMWF 样本比较两个模型。
 图里的量是 AIFS 与 IFS 的差，不是预报误差。
-计算用纬度加权，求区域内的均方根。
+计算用纬度加权，求区域内的 RMS。
 
 ```{code-cell} python
 diff = fc["aifs-single"]["gh"].sel(level=500) - fc["ifs"]["gh"].sel(level=500)
@@ -270,7 +270,7 @@ hours = rms.step.values / np.timedelta64(1, "h")
 fig, ax = plt.subplots(figsize=(6, 3.5))
 ax.plot(hours, rms, "o-")
 ax.set_xlabel("预报时效 / h")
-ax.set_ylabel("差的均方根 / m")
+ax.set_ylabel("差的 RMS / m")
 ax.set_title("500 hPa 位势高度，AIFS 减 IFS，北大西洋和欧洲")
 plt.show()
 ```

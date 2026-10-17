@@ -573,12 +573,12 @@ for ax, time in zip(axs, ch06.MAP_TIMES, strict=True):
     ax.plot(lon0, lat0, marker="*", color="tab:red", ms=13, mec="k")
     ax.set_aspect(1 / np.cos(np.deg2rad(50)))
     b, s = float(bias.sel(time=time)), float(rmse.sel(time=time))
-    ax.set_title(f"{time[:10]} 12 UTC：偏差 {b:+.1f}，RMSE {s:.1f} kg/m²", fontsize=10)
+    ax.set_title(f"{time[:10]} 12 UTC：bias {b:+.1f}，RMSE {s:.1f} kg/m²", fontsize=10)
     ax.gridlines(draw_labels=["left", "bottom"], linewidth=0.3, color="0.5")
 cbar = fig.colorbar(cf, ax=axs, shrink=0.8, label="AIFS tcw − ERA5 tcwv (kg/m²)")
 ```
 
-[](#fig-ch06-aifs) 的左图里，60 h 的误差小而分散，偏差是 +0.3 kg m⁻²。整层总水量包括云里的水和冰，所以小的正偏差符合预期。右图里，108 h 的 RMSE 增加到 5.6 kg m⁻²。误差集中在冷锋的湿空气带上，形成一对平行的正负误差带。在德国北部和波兰，误差在 ［−20, 25］ kg m⁻² 之间。正误差在负误差的西北边，所以 AIFS 预报的冷锋走得比 ERA5 的冷锋慢。
+[](#fig-ch06-aifs) 的左图里，60 h 的误差小而分散，bias 是 +0.3 kg m⁻²。整层总水量包括云里的水和冰，所以小的正 bias 符合预期。右图里，108 h 的 RMSE 增加到 5.6 kg m⁻²。误差集中在冷锋的湿空气带上，形成一对平行的正负误差带。在德国北部和波兰，误差在 ［−20, 25］ kg m⁻² 之间。正误差在负误差的西北边，所以 AIFS 预报的冷锋走得比 ERA5 的冷锋慢。
 
 湿度通过三条途径影响英国的能源交易：
 
