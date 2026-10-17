@@ -55,7 +55,7 @@ uv 同时更新 `pyproject.toml` 和 `uv.lock`。两个文件一起提交。
 | `tools/` | 检查工具 |
 | `tests/` | 单元测试 |
 | `STYLE.md` | 写作规范 |
-| `glossary.md` | 术语表草稿 |
+| `glossary.md` | 术语表 |
 
 ## 许可
 

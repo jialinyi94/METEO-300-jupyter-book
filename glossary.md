@@ -1,7 +1,5 @@
 # 术语表
 
-> **草稿，等待用户确认。** 本表的每个选择都可以改。改动后，检查器 `tools/ste_check.py` 自动使用新表。
-
 本表给每个概念选定一个中文术语。页面只用“中文术语”一列的词。“弃用词”一列的词不进入正文，检查器发现它们就报错。
 
 表格的列：
@@ -20,22 +18,27 @@
 | 气压 | pressure | $p$ | hPa | 等压面坐标 `level` | 压强、压力、大气压力、毫巴、mb |
 | 地面气压 | surface pressure | $p_s$ | hPa | `sp` / `surface_pressure` | 表面气压、本站气压、站点气压 |
 | 海平面气压 | mean sea level pressure | $p_{\mathrm{msl}}$ | hPa | `msl` / `mean_sea_level_pressure` | 海平面压力、海压、平均海平面气压 |
+| 修正海平面气压 | QNH; altimeter setting | — | hPa | MetPy `altimeter`，单位 inHg | 修正海压 |
 | 等压面 | isobaric surface; pressure level | — | — | 坐标 `level` | 气压层、气压面、等压层 |
 | 等压线 | isobar | — | — | — | — |
 | 模式层 | model level | — | — | — | 模型层 |
 | 气压坐标 | pressure coordinate | — | — | — | p 坐标、p 坐标系 |
 | 气压梯度 | pressure gradient | $\nabla p$ | hPa km⁻¹ | — | 压力梯度、压强梯度 |
+| 气压倾向 | pressure tendency | $\partial p / \partial t$ | hPa h⁻¹ | — | 气压趋势 |
 | 几何高度 | geometric height | $z$ | m | — | 高度、海拔、海拔高度 |
 | 位势 | geopotential | $\Phi$ | m² s⁻² | `z` / `geopotential` | 重力位势、地势 |
 | 位势高度 | geopotential height | $Z$ | m | `z` 除以 $g_0$ | 高度、重力位势高度 |
 | 标准重力加速度 | standard gravity | $g_0$ | m s⁻² | — | 标准重力 |
 | 地形高度 | surface geopotential height; orography | $Z_s$ | m | `z` 地面场除以 $g_0$ / `geopotential_at_surface` | 地形海拔 |
+| 离地位势高度 | geopotential height above ground | $Z - Z_s$ | m | — | — |
 | 厚度 | thickness | $\Delta Z$ | m | — | 位势厚度 |
 | 压高公式 | hypsometric equation | — | — | — | 测高方程、测高公式、压高方程 |
 | 静力平衡 | hydrostatic balance | — | — | — | 流体静力平衡、静水平衡、静力学平衡 |
 | 静力方程 | hydrostatic equation | — | — | — | 静力学方程、流体静力方程 |
 | 标高 | scale height | $H$ | km | — | 尺度高度 |
+| 标准大气 | standard atmosphere | — | — | MetPy `pressure_to_height_std` | — |
 | 密度 | density | $\rho$ | kg m⁻³ | — | — |
+| 水压 | water pressure | — | hPa | — | — |
 | 对流层 | troposphere | — | — | — | — |
 | 对流层顶 | tropopause | — | — | — | — |
 | 平流层 | stratosphere | — | — | — | 同温层 |
@@ -58,6 +61,17 @@
 | 相当位温 | equivalent potential temperature | $\theta_e$ | K | — | 等效位温、当量位温 |
 | 饱和相当位温 | saturation equivalent potential temperature | $\theta_{es}$ | K | — | — |
 | 有效发射温度 | effective emission temperature | $T_e$ | K | — | 有效温度、有效辐射温度、发射温度 |
+
+## 热力学
+
+| 中文术语 | English term | 符号 | 单位 | 变量名 | 弃用词 |
+|---|---|---|---|---|---|
+| 理想气体定律 | ideal gas law | — | — | — | 理想气体状态方程 |
+| 干空气气体常数 | gas constant for dry air | $R_d$ | J kg⁻¹ K⁻¹ | MetPy `Rd` | — |
+| 热力学第一定律 | first law of thermodynamics | — | — | — | — |
+| 内能 | internal energy | — | J kg⁻¹ | — | — |
+| 定压比热容 | specific heat capacity at constant pressure | $c_p$ | J kg⁻¹ K⁻¹ | MetPy `Cp_d` | 定压比热、比定压热容 |
+| 绝热过程 | adiabatic process | — | — | — | — |
 
 ## 湿度家族
 
@@ -89,7 +103,11 @@
 | 风 | wind | $\mathbf{v}$ | m s⁻¹ | — | — |
 | 水平风 | horizontal wind | $\mathbf{v}_h$ | m s⁻¹ | — | — |
 | 风速 | wind speed | $V$ | m s⁻¹ | `wind_speed` | — |
-| 风向 | wind direction | — | ° | — | — |
+| 风向 | wind direction | $\chi$ | ° | — | — |
+| 去向方位角 | bearing of travel | — | ° | MetPy `wind_direction` 的 `convention="to"` | — |
+| 数学角 | math angle | $\gamma$ | ° | — | — |
+| 节 | knot | kt | 1 kt ≈ 0.514 m s⁻¹ | — | — |
+| 风羽 | wind barb | — | kt | MetPy `StationPlot.plot_barb` | — |
 | 纬向风 | zonal wind; u component | $u$ | m s⁻¹ | `u` / `u_component_of_wind` | u 风、东西风分量 |
 | 经向风 | meridional wind; v component | $v$ | m s⁻¹ | `v` / `v_component_of_wind` | v 风、南北风分量 |
 | 10 m 风 | 10 m wind | $u_{10}$, $v_{10}$ | m s⁻¹ | `u10`, `v10` / `10m_u_component_of_wind`, `10m_v_component_of_wind` | 地面风、近地面风 |
@@ -199,6 +217,9 @@
 | 纬向 | zonal | $x$ | — | — | 东西向 |
 | 经向 | meridional | $y$ | — | — | 南北向 |
 | 纬向平均 | zonal mean | — | — | — | 带状平均、纬圈平均 |
+| 局地直角坐标系 | local Cartesian coordinate system | $x$, $y$, $z$ | m | — | 局地笛卡尔坐标系 |
+| 大圆距离 | great-circle distance | $d$ | km | pyproj `Geod.inv` | — |
+| 地球半径 | Earth radius | $R_\mathrm{E}$ | km | MetPy `earth_avg_radius` | — |
 
 ## 辐射
 
@@ -218,6 +239,7 @@
 | 吸收率 | absorptivity | $a$ | — | — | 吸收比 |
 | 黑体 | blackbody | — | — | — | 绝对黑体 |
 | 普朗克函数 | Planck function | $B_\lambda$ | W m⁻² sr⁻¹ μm⁻¹ | — | — |
+| 亮温 | brightness temperature | $T_b$ | K | GOES ABI L2 `CMI` | 亮度温度 |
 | 斯特藩-玻尔兹曼定律 | Stefan–Boltzmann law | $\sigma$ | W m⁻² K⁻⁴ | — | 斯蒂芬-玻尔兹曼定律、斯特番-玻尔兹曼定律 |
 | 维恩位移定律 | Wien's displacement law | — | — | — | 维恩定律 |
 | 基尔霍夫定律 | Kirchhoff's law | — | — | — | 克希霍夫定律 |
@@ -288,6 +310,8 @@
 | 中文术语 | English term | 符号 | 单位 | 变量名 | 弃用词 |
 |---|---|---|---|---|---|
 | 大气环流 | general circulation | — | — | — | 大气总环流、全球环流 |
+| 经圈环流 | meridional overturning circulation | — | — | — | — |
+| 经向质量流函数 | meridional mass streamfunction | $\psi$ | kg s⁻¹ | — | — |
 | 哈得来环流 | Hadley cell | — | — | — | 哈德莱环流、哈德利环流、哈得来环流圈 |
 | 费雷尔环流 | Ferrel cell | — | — | — | 费雷尔环流圈 |
 | 极地环流 | polar cell | — | — | — | 极地环流圈 |
@@ -321,8 +345,16 @@
 | 数据集 | dataset | — | — | — | 资料集、数据组 |
 | 观测站 | weather station | — | — | — | 测站、站点 |
 | 地面观测 | surface observation | — | — | — | 地面观察 |
+| METAR 报文 | METAR report | — | — | IEM `metar` | — |
+| 能见度 | visibility | — | m | MetPy `visibility` | — |
+| okta | okta | okta | 1 okta = 天空的 1/8 | — | — |
+| 观测站填图 | station plot | — | — | MetPy `StationPlot` | — |
+| 有效数字 | significant figures | — | — | — | — |
 | 探空 | sounding | — | — | — | 高空探测 |
 | 探空仪 | radiosonde | — | — | — | 无线电探空仪 |
+| 标准等压面 | mandatory pressure level | — | — | — | 标准层 |
+| 特性层 | significant level | — | — | — | — |
+| 全圆盘图像 | full disk image | — | — | GOES 产品 `ABI-L2-CMIPF` | — |
 | 分析场 | analysis | — | — | — | 分析资料、分析数据 |
 | 再分析 | reanalysis | — | — | ERA5 | 重分析 |
 | 数据同化 | data assimilation | — | — | — | 资料同化 |
@@ -375,7 +407,7 @@
 
 ## 难选的词
 
-下面每一条说明一个选择和它的理由。用户确认或改动后，删去本节的“草稿”标记。
+下面每一条说明一个选择和它的理由。用户在 2026-10-17 批准了这些选择。
 
 1. 等压面：选它，不选“气压层”和“气压面”。等压面是标准术语，也对应 ERA5 的 pressure levels。
 2. 位势高度：选它，不用单独的“高度”。单独的“高度”可以指位势高度，也可以指几何高度。几何意义的高度写“几何高度”。
