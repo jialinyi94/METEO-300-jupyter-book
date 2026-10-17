@@ -10,27 +10,29 @@ title: 数据集
 
 ## 总表
 
-| 数据集 | 类别 | 读取函数 | 需要账户 | 离线样本 |
-|---|---|---|---|---|
-| [ERA5](#ds-era5) | 再分析 | `era5`、`era5_monthly`、`era5_daily_mean`、`era5_climatology` | 否 | 有 |
-| [IGRA2](#ds-igra2) | 探空 | `sounding` | 否 | 有 |
-| [University of Wyoming 探空](#ds-wyoming) | 探空 | `sounding` | 否 | 无 |
-| [IEM METAR](#ds-metar) | 地面观测 | `metar` | 否 | 有 |
-| [ECMWF 开放数据](#ds-ecmwf) | 业务预报 | `ecmwf_forecast` | 否 | 有 |
-| [WeatherBench 2](#ds-wb2) | AI 预报评估 | `weatherbench2`、`wb2_scores` | 否 | 无 |
-| [GraphCastGFS](#ds-graphcastgfs) | AI 预报 | `meteo300.pages.ch02` | 否 | 有 |
-| [NOAA GML 二氧化碳](#ds-co2) | 大气成分 | `co2` | 否 | 有 |
-| [GOES ABI](#ds-goes) | 卫星 | `goes_abi` | 否 | 有 |
-| [Meteosat](#ds-meteosat) | 卫星 | `meteosat_image`、`meteosat` | 数值数据需要 | 无 |
-| [VIIRS](#ds-viirs) | 卫星 | `meteo300.pages.ch12.viirs_m15` | 是 | 有 |
-| [AERONET](#ds-aeronet) | 气溶胶 | `aeronet_aod` | 否 | 无 |
-| [CAMS](#ds-cams) | 大气成分 | `cams` | 是 | 无 |
-| [GPCP](#ds-gpcp) | 降水量 | `gpcp` | 否 | 有 |
-| [GPM IMERG](#ds-imerg) | 降水量 | `imerg` | 是 | 无 |
-| [CERES EBAF](#ds-ceres) | 辐射 | `ceres_ebaf` | 是 | 无 |
-| [KNMI Cabauw](#ds-cabauw) | 边界层 | `cabauw` | 否 | 有 |
-| [DE-Har 涡动协方差](#ds-dehar) | 湍流 | `turbulence_20hz` | 否 | 有 |
-| [Natural Earth](#ds-natural-earth) | 地图 | `meteo300.plot.coastlines` | 否 | 有 |
+表的最后两栏说明离线时有什么数据。“读取函数样本”是 `meteo300.data` 的读取函数自带的样本。设 `METEO300_OFFLINE=1` 后，读取函数在样本覆盖的范围内读它。读取函数在页面模块里时，这一栏写“—”。“页面样本”是页面通过 `page_data` 或页面模块读取的文件，只覆盖那一页的个例。页面样本的文件名以页面短名开头，来源和许可见 `data/samples/ATTRIBUTION-<页面短名>.md`。
+
+| 数据集 | 类别 | 读取函数 | 需要账户 | 读取函数样本 | 页面样本 |
+|---|---|---|---|---|---|
+| [ERA5](#ds-era5) | 再分析 | `era5`、`era5_monthly`、`era5_daily_mean`、`era5_climatology` | 否 | 有 | 有 |
+| [IGRA2](#ds-igra2) | 探空 | `sounding` | 否 | 有 | 有 |
+| [University of Wyoming 探空](#ds-wyoming) | 探空 | `sounding` | 否 | 无 | 无 |
+| [IEM METAR](#ds-metar) | 地面观测 | `metar` | 否 | 有 | 有 |
+| [ECMWF 开放数据](#ds-ecmwf) | 业务预报 | `ecmwf_forecast` | 否 | 有 | 有 |
+| [WeatherBench 2](#ds-wb2) | AI 预报评估 | `weatherbench2`、`wb2_scores` | 否 | 无 | 只有 ERA5、气候态和评分 |
+| [GraphCastGFS](#ds-graphcastgfs) | AI 预报 | `meteo300.pages.ch02` | 否 | — | 有 |
+| [NOAA GML 二氧化碳](#ds-co2) | 大气成分 | `co2` | 否 | 有 | 无 |
+| [GOES ABI](#ds-goes) | 卫星 | `goes_abi` | 否 | 有 | 有 |
+| [Meteosat](#ds-meteosat) | 卫星 | `meteosat_image`、`meteosat` | 数值数据需要 | 无 | 无 |
+| [VIIRS](#ds-viirs) | 卫星 | `meteo300.pages.ch12.viirs_m15` | 是 | — | 有 |
+| [AERONET](#ds-aeronet) | 气溶胶 | `aeronet_aod` | 否 | 无 | 无 |
+| [CAMS](#ds-cams) | 大气成分 | `cams` | 是 | 无 | 有 |
+| [GPCP](#ds-gpcp) | 降水量 | `gpcp` | 否 | 有 | 无 |
+| [GPM IMERG](#ds-imerg) | 降水量 | `imerg` | 是 | 无 | 有 |
+| [CERES EBAF](#ds-ceres) | 辐射 | `ceres_ebaf` | 是 | 无 | 有 |
+| [KNMI Cabauw](#ds-cabauw) | 边界层 | `cabauw` | 否 | 有 | 有 |
+| [DE-Har 涡动协方差](#ds-dehar) | 湍流 | `turbulence_20hz` | 否 | 有 | 有 |
+| [Natural Earth](#ds-natural-earth) | 地图 | `meteo300.plot.coastlines` | 否 | 全部数据在仓库里 | 无 |
 
 (ds-accounts)=
 ## 账户和条款
@@ -353,7 +355,8 @@ GPCP 合并卫星和雨量计的数据，得到全球降水量。
 - 账户：NASA Earthdata。凭证在 `~/.netrc` 里。
 - 网址：<https://ceres.larc.nasa.gov/data/>
 - 许可：NASA 开放数据，使用不受限制。
-- 使用页面：[t2](../topics/t2-radiation.md)。离线时，页面用 ERA5 日平均样本 `era5_daily_toa.nc` 代替。
+- 页面样本：`t2-ceres-toa-2025.nc`，2025 年大气顶辐照度的年平均和逐月纬向平均。t2 通过 `page_data` 读取它。
+- 使用页面：[t2](../topics/t2-radiation.md)。
 
 注意事项：
 
