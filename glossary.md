@@ -28,6 +28,7 @@
 | 几何高度 | geometric height | $z$ | m | — | 高度、海拔、海拔高度 |
 | 位势 | geopotential | $\Phi$ | m² s⁻² | `z` / `geopotential` | 重力位势、地势 |
 | 位势高度 | geopotential height | $Z$ | m | `z` 除以 $g_0$ | 高度、重力位势高度 |
+| 重力加速度 | gravitational acceleration | $g$ | m s⁻² | — | — |
 | 标准重力加速度 | standard gravity | $g_0$ | m s⁻² | — | 标准重力 |
 | 地形高度 | surface geopotential height; orography | $Z_s$ | m | `z` 地面场除以 $g_0$ / `geopotential_at_surface` | 地形海拔 |
 | 海陆掩码 | land-sea mask | — | — | `lsm` / `land_sea_mask` | 海陆掩膜、陆海掩码 |
@@ -100,6 +101,7 @@
 | Clausius–Clapeyron 方程 | Clausius–Clapeyron equation | — | — | — | 克劳修斯-克拉珀龙方程、克-克方程、克拉珀龙方程、克劳修斯-克拉伯龙方程 |
 | 降水 | precipitation | — | — | — | — |
 | 降水量 | precipitation amount | — | mm | `tp` / `total_precipitation_6hr` | — |
+| 降雪量 | snowfall | — | mm | `sf` / `snowfall` | — |
 
 ## 风
 
