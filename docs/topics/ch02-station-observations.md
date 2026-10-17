@@ -124,14 +124,6 @@ $$
 2025-01-24，风暴 Éowyn 经过爱尔兰和英国。英国气象局对北爱尔兰和苏格兰中南部发布了风的红色预警。格拉斯哥在预警区之内。本页看两份真实数据：格拉斯哥机场这一天的 48 条 METAR 报文，以及 06 UTC 英国和爱尔兰的全部 METAR 报文。
 
 ```{code-cell} python
-:tags: [remove-cell]
-# ruff: noqa: E501
-# tools/ruff_md.sh lints this page as a Python script. The Markdown text becomes comment
-# lines, and many Chinese text lines are wider than 100 columns. The line above stops
-# E501 for this page. The code lines are kept shorter than 100 columns by hand.
-```
-
-```{code-cell} python
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
