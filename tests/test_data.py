@@ -184,6 +184,14 @@ def test_ecmwf_sources(monkeypatch):
     assert d._ecmwf_sources() == ("aws",)
 
 
+def test_ecmwf_requests_put_geopotential_on_pressure_levels():
+    # AIFS Single runs of 2025 have "z" on pressure levels and no "gh".
+    reqs = d._ecmwf_requests(["msl", "10u", "z", "u"], [850, 500])
+    assert reqs == [{"param": ["msl", "10u"]}, {"param": ["z", "u"], "levelist": [850, 500]}]
+    with pytest.raises(ValueError, match="need levels"):
+        d._ecmwf_requests(["z"], None)
+
+
 def test_offline_sounding(offline):
     df = d.sounding("2023-11-02T12", "03808")
     assert df.attrs["units"]["pressure"] == "hPa"

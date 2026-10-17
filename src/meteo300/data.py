@@ -1511,7 +1511,9 @@ def _metar_online(station: str, t0: pd.Timestamp, t1: pd.Timestamp) -> pd.DataFr
 # =============================================================================================
 
 ECMWF_SOURCES = ("google", "aws", "ecmwf")
-ECMWF_PL_PARAMS = {"t", "u", "v", "gh", "q", "r", "w", "vo", "d"}
+# AIFS Single writes the geopotential "z" on pressure levels. Its runs before mid-2026 have
+# no geopotential height "gh" (checked: 2025-10 and 2026-03 have only "z").
+ECMWF_PL_PARAMS = {"t", "u", "v", "gh", "z", "q", "r", "w", "vo", "d"}
 ECMWF_ATTRIBUTION = "ECMWF open data, CC BY 4.0. Source: www.ecmwf.int"
 _GRIB_NAMES = {"2t": "t2m", "2d": "d2m", "10u": "u10", "10v": "v10", "100u": "u100"}
 _GRIB_NAMES |= {"100v": "v100"}
@@ -1532,7 +1534,8 @@ def ecmwf_forecast(
     ----------
     params
         ECMWF parameter names: ``msl``, ``2t``, ``10u``, ``10v``, ``tp`` (surface) and
-        ``t``, ``u``, ``v``, ``gh``, ``q``, ``r``, ``w`` (pressure levels).
+        ``t``, ``u``, ``v``, ``gh``, ``q``, ``r``, ``w`` (pressure levels). AIFS Single also has
+        the geopotential ``z`` (m² s⁻²); its runs before mid-2026 have no ``gh``.
     steps
         Lead times in hours. IFS: 0 to 144 every 3 h, then every 6 h to 360. AIFS: every 6 h.
     levels
@@ -1622,9 +1625,8 @@ def _ecmwf_latest(model: str, step: int, param: str) -> pd.Timestamp:
     raise ConnectionError(f"no ECMWF open data mirror answered: {last}")
 
 
-def _ecmwf_online(plist, step_list, lev_list, model, run_ts, area) -> xr.Dataset:
-    import cfgrib
-
+def _ecmwf_requests(plist, lev_list) -> list[dict]:
+    """Split the parameters into a surface request and a pressure-level request."""
     sfc = [p for p in plist if p not in ECMWF_PL_PARAMS]
     pl = [p for p in plist if p in ECMWF_PL_PARAMS]
     if pl and not lev_list:
@@ -1634,8 +1636,14 @@ def _ecmwf_online(plist, step_list, lev_list, model, run_ts, area) -> xr.Dataset
         requests_.append({"param": sfc})
     if pl:
         requests_.append({"param": pl, "levelist": lev_list})
+    return requests_
+
+
+def _ecmwf_online(plist, step_list, lev_list, model, run_ts, area) -> xr.Dataset:
+    import cfgrib
+
     parts = []
-    for i, req in enumerate(requests_):
+    for i, req in enumerate(_ecmwf_requests(plist, lev_list)):
         target = cache_dir("ecmwf") / f"{model}_{run_ts:%Y%m%d%H}_{_key(req, step_list)}_{i}.grib2"
         if not target.exists():
             last: Exception | None = None
