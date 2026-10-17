@@ -144,11 +144,11 @@ METEO 300 第 10 课 10.9 节说，高空的气流绕过槽时比地转风慢，
 
 ### 2024-12-07，风暴 Darragh 横穿英国
 
-2024 年 12 月初，英国气象局把一个从大西洋移来的气旋命名为 Darragh。2024-12-07，它的中心从北爱尔兰移过英格兰北部，进入北海。英国气象局对威尔士西部和 Bristol 海峡两岸发布了红色大风预警，时间是 2024-12-07 03 UTC 到 11 UTC。
+2024-12-05，英国气象局把一个从大西洋移来的气旋命名为 Darragh。英国的风暴名字由 Met Office、Met Éireann 和 KNMI 共同选定。2024-12-07 00 UTC，它的中心在北爱尔兰上空。然后中心经过 Lincolnshire，在 12 UTC 离开 Norfolk 海岸，进入北海。英国气象局对威尔士西部和 Bristol 海峡两岸发布了红色大风预警，时间是 2024-12-07 03 UTC 到 11 UTC。
 
-英国气象局的 [风暴报告](https://www.metoffice.gov.uk/binaries/content/assets/metofficegovuk/pdf/weather/learn-about/uk-past-events/interesting/2024/2024_10_storm_darragh_v1.pdf) 给出这些数字。最大阵风是 83 kt，出现在德文郡的 Berry Head。这是那里 30 年记录里 12 月最大的阵风。超过 230 万用户停电。
+英国气象局的 [风暴报告](https://www.metoffice.gov.uk/api/assets/file/2024_10_storm_darragh_v2pdf?prefix=assets) 给出这些数字。最大阵风是 83 kt，出现在德文郡的 Berry Head。这是那里 30 年记录里 12 月最大的阵风。超过 230 万用户停电。
 
-本页选这个个例，原因有三个。第一，气旋中心横穿英国，锋和云的结构都在英国上空。第二，大面积停电说明强风直接影响英国的电力系统。第三，ECMWF 开放数据从 2024-02-29 起保存 AIFS 的预报，所以本页能比较 AI 天气模型和数值模式。2023 年 11 月的风暴 Ciarán 更深，可是那时开放数据里还没有 AIFS。
+本页选这个个例，原因有三个。第一，气旋中心横穿英国，锋和云的结构都在英国上空。第二，大面积停电说明强风直接影响英国的电力系统。第三，ECMWF 开放数据从 2024-02-28 起包含 AIFS 的预报，所以本页能比较 AI 天气模型和数值模式。2023 年 11 月的风暴 Ciarán 更深，可是那时开放数据里还没有 AIFS。Culdrose 和 St Catherine's Point 的气压低到 953.6 hPa，这是英格兰 11 月的最低纪录，见英国气象局的 [Ciarán 报告](https://www.metoffice.gov.uk/api/assets/file/2023_09_storm_ciaran_2pdf?prefix=assets)。
 
 下面的代码读取 ERA5 和卫星数据，再用本页的追踪器找出 ERA5 的气旋路径。追踪器的细节在计算一节。联网时，函数下载数据。离线时，`d.page_data` 读取 `data/samples/` 里的样本。
 
@@ -225,7 +225,7 @@ for when, (lat, lon) in centres.items():
 
 本页的主要数据是 ERA5 再分析。ERA5 是 ECMWF 制作的再分析数据集，网格间距是 0.25°。本页从 ARCO-ERA5 读取两个时刻的场：海平面气压 `msl`、500 hPa 的位势 `z`、250 hPa 和 850 hPa 的风 `u` 和 `v`、850 hPa 的温度 `t` 和比湿 `q`。追踪器用每 3 h 的 `msl`。ERA5 的论文是 Hersbach 等，2020，[doi:10.1002/qj.3803](https://doi.org/10.1002/qj.3803)。ERA5 以 CC BY 4.0 许可发布。
 
-预报来自 ECMWF 开放数据。2024 年 12 月，开放数据里的 AI 天气模型是 AIFS 的试验版本 v0.2.1，模型名是 `aifs`。2025-02-25，AIFS Single v1 取代了它。数值模式是 IFS，当时的版本是 Cy49r1。两个模型的输出都在 0.25° 网格上。本页读取 10 次起报的 `msl`。
+预报来自 ECMWF 开放数据。2024 年 12 月，开放数据里的 AI 天气模型是 AIFS 的试验版本 v0.2.1，模型名是 `aifs`。2025-02-25 06 UTC 起，AIFS Single v1 取代了它，模型名是 `aifs-single`。数值模式是 IFS，当时的版本是 Cy49r1。两个模型的输出都在 0.25° 网格上。本页读取 10 次起报的 `msl`。
 
 AIFS 的论文是 Lang 等，2024，[`arXiv:2406.01465`](https://arxiv.org/abs/2406.01465)。ECMWF 开放数据以 CC BY 4.0 许可发布。
 
@@ -341,7 +341,7 @@ print(f"搜索半径：{ch12.SEARCH_RADIUS_KM:.0f} km；匹配半径：{ch12.MAT
 
 第三步，把各个时刻的中心连起来。追踪器先估计气旋下一个时刻的位置：把上一个中心按上一步的位移再移动一次。然后它取离这个估计位置最近的中心。这个中心离估计位置超过搜索半径 600 km 时，追踪结束。两个中心的距离是大圆距离。Darragh 在 6 h 里最多移动约 470 km，所以搜索半径不能太小。
 
-ERA5 的路径在真实数据一节。下面用它算出气旋的移动速度和加深的速度。爆发性气旋的常用标准来自 Sanders 和 Gyakum 1980：24 h 里，中心气压至少下降 $24\ \mathrm{hPa} \times \sin\varphi / \sin 60°$。
+ERA5 的路径在真实数据一节。下面用它算出气旋的移动速度和加深的速度。爆发性气旋的常用标准来自 Sanders 和 Gyakum，1980，[`doi:10.1175/1520-0493(1980)108<1589:SDCOT>2.0.CO;2`](https://doi.org/10.1175/1520-0493%281980%29108%3C1589%3ASDCOT%3E2.0.CO%3B2)：24 h 里，中心气压至少下降 $24\ \mathrm{hPa} \times \sin\varphi / \sin 60°$。
 
 ```{code-cell} python
 six = era5_track.loc[ch12.VALID_TIMES]
