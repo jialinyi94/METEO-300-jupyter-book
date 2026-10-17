@@ -20,8 +20,7 @@ mirror of ECMWF open data still had the runs of December 2024 and answered fast.
 mirror had them too, but often answered "503 Slow Down".
 
 In 2024 the AI model in ECMWF open data was the experimental AIFS (model name ``"aifs"``).
-:func:`meteo300.data.ecmwf_forecast` accepts only ``"ifs"`` and ``"aifs-single"``, so
-:func:`forecast_msl` calls the reader's internal download function with ``model="aifs"``.
+:func:`forecast_msl` reads it through :func:`meteo300.data.ecmwf_forecast`.
 
 The cyclone tracker is :func:`track`. It follows the local minimum of the mean sea level
 pressure that lies nearest to a first guess. :func:`track_forecast` starts it at the ERA5
@@ -199,7 +198,7 @@ def forecast_msl() -> xr.Dataset:
         runs = []
         for run in RUNS:
             steps = [int((v - run) / pd.Timedelta(hours=1)) for v in VALID_TIMES if v >= run]
-            ds = d._ecmwf_online(["msl"], steps, None, model, run, TRACK_AREA)
+            ds = d.ecmwf_forecast("msl", steps=steps, model=model, run=run, area=TRACK_AREA)
             msl = ds["msl"].assign_coords(valid_time=ds["valid_time"]).swap_dims(step="valid_time")
             msl = msl.drop_vars([c for c in ("step", "time") if c in msl.coords])
             msl = msl.reindex(valid_time=VALID_TIMES)

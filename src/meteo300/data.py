@@ -1532,8 +1532,14 @@ def _metar_online(station: str, t0: pd.Timestamp, t1: pd.Timestamp) -> pd.DataFr
 # =============================================================================================
 
 ECMWF_SOURCES = ("google", "aws", "ecmwf")
+# Model names in ECMWF open data. "aifs" is the experimental AIFS, under the path "aifs/".
+# The mirrors keep its runs from 2024-02-29 00 UTC to 2025-02-24 00 UTC. AIFS Single
+# ("aifs-single") replaced it. Its first run is 2025-02-25 06 UTC (checked on AWS 2026-10-17).
+ECMWF_MODELS = ("ifs", "aifs-single", "aifs")
+AIFS_EXPERIMENTAL_END = pd.Timestamp("2025-02-25")
 # AIFS Single writes the geopotential "z" on pressure levels. Its runs before mid-2026 have
-# no geopotential height "gh" (checked: 2025-10 and 2026-03 have only "z").
+# no geopotential height "gh" (checked: 2025-10 and 2026-03 have only "z"). The experimental
+# AIFS also has "z" and no "gh".
 ECMWF_PL_PARAMS = {"t", "u", "v", "gh", "z", "q", "r", "w", "vo", "d"}
 ECMWF_ATTRIBUTION = "ECMWF open data, CC BY 4.0. Source: www.ecmwf.int"
 _GRIB_NAMES = {"2t": "t2m", "2d": "d2m", "10u": "u10", "10v": "v10", "100u": "u100"}
@@ -1555,14 +1561,17 @@ def ecmwf_forecast(
     ----------
     params
         ECMWF parameter names: ``msl``, ``2t``, ``10u``, ``10v``, ``tp`` (surface) and
-        ``t``, ``u``, ``v``, ``gh``, ``q``, ``r``, ``w`` (pressure levels). AIFS Single also has
-        the geopotential ``z`` (m² s⁻²); its runs before mid-2026 have no ``gh``.
+        ``t``, ``u``, ``v``, ``gh``, ``q``, ``r``, ``w`` (pressure levels). The two AIFS models
+        also have the geopotential ``z`` (m² s⁻²). Their runs before mid-2026 have no ``gh``.
     steps
         Lead times in hours. IFS: 0 to 144 every 3 h, then every 6 h to 360. AIFS: every 6 h.
     levels
         Pressure levels in hPa for the pressure-level parameters.
     model
-        ``"ifs"`` (physics-based) or ``"aifs-single"`` (ECMWF's AI model).
+        ``"ifs"`` (physics-based), ``"aifs-single"`` (ECMWF's AI model, runs from
+        2025-02-25 06 UTC) or ``"aifs"`` (the experimental AIFS, runs from 2024-02-29 to
+        2025-02-24). The model ``"aifs"`` needs ``run``. Google lacks some of its runs, for
+        example those of late January 2025; the reader then tries AWS.
     run
         Initialisation time (00, 06, 12 or 18 UTC). ``None`` takes the latest run.
         The mirrors keep runs for a limited time only, so pages fix ``run``.
@@ -1579,8 +1588,13 @@ def ecmwf_forecast(
     lev_list = None if levels is None else [int(lev) for lev in levels]
     run_ts = None if run is None else _ts(run)
     area = _check_area(area)
-    if model not in ("ifs", "aifs-single"):
-        raise ValueError("model is 'ifs' or 'aifs-single'")
+    if model not in ECMWF_MODELS:
+        raise ValueError(f"model is one of {ECMWF_MODELS}")
+    if model == "aifs" and (run_ts is None or run_ts >= AIFS_EXPERIMENTAL_END):
+        raise ValueError(
+            "model 'aifs' is the experimental AIFS: give a run before 2025-02-25. "
+            "Use model 'aifs-single' for later runs."
+        )
 
     def online() -> xr.Dataset:
         nonlocal run_ts
@@ -1633,8 +1647,16 @@ def _ecmwf_client(source: str, model: str):
     from ecmwf.opendata import Client
 
     retries, wait = ECMWF_RETRIES.get(source, (2, 5))
+    # For runs before 2026-05-12 the client puts the 06 and 18 UTC runs under the stream
+    # "scda". The experimental AIFS keeps all four runs under "oper", so the client must not
+    # change the stream for it.
     return Client(
-        source=source, model=model, resol="0p25", maximum_retries=retries, retry_after=wait
+        source=source,
+        model=model,
+        resol="0p25",
+        maximum_retries=retries,
+        retry_after=wait,
+        infer_stream_keyword=model != "aifs",
     )
 
 

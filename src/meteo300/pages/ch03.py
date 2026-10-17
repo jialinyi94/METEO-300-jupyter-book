@@ -6,22 +6,17 @@ The case is Storm Eowyn on 2025-01-24 00 UTC. The page reads four samples throug
 - :func:`camborne_sounding`: the IGRA2 sounding of Camborne, through ``data.sounding``;
 - :func:`era5_surface`: ERA5 surface pressure and mean sea level pressure, through ``data.era5``;
 - :func:`era5_levels`: ERA5 ``z``, ``t`` and ``q`` on 37 pressure levels, through ``data.era5``;
-- :func:`aifs_levels`: an AIFS forecast of ``z``, ``t`` and ``q`` on 13 pressure levels.
+- :func:`aifs_levels`: an AIFS forecast of ``z``, ``t`` and ``q`` on 13 pressure levels,
+  through ``data.ecmwf_forecast``.
 
-``data.ecmwf_forecast`` cannot read this AIFS run. Before 2025-02-25 the open-data archive kept
-AIFS under the path ``aifs/``, not ``aifs-single/``, and the run has the geopotential ``z``
-instead of ``gh``. :func:`aifs_levels` therefore reads the GRIB messages from the AWS mirror
-with HTTP byte ranges.
+The AIFS run is the experimental AIFS, model name ``"aifs"``. AIFS Single replaced it on
+2025-02-25. The Google mirror does not have this run, so the reader gets it from AWS.
 
 Run ``python -m meteo300.pages.ch03`` online to write the samples again.
 """
 
 from __future__ import annotations
 
-import json
-import time
-import urllib.error
-import urllib.request
 from pathlib import Path
 
 from meteo300 import data as d
@@ -76,10 +71,6 @@ ERA5_POINT = {"latitude": 50.25, "longitude": -5.25}  # the ERA5 grid point near
 
 AIFS_RUN = pd.Timestamp("2025-01-22T00")
 AIFS_STEP = 48
-AIFS_URL = (
-    "https://ecmwf-forecasts.s3.eu-central-1.amazonaws.com/"
-    "{run:%Y%m%d}/{run:%H}z/aifs/0p25/oper/{run:%Y%m%d%H}0000-{step}h-oper-fc"
-)
 
 SAMPLES = {
     "sounding": "ch03-camborne-sounding-2025012400.csv",
@@ -144,44 +135,13 @@ def era5_levels() -> xr.Dataset:
     return out
 
 
-def _get(url: str, headers: dict | None = None, tries: int = 8) -> bytes:
-    """HTTP GET with backoff. The AWS mirror often answers 503 Slow Down."""
-    req = urllib.request.Request(url, headers={"User-Agent": d.USER_AGENT, **(headers or {})})
-    for attempt in range(tries):
-        try:
-            with urllib.request.urlopen(req, timeout=d.HTTP_TIMEOUT) as resp:
-                return resp.read()
-        except urllib.error.HTTPError as err:
-            if err.code not in (429, 500, 502, 503, 504) or attempt == tries - 1:
-                raise ConnectionError(f"{url}: {err}") from err
-        except (urllib.error.URLError, TimeoutError) as err:
-            if attempt == tries - 1:
-                raise ConnectionError(f"{url}: {err}") from err
-        time.sleep(min(10 * (attempt + 1), 60))
-    raise ConnectionError(url)
-
-
 def aifs_levels() -> xr.Dataset:
     """AIFS forecast of z, t, q on 13 levels: run 2025-01-22 00 UTC, step 48 h, 1 deg grid."""
-    import cfgrib
-
-    base = AIFS_URL.format(run=AIFS_RUN, step=AIFS_STEP)
-    target = d.cache_dir("ch03") / f"aifs_{AIFS_RUN:%Y%m%d%H}_{AIFS_STEP}h_ztq.grib2"
-    if not target.exists():
-        index = [json.loads(line) for line in _get(base + ".index").decode().splitlines()]
-        wanted = [r for r in index if r["levtype"] == "pl" and r["param"] in ("z", "t", "q")]
-        tmp = target.with_suffix(".tmp")
-        with tmp.open("wb") as f:
-            for r in wanted:
-                first, last = r["_offset"], r["_offset"] + r["_length"] - 1
-                f.write(_get(base + ".grib2", {"Range": f"bytes={first}-{last}"}))
-        tmp.replace(target)
-    parts = []
-    for ds in cfgrib.open_datasets(str(target), backend_kwargs={"indexpath": ""}):
-        ds = ds.rename(isobaricInhPa="level")
-        ds = ds.assign_coords(longitude=((ds["longitude"] + 180) % 360) - 180)
-        parts.append(ds.sortby("longitude").sel(**GRID_1DEG, method="nearest", tolerance=0.01))
-    out = xr.merge(parts, compat="override")[["z", "t", "q"]].load()
+    ds = d.ecmwf_forecast(
+        ["z", "t", "q"], steps=AIFS_STEP, levels=LEVELS_13, model="aifs", run=AIFS_RUN, area=AREA
+    )
+    out = ds[["z", "t", "q"]].squeeze("step", drop=True)
+    out = out.sel(**GRID_1DEG, method="nearest", tolerance=0.01)
     keep = {"level", "latitude", "longitude"}
     out = out.drop_vars([c for c in out.coords if c not in keep])
     out["level"] = out["level"].astype("int64")

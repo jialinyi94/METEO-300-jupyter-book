@@ -154,3 +154,32 @@ def test_error_summary_and_lead_bins():
     assert summary.loc[("A", "0–24"), "hits"] == 4
     assert summary.loc[("B", "0–24"), "hits"] == 0
     assert np.isnan(summary.loc[("B", "0–24"), "track_km"])
+
+
+def test_forecast_msl_reads_both_models_through_the_public_reader(monkeypatch):
+    calls = []
+
+    def fake_forecast(params, *, steps, levels=None, model="ifs", run=None, area=None):
+        calls.append((params, model, pd.Timestamp(run), area))
+        lat, lon = np.arange(62.0, 43.99, -2.0), np.arange(-36.0, 12.01, 2.0)
+        msl = np.full((len(steps), lat.size, lon.size), 100000.0)
+        ds = xr.Dataset(
+            {"msl": (("step", "latitude", "longitude"), msl)},
+            coords={
+                "step": pd.to_timedelta(steps, unit="h"),
+                "latitude": lat,
+                "longitude": lon,
+                "time": pd.Timestamp(run),
+            },
+        )
+        return ds.assign_coords(valid_time=ds["time"] + ds["step"])
+
+    monkeypatch.setattr(ch12.d, "ecmwf_forecast", fake_forecast)
+    out = ch12.forecast_msl()
+    assert len(calls) == len(ch12.MODELS) * len(ch12.RUNS)
+    assert {c[1] for c in calls} == {"aifs", "ifs"}
+    assert all(c[0] == "msl" and c[3] == ch12.TRACK_AREA for c in calls)
+    assert out["msl"].dims == ("model", "run", "valid_time", "latitude", "longitude")
+    # The last run sees only the valid times at or after it.
+    last = out["msl"].sel(model="AIFS", run=ch12.RUNS[-1]).notnull().any(["latitude", "longitude"])
+    assert int(last.sum()) == int((ch12.VALID_TIMES >= ch12.RUNS[-1]).sum())

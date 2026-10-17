@@ -227,6 +227,47 @@ def test_ecmwf_requests_put_geopotential_on_pressure_levels():
         d._ecmwf_requests(["z"], None)
 
 
+def test_ecmwf_forecast_checks_the_model(offline):
+    with pytest.raises(ValueError, match="model is one of"):
+        d.ecmwf_forecast("msl", steps=0, model="aifs-ens")
+    # The experimental AIFS has no latest run: its last run is 2025-02-24 00 UTC.
+    with pytest.raises(ValueError, match="before 2025-02-25"):
+        d.ecmwf_forecast("msl", steps=0, model="aifs")
+    with pytest.raises(ValueError, match="before 2025-02-25"):
+        d.ecmwf_forecast("msl", steps=0, model="aifs", run="2025-03-01T00")
+
+
+def test_ecmwf_forecast_passes_the_experimental_aifs_to_the_download(monkeypatch, tmp_path):
+    monkeypatch.delenv("METEO300_OFFLINE", raising=False)
+    monkeypatch.setenv("METEO300_CACHE", str(tmp_path))
+    calls = []
+
+    def fake_online(plist, step_list, lev_list, model, run_ts, area):
+        calls.append((plist, step_list, lev_list, model, run_ts, area))
+        steps = [pd.Timedelta(hours=6)]
+        return xr.Dataset({"msl": (("step",), [99000.0])}, coords={"step": steps})
+
+    monkeypatch.setattr(d, "_ecmwf_online", fake_online)
+    ds = d.ecmwf_forecast("msl", steps=6, model="aifs", run="2024-12-03T06", area=(62, -36, 44, 12))
+    run = pd.Timestamp("2024-12-03T06")
+    assert calls == [(["msl"], [6], None, "aifs", run, (62.0, -36.0, 44.0, 12.0))]
+    assert float(ds["msl"][0]) == 99000.0
+
+
+def test_ecmwf_client_keeps_the_stream_of_the_experimental_aifs():
+    # Before 2026-05-12 the IFS runs of 06 and 18 UTC are under the stream "scda". The
+    # experimental AIFS keeps all four runs under "oper".
+    def url(model):
+        client = d._ecmwf_client("aws", model)
+        res = client._get_urls(
+            date="20241203", time=6, type="fc", step=6, param="msl", use_index=False
+        )
+        return res.urls[0]
+
+    assert url("aifs").endswith("/20241203/06z/aifs/0p25/oper/20241203060000-6h-oper-fc.grib2")
+    assert "/06z/ifs/0p25/scda/" in url("ifs")
+
+
 def test_offline_sounding(offline):
     df = d.sounding("2023-11-02T12", "03808")
     assert df.attrs["units"]["pressure"] == "hPa"
