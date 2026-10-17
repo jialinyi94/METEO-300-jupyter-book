@@ -52,7 +52,7 @@ $$
 \frac{dp}{p} = -\frac{g}{R_d T_v}\, dz
 $$
 
-气象数据用位势高度 $Z$ 代替几何高度 $z$。两者的关系是 $g_0\,dZ = g\,dz$。式中 $g_0 = 9.80665\ \mathrm{m\,s^{-2}}$ 是标准重力加速度。在对流层里，位势高度和几何高度相差约 0.1%。从等压面 $p_1$ 积分到等压面 $p_2$，结果是压高公式：
+气象数据用位势高度 $Z$ 代替几何高度 $z$。两者的关系是 $g_0\,dZ = g\,dz$。式中 $g_0 = 9.80665\ \mathrm{m\,s^{-2}}$ 是标准重力加速度。在对流层里，位势高度和几何高度相差不到 1%。从等压面 $p_1$ 积分到等压面 $p_2$，结果是压高公式：
 
 ```{math}
 :label: eq-ch03-hypsometric
@@ -158,7 +158,9 @@ IGRA2 的论文是 Durre 等，2018，[`doi:10.1175/JTECH-D-17-0223.1`](https://
 
 AI 天气连接一节还读取 37 个等压面上的 `z`、`t` 和 `q`。ERA5 的论文是 Hersbach 等，2020，[doi:10.1002/qj.3803](https://doi.org/10.1002/qj.3803)。从 2025-07-02 起，ERA5 以 CC BY 4.0 许可发布。
 
-AI 预报用 ECMWF 开放数据里的 AIFS。AIFS 是 ECMWF 的 AI 天气模型，网格间距是 0.25°。本页读取 2025-01-22 00 UTC 起报的预报，预报时效是 48 h。这次预报早于 2025-02-25，那时 AIFS 还是试验版本。AIFS 的论文是 Lang 等，2024，[`arXiv:2406.01465`](https://arxiv.org/abs/2406.01465)。ECMWF 开放数据以 CC BY 4.0 许可发布。
+AI 预报用 ECMWF 开放数据里的 AIFS。AIFS 是 ECMWF 的 AI 天气模型，论文是 Lang 等，2024，[`arXiv:2406.01465`](https://arxiv.org/abs/2406.01465)。它的原生网格间距约 31 km。开放数据把输出插值到 0.25° 网格，见 [ECMWF 的 AIFS 数据页](https://www.ecmwf.int/en/forecasts/datasets/aifs-machine-learning-data)。ECMWF 开放数据以 CC BY 4.0 许可发布。
+
+本页读取 2025-01-22 00 UTC 起报的预报，预报时效是 48 h。这次预报早于 2025-02-25，那时 AIFS 还是试验版本。
 
 标准大气用 1976 年美国标准大气。它由 NOAA、NASA 和美国空军在 1976 年发布。MetPy 的函数 `pressure_to_height_std` 和 `add_height_to_pressure` 用它的对流层部分。
 
@@ -318,7 +320,7 @@ fig = ch03.plot_scale_height(prof, levels, fits)
 
 ## AI 天气连接
 
-AI 天气模型在等压面上预报。Pangu-Weather、FuXi 和 AIFS 都用同样的 13 个等压面。GraphCast 有 37 层和 13 层两个版本。WeatherBench 2 也在这 13 个等压面上评估模型。13 个等压面的气压分别是 50、100、150、200、250、300、400、500、600、700、850、925 和 1000 hPa。
+AI 天气模型在等压面上预报。Pangu-Weather、FuXi 和 AIFS Single v1 都用同样的 13 个等压面。2026-05-12 起，AIFS Single v2 增加了 10 hPa。GraphCast 有 37 层和 13 层两个版本。WeatherBench 2 也在这 13 个等压面上评估模型。13 个等压面的气压分别是 50、100、150、200、250、300、400、500、600、700、850、925 和 1000 hPa。
 
 每个等压面上，模型输出位势 `z`、温度 `t` 和比湿 `q`。WeatherBench 2 把它们叫作 `geopotential`、`temperature` 和 `specific_humidity`。`z` 是位势，单位 m² s⁻²。位势除以 $g_0$ 才是位势高度。
 
