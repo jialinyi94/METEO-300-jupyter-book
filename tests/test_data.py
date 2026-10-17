@@ -143,7 +143,8 @@ def test_page_samples(monkeypatch, tmp_path):
 
     monkeypatch.setenv("METEO300_OFFLINE", "1")
     back = d.page_data("ch02-test-mslp.csv", broken)
-    assert back["mslp"].tolist() == [1012.5, 1001.25] and back.attrs["units"]["mslp"] == "hPa"
+    # The default keeps 5 significant digits, so 1001.25 becomes 1001.2.
+    assert back["mslp"].tolist() == [1012.5, 1001.2] and back.attrs["units"]["mslp"] == "hPa"
     assert d.page_data("t3-test.nc", broken)["t"].attrs["units"] == "K"
     monkeypatch.delenv("METEO300_OFFLINE")
     with pytest.warns(UserWarning, match="page sample"):
@@ -154,6 +155,39 @@ def test_page_samples(monkeypatch, tmp_path):
     with pytest.raises(d.DataAccessError):
         d.save_page_sample(df, "ch02-too-big.csv")
     assert not (tmp_path / "ch02-too-big.csv").exists()
+
+
+def test_csv_page_sample_digits_and_forecast_times(monkeypatch, tmp_path):
+    monkeypatch.setenv("METEO300_SAMPLES", str(tmp_path))
+    table = pd.DataFrame(
+        {
+            "model": ["AIFS", "IFS"],
+            "run": pd.to_datetime(["2025-12-22T00", "2025-12-22T12"]),
+            "lead_h": [0, 12],
+            "valid": pd.to_datetime(["2025-12-22T00", "2025-12-23T00"]),
+            "speed": np.array([27.0612345, 70.86649], dtype="float32"),
+            "flux": [1264252.4, np.nan],
+        }
+    )
+    table.attrs = {"units": {"speed": "m/s"}}
+    path = d.save_page_sample(table, "ch10-test-jet.csv", digits=4)
+    text = path.read_text()
+    assert ",27.06," in text and ",1264000.0" in text and "1264252" not in text
+    assert table["speed"].dtype == "float32" and table["flux"].iloc[0] == 1264252.4
+
+    monkeypatch.setenv("METEO300_OFFLINE", "1")
+    back = d.page_data("ch10-test-jet.csv", lambda: None)
+    assert back["run"].tolist() == table["run"].tolist()
+    assert back["valid"].tolist() == table["valid"].tolist()
+    assert back["speed"].tolist() == [27.06, 70.87]
+    assert back["flux"].iloc[0] == 1264000.0 and np.isnan(back["flux"].iloc[1])
+    assert back["lead_h"].tolist() == [0, 12] and back.attrs["units"]["speed"] == "m/s"
+
+    # Columns named "run" or "valid" that do not hold times stay as they are.
+    other = pd.DataFrame({"run": [1, 2], "valid": ["yes", "no"]})
+    d.save_page_sample(other, "ch10-test-other.csv")
+    back = d.page_data("ch10-test-other.csv", lambda: None)
+    assert back["run"].tolist() == [1, 2] and back["valid"].tolist() == ["yes", "no"]
 
 
 def test_bundled_natural_earth_and_station_plot():

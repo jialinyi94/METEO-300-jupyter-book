@@ -325,9 +325,9 @@ def save_page_sample(obj: xr.Dataset | pd.DataFrame, file: str, *, digits: int =
     """Write a page sample. Refuse files above 5 MiB.
 
     A Dataset goes to netCDF4 with zlib compression. Floats are stored as float32 with
-    ``digits`` significant digits. A DataFrame goes to CSV; ``df.attrs`` (units,
-    attribution) goes into the first line. Add a row for the file to
-    ``data/samples/ATTRIBUTION.md``.
+    ``digits`` significant digits. A DataFrame goes to CSV; its float columns keep ``digits``
+    significant digits, and the index stays unchanged. ``df.attrs`` (units, attribution) goes
+    into the first line. Add a row for the file to ``data/samples/ATTRIBUTION.md``.
     """
     path = page_sample_path(file)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -346,12 +346,23 @@ def save_page_sample(obj: xr.Dataset | pd.DataFrame, file: str, *, digits: int =
     else:
         if not isinstance(obj, pd.DataFrame):
             raise TypeError("a .csv page sample takes a pandas.DataFrame")
-        _write_df_csv(obj, path)
+        _write_df_csv(_round_float_columns(obj, digits), path)
     size = path.stat().st_size
     if size > SAMPLE_LIMIT_BYTES:
         path.unlink()
         raise DataAccessError(f"{file}: {size / 1e6:.1f} MB is above the 5 MiB limit")
     return path
+
+
+def _round_float_columns(df: pd.DataFrame, digits: int) -> pd.DataFrame:
+    """A copy of ``df`` with each float column rounded to ``digits`` significant digits."""
+    out = df.copy()
+    for i in range(out.shape[1]):
+        col = out.iloc[:, i]
+        if pd.api.types.is_float_dtype(col):
+            rounded = col.map(lambda v: float(f"{v:.{digits}g}"), na_action="ignore")
+            out.isetitem(i, rounded.astype("float64"))
+    return out
 
 
 def page_data(file: str, build: Callable[[], Any]) -> Any:
@@ -463,6 +474,16 @@ def _read_df_csv(path: Path) -> pd.DataFrame:
     for col in ("time", "release_time"):
         if col in df.columns:
             df[col] = pd.to_datetime(df[col])
+    # Forecast tables: "run" is the initialization time and "valid" the valid time. Parse
+    # them only when they hold text, so that a numeric column with the same name stays as is.
+    for col in ("run", "valid"):
+        if col in df.columns and pd.api.types.is_string_dtype(df[col]):
+            try:
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore", UserWarning)  # "Could not infer format"
+                    df[col] = pd.to_datetime(df[col])
+            except (ValueError, TypeError):
+                continue
     df.attrs.update(meta.get("attrs", {}))
     return df
 
