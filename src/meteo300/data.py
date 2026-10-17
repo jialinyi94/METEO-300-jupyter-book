@@ -2105,13 +2105,16 @@ HOW_TO_REGISTER = {
         "(chmod 600 ~/.netrc):\n"
         f"  machine {EARTHDATA_HOST} login <USERNAME> password <PASSWORD>\n"
         "Or write a user token into ~/.config/earthdata/token (chmod 600), "
-        "or set EARTHDATA_TOKEN, or EARTHDATA_USERNAME and EARTHDATA_PASSWORD."
+        "or set EARTHDATA_TOKEN, or EARTHDATA_USERNAME and EARTHDATA_PASSWORD.\n"
+        "For imerg(), also approve the application 'NASA GESDISC DATA ARCHIVE' in your "
+        "Earthdata account (see LICENCE_HINTS['gesdisc'])."
     ),
     "eumetsat": (
         "Register at https://eoportal.eumetsat.int, get your API key and secret at "
         "https://api.eumetsat.int/api-key, then run:\n"
         "  uv run eumdac set-credentials <CONSUMER_KEY> <CONSUMER_SECRET>\n"
-        "This writes ~/.eumdac/credentials."
+        "This writes ~/.eumdac/credentials. Then accept the EUMETSAT General Licence "
+        "(see LICENCE_HINTS['eumetsat'])."
     ),
     "knmi": (
         "Optional: register at https://developer.dataplatform.knmi.nl for your own key, then "
@@ -2196,6 +2199,77 @@ def knmi_key() -> tuple[str, bool]:
 
 def _need(service: str, what: str) -> CredentialsError:
     return CredentialsError(f"{what} needs an account.\n{HOW_TO_REGISTER[service]}")
+
+
+# Two services answer HTTP 403 until the user accepts their terms on a website, even with
+# valid credentials. Each entry: (texts that identify the 403, what the user must do).
+# GESDISC_APPROVE_URL is the "resolution_url" of the GES DISC 403 body (seen 2026-10-17).
+GESDISC_APPROVE_URL = "https://urs.earthdata.nasa.gov/approve_app?client_id=e2WVk8Pw6weeLUKZYOxvTQ"
+_APPROVE_URL_RE = re.compile(r"https://urs\.earthdata\.nasa\.gov/approve_app\?client_id=[\w-]+")
+LICENCE_HINTS = {
+    "gesdisc": (
+        ("eula acceptance failure",),
+        "NASA GES DISC answered HTTP 403 'EULA Acceptance Failure': your Earthdata account "
+        "has not approved the GES DISC application.\n"
+        "Do this once: log in at https://urs.earthdata.nasa.gov, open Applications > "
+        "Authorized Apps, click 'Approve More Applications', search for "
+        "'NASA GESDISC DATA ARCHIVE', click 'Authorize' and accept the EULA.\n"
+        "Or open this page while logged in and approve: {url}",
+    ),
+    "eumetsat": (
+        ("generallicense required", "general licence required", "general license required"),
+        "EUMETSAT Data Store answered HTTP 403 'GeneralLicense required': your EUMETSAT "
+        "account has not accepted the General Licence.\n"
+        "Do this once: log in at https://user.eumetsat.int/profile?activeTab=data-licenses, "
+        "and under 'Data licences' request the licence 'Meteosat > 1 hr latency & Metop'. "
+        "Tick 'I accept these licensing terms and conditions' and submit.",
+    ),
+}
+
+
+def _error_text(err: BaseException | str) -> str:
+    """The message of ``err``, eumdac's ``extra_info``, the HTTP body and the chained causes."""
+    if isinstance(err, str):
+        return err
+    parts: list[str] = []
+    seen: set[int] = set()
+    exc: BaseException | None = err
+    while exc is not None and id(exc) not in seen:
+        seen.add(id(exc))
+        parts.append(str(exc))
+        info = getattr(exc, "extra_info", None)
+        if info:
+            parts.append(repr(info))
+        response = getattr(exc, "response", None)
+        if response is not None:
+            try:
+                parts.append(str(response.text))
+            except Exception:  # noqa: BLE001 - a closed stream has no text; skip it
+                pass
+        exc = exc.__cause__ or exc.__context__
+    return "\n".join(parts)
+
+
+def licence_hint(err: BaseException | str) -> str | None:
+    """What the user must do on a website, when ``err`` is a 403 for terms not accepted yet.
+
+    ``err`` is an exception or an error text, for example the body of the HTTP response.
+    The function knows the cases in :data:`LICENCE_HINTS`: GES DISC "EULA Acceptance Failure"
+    and EUMETSAT "GeneralLicense required". For other errors it returns None.
+    """
+    text = _error_text(err)
+    low = text.lower()
+    for needles, hint in LICENCE_HINTS.values():
+        if any(n in low for n in needles):
+            found = _APPROVE_URL_RE.search(text)
+            return hint.format(url=found.group(0) if found else GESDISC_APPROVE_URL)
+    return None
+
+
+def _licence_error(err: BaseException) -> CredentialsError | None:
+    """A :class:`CredentialsError` with the steps of :func:`licence_hint`, or None."""
+    hint = licence_hint(err)
+    return CredentialsError(hint) if hint else None
 
 
 # =============================================================================================
@@ -2440,8 +2514,10 @@ def imerg(
 ) -> xr.Dataset:
     """GPM IMERG Final precipitation (0.1°) from NASA GES DISC. Needs a NASA Earthdata login.
 
-    Without credentials it raises :class:`CredentialsError`. :func:`gpcp` gives public
-    satellite-gauge precipitation at coarser resolution.
+    Without credentials it raises :class:`CredentialsError`. It raises the same error, with
+    the steps to fix it, when GES DISC answers HTTP 403 "EULA Acceptance Failure"; see
+    :func:`licence_hint`. :func:`gpcp` gives public satellite-gauge precipitation at coarser
+    resolution.
 
     Parameters
     ----------
@@ -2473,7 +2549,13 @@ def imerg(
         granules = earthaccess.search_data(**kw)
         if not granules:
             raise DataAccessError(f"no IMERG {frequency} granules for {times[0]}..{times[-1]}")
-        files = earthaccess.download(granules, local_path=str(cache_dir("imerg")))
+        try:
+            files = earthaccess.download(granules, local_path=str(cache_dir("imerg")))
+        except Exception as err:
+            licence = _licence_error(err)
+            if licence is None:
+                raise
+            raise licence from err
         parts = []
         for f in files:
             ds = xr.open_dataset(f, group="Grid", engine="h5netcdf", decode_times=True)
@@ -2564,8 +2646,10 @@ def meteosat(
     """Calibrated Meteosat SEVIRI Level 1.5 data from the EUMETSAT Data Store, read with satpy.
 
     Needs EUMETSAT API credentials (``~/.eumdac/credentials``). Without them it raises
-    :class:`CredentialsError`. :func:`meteosat_image` gives public pictures, and
-    :func:`goes_abi` gives public calibrated data from GOES.
+    :class:`CredentialsError`. It raises the same error, with the steps to fix it, when the
+    Data Store answers HTTP 403 "GeneralLicense required"; see :func:`licence_hint`.
+    :func:`meteosat_image` gives public pictures, and :func:`goes_abi` gives public
+    calibrated data from GOES.
 
     A full-disc SEVIRI file is about 250 MB. The reader downloads it once into the cache.
 
@@ -2605,8 +2689,17 @@ def meteosat(
     nat = sorted(folder.glob("*.nat"))
     if not nat:
         entry = next(e for e in product.entries if e.endswith(".nat"))
-        with product.open(entry=entry) as fsrc, (folder / Path(entry).name).open("wb") as fdst:
-            shutil.copyfileobj(fsrc, fdst)
+        try:
+            with (
+                product.open(entry=entry) as fsrc,
+                (folder / Path(entry).name).open("wb") as fdst,
+            ):
+                shutil.copyfileobj(fsrc, fdst)
+        except Exception as err:
+            licence = _licence_error(err)
+            if licence is None:
+                raise
+            raise licence from err
         nat = sorted(folder.glob("*.nat"))
     scn = Scene(reader="seviri_l1b_native", filenames=[str(n) for n in nat])
     scn.load(_as_list(channels))
