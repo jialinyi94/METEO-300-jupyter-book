@@ -24,7 +24,7 @@ concurrency:
 jobs:
   build:
     name: Build site (execute notebooks)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
       # The readers in meteo300.data read data/samples/ instead of the network.
@@ -52,7 +52,8 @@ jobs:
           restore-keys: |
             downloads-
 
-      - uses: astral-sh/setup-uv@v10
+      # setup-uv has no major tags after v7. Use the full version.
+      - uses: astral-sh/setup-uv@v10.3.0
         with:
           enable-cache: true
 
@@ -80,14 +81,14 @@ jobs:
 
   checks:
     name: Writing standard and code checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
       METEO300_OFFLINE: "1"
     steps:
       - uses: actions/checkout@v7
 
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.3.0
         with:
           enable-cache: true
 
@@ -107,7 +108,7 @@ jobs:
     name: Deploy to GitHub Pages
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [build, checks]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       pages: write
       id-token: write
