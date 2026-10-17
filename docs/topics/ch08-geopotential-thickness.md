@@ -208,9 +208,9 @@ fig = ch08.plot_snow_fraction(snow)
 
 地图和厚度用 ERA5 再分析。ERA5 是 ECMWF 制作的再分析数据集，给出 1940 年以来每小时的全球大气状态，网格间距 0.25°。本页从 ARCO-ERA5 读取 5 个等压面变量：位势、温度、比湿和两个风分量。本页还读取 5 个单层变量：海平面气压、降水量、降雪量、海陆掩码和地形高度。ERA5 的论文是 Hersbach 等，2020，[doi:10.1002/qj.3803](https://doi.org/10.1002/qj.3803)。ERA5 以 CC BY 4.0 许可发布。
 
-AI 天气连接一节用 WeatherBench 2。WeatherBench 2 是 Google Research 的 AI 天气模型评估基准。它把 ERA5、ERA5 气候态和多个模型的预报插值到 1.5° 网格上。本页读取其中 5 个数据集：ERA5、1990 年至 2019 年的 ERA5 气候态、IFS HRES 的分析场、GraphCast 的预报和 IFS HRES 的预报。本页还读取 WeatherBench 2 算好的 2020 年评分。WeatherBench 2 的论文是 Rasp 等，2024，[doi:10.1029/2023MS004019](https://doi.org/10.1029/2023MS004019)。
+AI 天气连接一节用 WeatherBench 2。WeatherBench 2 是 Google Research 的 AI 天气模型评估基准。它用面积加权平均把 ERA5、ERA5 气候态和多个模型的预报降到几种网格上，标准评分用 1.5° 网格。本页读取其中 5 个数据集的 1.5° 版本：ERA5、1990 年至 2019 年的 ERA5 气候态、IFS HRES 的分析场、GraphCast 的预报和 IFS HRES 的预报。本页还读取 WeatherBench 2 算好的 2020 年评分。WeatherBench 2 的论文是 Rasp 等，2024，[doi:10.1029/2023MS004019](https://doi.org/10.1029/2023MS004019)。
 
-GraphCast 是 Google DeepMind 的 AI 天气模型，论文是 Lam 等，2023，[doi:10.1126/science.adi2336](https://doi.org/10.1126/science.adi2336)。WeatherBench 2 的 GraphCast 预报从 ERA5 起报，起报时间从 2019-11-16 到 2021-01-31，每 12 h 一次。IFS HRES 是 ECMWF 的高分辨率确定性预报，从 ECMWF 的业务分析场起报。本书不提交这两个模型的预报。页面只在联网时读取它们，仓库里只有从它们算出的评分。
+GraphCast 是 Google DeepMind 的 AI 天气模型，论文是 Lam 等，2023，[doi:10.1126/science.adi2336](https://doi.org/10.1126/science.adi2336)。WeatherBench 2 的 2020 年 GraphCast 预报从 ERA5 起报，起报时间从 2019-11-16 到 2021-01-31，每 12 h 一次。IFS HRES 是 ECMWF 的高分辨率确定性预报，从 ECMWF 的业务分析场起报。本书不提交这两个模型的预报。页面只在联网时读取它们，仓库里只有从它们算出的评分。
 
 两个备选数据集。ECMWF 开放数据有 IFS 和 AIFS 的实时预报。IFS 给出位势高度 `gh`，AIFS 给出位势 `z`。NOAA 的 GFS 和 GraphCastGFS 也有等压面上的位势高度。完整的数据集条目见 [数据集参考页](../reference/datasets.md)。
 
@@ -425,11 +425,11 @@ print(f"手算：RMSE {rmse_hand:.1f} m，ACC {acc_hand:.3f}，减去区域平�
 
 ## AI 天气连接
 
-Z500 是 AI 天气模型报告最多的变量。WeatherBench 2 的记分板、GraphCast 和 Pangu-Weather 的论文都报告它的 RMSE 和 ACC。ECMWF 也长期用它衡量自己的模式。ECMWF 常看两个预报时效：ACC 降到 0.8 的预报时效和 ACC 降到 0.6 的预报时效。预报员通常认为，ACC 高于 0.6 的预报还能给出有用的天气形势。
+Z500 是 AI 天气模型报告最多的变量。WeatherBench 2 的记分板、GraphCast 和 Pangu-Weather 的论文都报告它的 RMSE 和 ACC。ECMWF 也长期用它衡量自己的模式。ECMWF 的年度评估报告看 ACC 降到 0.8 的预报时效，见 [Haiden 等，2024](https://www.ecmwf.int/sites/default/files/elibrary/092024/81582-evaluation-of-ecmwf-forecasts.pdf)。早年的报告看 ACC 降到 0.6 的预报时效。ECMWF 的 [预报用户指南](https://confluence.ecmwf.int/spaces/FUG/pages/673550781/Section%2B6.2.2%2BAnomaly%2BCorrelation%2BCoefficient) 说，ACC 低于 0.6 时，天气尺度系统的位置预报不再有用。
 
 这个变量在 ERA5 里是 500 hPa 的 `z`，在 WeatherBench 2 里是 `geopotential` 在 `level=500` 的值。GraphCast 的输入和输出都包括多个等压面上的 `geopotential`，单位是 m² s⁻²。WeatherBench 2 的 RMSE 也用 m² s⁻² 报告。RMSE 除以 $g_0$，才得到以 m 为单位的位势高度误差。
 
-函数 `ch08.case_scores` 读取 GraphCast 和 IFS HRES 在 2021-01-15 12 UTC 起报的预报。预报时效是 ［0, 240］ h，间隔 6 h。它用上一节的 earthkit 函数算出三个区域的评分：全球、北半球和欧洲。真值是 ERA5。IFS HRES 还和它自己的分析场比较，WeatherBench 2 把这个真值叫作 `hres_t0`。样本只保存评分，不保存预报。
+函数 `ch08.case_scores` 读取 GraphCast 和 IFS HRES 在 2021-01-15 12 UTC 起报的预报。预报时效是 ［0, 240］ h，间隔 6 h。它用上一节的 earthkit 函数算出三个区域的评分：全球、20°N 以北的北半球和欧洲。真值是 ERA5。IFS HRES 还和它自己的分析场比较，WeatherBench 2 把这个真值叫作 `hres_t0`。样本只保存评分，不保存预报。
 
 WeatherBench 2 先对每个起报时间求加权的 MSE，再对全年平均，最后开平方。本页只有一个起报时间，所以本页的 RMSE 和 WeatherBench 2 的定义一致。函数还读取 WeatherBench 2 算好的 2020 年平均评分，用于比较。样本还保存了 scores 和手算的结果，下面的代码检查它们。
 
