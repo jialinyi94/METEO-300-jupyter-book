@@ -3,6 +3,7 @@ name = "meteo300"
 version = "0.1.0"
 description = "A data book: atmospheric science with real data, for AI weather analysts"
 authors = [{ name = "Jialin Yi" }]
+license = "Apache-2.0"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
@@ -54,8 +55,7 @@ testpaths = ["tests"]
 [tool.ste_check]
 # Settings of tools/ste_check.py, the automatic checks of STYLE.md.
 paths = ["intro.md", "README.md", "docs"]
-# The old pages wait for deletion (ALP-423).
-exclude = ["docs/thermo", "docs/moist", "docs/radiation", "docs/dynamic", "intro.md"]
+exclude = []
 glossary = "glossary.md"
 zh_max_chars = 40
 en_max_words = 25

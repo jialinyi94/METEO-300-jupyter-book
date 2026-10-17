@@ -208,3 +208,7 @@ __marimo__/
 
 # MyST build outputs
 _build
+
+# Marker files for the P-ALP-12 agents. They stay untracked.
+.book-ready
+.data-ready
