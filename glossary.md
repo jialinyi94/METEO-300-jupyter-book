@@ -270,7 +270,7 @@
 | 光谱辐照度 | spectral irradiance | $F_\Lambda$ | W m⁻² μm⁻¹ | — | 单色辐照度、分光辐照度 |
 | 波长 | wavelength | $\Lambda$ | μm | — | — |
 | 太阳常数 | solar constant | $S_0$ | W m⁻² | — | — |
-| 太阳天顶角 | solar zenith angle | — | ° | — | — |
+| 太阳天顶角 | solar zenith angle | $Z$ | ° | earthkit-meteo `cos_solar_zenith_angle` 给出 $\cos Z$ | — |
 | 反照率 | albedo | $\alpha$ | — | `fal` / `forecast_albedo` | 反照度 |
 | 发射率 | emissivity | $\varepsilon$ | — | — | 比辐射率、发射本领 |
 | 吸收率 | absorptivity | $a$ | — | — | 吸收比 |
@@ -287,6 +287,26 @@
 | 温室效应 | greenhouse effect | — | — | — | — |
 | 辐射平衡 | radiative equilibrium | — | — | — | 辐射均衡 |
 | 累积量 | accumulated field | — | J m⁻² | — | 累计量 |
+| 辐亮度 | radiance | $I$ | W m⁻² sr⁻¹ μm⁻¹ | GOES ABI L1b `Rad` | 辐射亮度 |
+| 波数 | wavenumber | $\tilde{\nu}$ | cm⁻¹ | — | — |
+| 波段 | spectral band | — | μm | GOES ABI `C02`、`C08`、`C13` | 光谱通道 |
+| 大气窗区 | atmospheric window | — | μm | — | 大气窗口、窗口区 |
+| 反射率 | reflectance | — | % | GOES ABI L2 `CMI`，可见光波段 | 反射比 |
+| 透过率 | transmittance | $\mathcal{T}$ | — | — | 透射率、透射比 |
+| 大气光学质量 | relative optical air mass | $m$ | — | pvlib `get_relative_airmass` | — |
+| 等效光学厚度 | effective optical depth | $\tau_{\mathrm{eff}}$ | — | — | — |
+| 太阳赤纬 | solar declination | $\delta_\odot$ | ° | earthkit-meteo `solar_declination_angle` | 赤纬角 |
+| 时角 | hour angle | $h_\odot$ | ° | — | 太阳时角 |
+| 晴空 | clear sky | — | — | ERA5 `ssrdc`；pvlib `Location.get_clearsky` | — |
+| 灰体大气 | grey atmosphere | — | — | climlab `GreyRadiationModel` | 灰色大气 |
+| 辐射对流平衡 | radiative–convective equilibrium | RCE | — | climlab `RadiativeConvectiveModel` | 辐射-对流平衡 |
+| 对流调整 | convective adjustment | — | — | climlab `ConvectiveAdjustment` | — |
+| 静止卫星 | geostationary satellite | — | — | GOES、Meteosat、Himawari | 地球静止卫星、同步卫星 |
+| 辐射传输模式 | radiative transfer model | — | — | RTTOV | 辐射传输模型 |
+| Planck 常数 | Planck constant | $h$ | J s | `scipy.constants.h` | 普朗克常数 |
+| Boltzmann 常数 | Boltzmann constant | $k_B$ | J K⁻¹ | `scipy.constants.k` | 玻尔兹曼常数 |
+| 光速 | speed of light | $c$ | m s⁻¹ | `scipy.constants.c` | — |
+| 光伏出力 | PV power output | $P_{\mathrm{PV}}$ | MW | pvlib `pvwatts_dc` | 光伏功率 |
 
 ## 边界层
 

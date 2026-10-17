@@ -26,7 +26,8 @@ dependencies = [
     "cfgrib>=0.9.15.1",
     "s3fs>=2026.9.0",
     "satpy>=0.60.0",
-    "h5netcdf>=1.8.1",
+    # h5netcdf >= 1.8 makes h5py optional. Without h5py, engine="h5netcdf" cannot open files.
+    "h5netcdf[h5py]>=1.8.1",
     "earthaccess>=0.19.0",
     "cdsapi>=0.7.7",
     "eumdac>=3.1.1",
@@ -50,6 +51,10 @@ dependencies = [
     # Without ipywidgets, "import tqdm.auto" in a notebook warns "IProgress not found".
     # "import metpy.calc" imports pooch, and pooch imports tqdm.auto.
     "ipywidgets>=8",
+    "pvlib>=0.16.1",
+    "climlab>=0.9.2",
+    # climlab imports six, but the package does not require it.
+    "six>=1.17.0",
 ]
 
 [dependency-groups]
