@@ -667,7 +667,7 @@ ERA5_STORE_1P5 = (
 )
 ERA5_ATTRIBUTION = (
     "Contains modified Copernicus Climate Change Service information. ERA5: Hersbach et al. "
-    "(2020), doi:10.1002/qj.3803. Copernicus licence."
+    "(2020), doi:10.1002/qj.3803. Licence: CC BY 4.0."
 )
 
 # Short names that the readers accept, mapped to the ARCO-ERA5 / WeatherBench 2 names.
@@ -1167,6 +1167,8 @@ def sounding(time: TimeLike, station: str, *, source: str = "auto") -> pd.DataFr
     -------
     pandas.DataFrame, one row per level, sorted from the surface upward. Columns: pressure,
     height, temperature, dewpoint, relative_humidity, direction, speed, u_wind, v_wind.
+    ``height`` is the geopotential height in m (IGRA2 GPH, Wyoming HGHT). IGRA2 gives it on
+    some levels only.
     ``df.attrs`` holds units, station, latitude, longitude, time and source.
 
     Notes

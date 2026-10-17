@@ -4,16 +4,18 @@ The files in this directory are small extracts of public data sets. The book rea
 `METEO300_OFFLINE=1` is set, for example in CI. `tools/make_samples.py` makes the files again
 from the original sources. `SAMPLES` in `src/meteo300/data.py` gives the coverage of each file.
 
+Copernicus data in the Climate Data Store use the CC BY 4.0 licence since 2025-07-02.
+
 Changes to the original data: we select a small area, a few times and a few levels. Some files
 keep every second grid point. Floating-point values keep 5 significant digits. The files
 `co2_mm_*.csv`, the GOES file, the Cabauw file and the DE-Har file are unchanged copies.
 
 | File | Source | Licence | Attribution |
 |---|---|---|---|
-| `era5_ciaran_pl.nc`, `era5_ciaran_sfc.nc` | ERA5 hourly, ARCO-ERA5 Zarr on Google Cloud | Copernicus licence | Contains modified Copernicus Climate Change Service information 2026. Hersbach et al. (2020), doi:10.1002/qj.3803. Neither the European Commission nor ECMWF is responsible for any use of this information. |
-| `era5_global_1p5.nc`, `era5_monthly_1p5.nc` | ERA5 at 1.5°, WeatherBench 2 Zarr on Google Cloud | Copernicus licence | As ERA5 above. Regridding: WeatherBench 2, Rasp et al. (2024), doi:10.1029/2023MS004019. |
-| `era5_climatology_1p5.nc` | ERA5 climatology 1990-2019, WeatherBench 2 | Copernicus licence | As ERA5 above. Climatology: WeatherBench 2, Rasp et al. (2024). |
-| `era5_daily_toa.nc` | ERA5 hourly, ARCO-ERA5; daily means averaged to 1.5° | Copernicus licence | As ERA5 above. |
+| `era5_ciaran_pl.nc`, `era5_ciaran_sfc.nc` | ERA5 hourly, ARCO-ERA5 Zarr on Google Cloud | CC BY 4.0 | Contains modified Copernicus Climate Change Service information 2026. Hersbach et al. (2020), doi:10.1002/qj.3803. Neither the European Commission nor ECMWF is responsible for any use of this information. |
+| `era5_global_1p5.nc`, `era5_monthly_1p5.nc` | ERA5 at 1.5°, WeatherBench 2 Zarr on Google Cloud | CC BY 4.0 | As ERA5 above. Regridding: WeatherBench 2, Rasp et al. (2024), doi:10.1029/2023MS004019. |
+| `era5_climatology_1p5.nc` | ERA5 climatology 1990-2019, WeatherBench 2 | CC BY 4.0 | As ERA5 above. Climatology: WeatherBench 2, Rasp et al. (2024). |
+| `era5_daily_toa.nc` | ERA5 hourly, ARCO-ERA5; daily means averaged to 1.5° | CC BY 4.0 | As ERA5 above. |
 | `sounding_igra2.csv` | IGRA version 2, NOAA NCEI | NOAA data, no restrictions | Durre, I., X. Yin, R. S. Vose, S. Applequist and J. Arnfield (2016): Integrated Global Radiosonde Archive (IGRA), Version 2. NOAA NCEI, doi:10.7289/V5X63K0Q. |
 | `metar_egll.csv` | Iowa Environmental Mesonet (IEM), ASOS/METAR archive | Public domain | Iowa Environmental Mesonet, Iowa State University, mesonet.agron.iastate.edu. |
 | `ecmwf_opendata.nc` | ECMWF open data, IFS and AIFS Single | CC BY 4.0 | Copyright 2026 European Centre for Medium-Range Weather Forecasts (ECMWF). Source: www.ecmwf.int. Licence: CC BY 4.0. ECMWF does not accept any liability for errors or omissions in the data, their availability, or for any loss or damage from their use. |
