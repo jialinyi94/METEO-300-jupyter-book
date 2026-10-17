@@ -538,7 +538,7 @@
 | 纬度加权 | latitude weighting | — | — | — | — |
 | 均方根 | root mean square | RMS | 与变量相同 | — | — |
 | 损失函数 | loss function | — | — | — | 代价函数 |
-| 动能谱 | kinetic energy spectrum | $E(k)$ | m² s⁻² | — | 能谱 |
+| 动能谱 | kinetic energy spectrum | $E(k)$ | m² s⁻² | — | 能谱、能量谱 |
 | 纬向波数 | zonal wavenumber | $k$ | — | — | — |
 | 有效分辨率 | effective resolution | — | km | — | — |
 
