@@ -74,6 +74,7 @@
 | 理想气体定律 | ideal gas law | — | — | — | 理想气体状态方程 |
 | 干空气气体常数 | gas constant for dry air | $R_d$ | J kg⁻¹ K⁻¹ | MetPy `Rd` | — |
 | 水汽气体常数 | gas constant for water vapour | $R_v$ | J kg⁻¹ K⁻¹ | MetPy `Rv` | 水蒸气气体常数 |
+| 摩尔气体常数 | molar gas constant | $R^*$ | J mol⁻¹ K⁻¹ | MetPy `R` | 普适气体常数、通用气体常数 |
 | 热力学第一定律 | first law of thermodynamics | — | — | — | — |
 | 内能 | internal energy | — | J kg⁻¹ | — | — |
 | 定压比热容 | specific heat capacity at constant pressure | $c_p$ | J kg⁻¹ K⁻¹ | MetPy `Cp_d` | 定压比热、比定压热容 |
@@ -103,6 +104,7 @@
 | 降水 | precipitation | — | — | — | — |
 | 降水量 | precipitation amount | — | mm | `tp` / `total_precipitation_6hr` | — |
 | 降雪量 | snowfall | — | mm | `sf` / `snowfall` | — |
+| 降水率 | precipitation rate | — | mm h⁻¹ | IMERG `precipitation` | — |
 
 ## 风
 
@@ -342,10 +344,36 @@
 | 大气成分 | atmospheric composition | — | — | — | — |
 | 干空气 | dry air | — | — | — | 干燥空气 |
 | 体积混合比 | volume mixing ratio | — | ppm | — | — |
+| 二氧化碳 | carbon dioxide | CO₂ | ppm | NOAA GML `average` | — |
+| 温室气体 | greenhouse gas | — | — | — | — |
+| 季节循环 | seasonal cycle | — | — | — | — |
+| 季节振幅 | seasonal amplitude; peak-to-trough amplitude | — | ppm | — | — |
+| 年增长率 | annual growth rate | — | ppm a⁻¹ | — | — |
 | 臭氧 | ozone | O₃ | kg kg⁻¹ | `o3` / `ozone_mass_mixing_ratio` | — |
 | 气溶胶 | aerosol | — | — | — | 气胶、悬浮微粒 |
 | 气溶胶光学厚度 | aerosol optical depth | AOD | — | CAMS `aod550` | 气溶胶光学深度 |
+| 沙尘 | mineral dust | — | — | CAMS `duaod550` | — |
+| 海盐 | sea salt | — | — | CAMS `ssaod550` | — |
+| 硫酸盐 | sulphate | — | — | CAMS `suaod550` | — |
+| 有机物 | organic matter | — | — | CAMS `omaod550` | — |
+| 湿沉降 | wet deposition | — | — | — | — |
 | 云凝结核 | cloud condensation nuclei | CCN | cm⁻³ | — | 凝结核 |
+| 冰核 | ice-nucleating particle | INP | — | — | — |
+| 活化 | activation | — | — | — | — |
+| 霾滴 | haze droplet | — | μm | — | — |
+| 滴半径 | drop radius | $r_\mathrm{d}$ | μm | — | — |
+| 临界半径 | critical radius | $r_\mathrm{c}$ | μm | — | — |
+| 平衡水汽压 | equilibrium vapour pressure | $e_\mathrm{eq}$ | hPa | — | — |
+| 平衡饱和比 | equilibrium saturation ratio | $S_\mathrm{eq}$ | — | — | — |
+| 临界过饱和度 | critical supersaturation | $S_\mathrm{c} - 1$ | % | — | — |
+| 表面张力 | surface tension | $\sigma_\mathrm{w}$ | N m⁻¹ | — | — |
+| 液态水摩尔浓度 | molar concentration of liquid water | $n_\mathrm{L}$ | mol m⁻³ | — | — |
+| Kelvin 系数 | Kelvin coefficient | $a_\mathrm{K}$ | m | — | — |
+| Raoult 定律 | Raoult's law | — | — | — | 拉乌尔定律 |
+| 溶质物质的量 | amount of solute | $N_\mathrm{s}$ | mol | — | — |
+| 溶质摩尔分数 | mole fraction of solute | $x_\mathrm{s}$ | — | — | — |
+| van 't Hoff 因子 | van 't Hoff factor | $i$ | — | — | 范特霍夫因子 |
+| 溶质系数 | solute coefficient | $b_\mathrm{s}$ | m³ | — | — |
 | 云滴 | cloud droplet | — | μm | — | 云粒 |
 | 雨滴 | raindrop | — | mm | — | — |
 | 冰晶 | ice crystal | — | — | — | — |
@@ -410,6 +438,7 @@
 | 数据集 | dataset | — | — | — | 资料集、数据组 |
 | 观测站 | weather station | — | — | — | 测站、站点 |
 | 地面观测 | surface observation | — | — | — | 地面观察 |
+| 雨量计 | rain gauge | — | — | — | — |
 | METAR 报文 | METAR report | — | — | IEM `metar` | — |
 | 能见度 | visibility | — | m | MetPy `visibility` | — |
 | okta | okta | okta | 1 okta = 天空的 1/8 | — | — |
@@ -458,6 +487,7 @@
 | 标准误差 | standard error | — | 与变量相同 | — | 标准误 |
 | 距平相关系数 | anomaly correlation coefficient | ACC | — | — | 异常相关系数、距平相关 |
 | 连续分级概率评分 | continuous ranked probability score | CRPS | 与变量相同 | — | 连续排序概率评分、连续等级概率评分 |
+| SEEPS 评分 | stable equitable error in probability space | SEEPS | — | WeatherBench 2 的降水评分 | — |
 | 技巧评分 | skill score | — | — | — | 技巧分数 |
 | 纬度加权 | latitude weighting | — | — | — | — |
 | 均方根 | root mean square | RMS | 与变量相同 | — | — |
@@ -508,3 +538,5 @@
 23. 顺转和逆转：风随几何高度顺时针转动叫顺转，逆时针转动叫逆转。两个词只描述风随几何高度的转动，不描述风随时间的转动。风随时间的转动写“风向顺时针转了多少度”。
 24. 风矢端图：选它，不选“速端图”。它是 hodograph 的大气科学名词，图上画的是风向量的端点。
 25. 层平均温度：两个等压面之间的温度对 $\ln p$ 的平均，记作 $\langle T\rangle$。厚度正比于它。
+26. 滴半径：写 $r_\mathrm{d}$，沿用 METEO 300 第 5 课的符号。下标 d 表示滴。它和混合比 $r$ 是两个符号。表面张力写 $\sigma_\mathrm{w}$，因为 $\sigma$ 已经用于 Stefan–Boltzmann 定律。溶质系数写 $b_\mathrm{s}$，因为 METEO 300 的 $B$ 在本书表示浮力。
+27. 季节振幅：指一年里最高月和最低月的差，即峰谷差。二氧化碳的文献都这样定义。它是正弦振幅的 2 倍。

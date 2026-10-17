@@ -2289,6 +2289,22 @@ CAMS_DATASETS = {
     "eac4": "cams-global-reanalysis-eac4",
     "forecast": "cams-global-atmospheric-composition-forecasts",
 }
+# Short names of the CAMS netCDF files, mapped to the ADS request names.
+CAMS_ALIASES = {
+    "aod550": "total_aerosol_optical_depth_550nm",
+    "duaod550": "dust_aerosol_optical_depth_550nm",
+    "ssaod550": "sea_salt_aerosol_optical_depth_550nm",
+    "suaod550": "sulphate_aerosol_optical_depth_550nm",
+    "omaod550": "organic_matter_aerosol_optical_depth_550nm",
+    "bcaod550": "black_carbon_aerosol_optical_depth_550nm",
+    "pm2p5": "particulate_matter_2.5um",
+    "pm10": "particulate_matter_10um",
+}
+CAMS_ATTRIBUTION = (
+    "Generated using Copernicus Atmosphere Monitoring Service information {year}. Licence: "
+    "CC BY 4.0. Neither the European Commission nor ECMWF is responsible for any use that may "
+    "be made of the Copernicus information or data it contains."
+)
 
 
 def cams(
@@ -2302,56 +2318,123 @@ def cams(
 ) -> xr.Dataset:
     """CAMS atmospheric composition from the Copernicus Atmosphere Data Store (ADS).
 
-    Needs an ADS account (see ``HOW_TO_REGISTER["ads"]``). Without credentials it raises
-    :class:`CredentialsError`. :func:`aeronet_aod` gives public aerosol data.
+    Needs an ADS account (see ``HOW_TO_REGISTER["ads"]``) and the accepted licence of the
+    dataset. Without credentials it raises :class:`CredentialsError`. The reader has no
+    sample: in offline mode it raises :class:`DataAccessError`. Pages save their own sample
+    with :func:`save_page_sample`.
 
     Parameters
     ----------
     variables
-        ADS variable names, for example ``"total_aerosol_optical_depth_550nm"``,
-        ``"particulate_matter_2.5um"``, ``"carbon_monoxide"``.
+        ADS variable names, for example ``"total_aerosol_optical_depth_550nm"``, or the short
+        names of ``CAMS_ALIASES``, for example ``"aod550"`` and ``"duaod550"``.
     time
-        Analysis times (EAC4: 2003 onwards, every 3 h) or forecast base dates (00 UTC).
+        EAC4: analysis times, 2003 to the end of the previous year, every 3 h.
+        Forecast: base times, 00 or 12 UTC, 2015 onwards. Dates older than 30 days come from
+        tape and can wait in the ADS queue for minutes to hours.
     area, levels
         As in :func:`era5`. ``levels`` are pressure levels in hPa for 3D variables.
     dataset
         ``"eac4"`` (reanalysis, 0.75°) or ``"forecast"`` (global forecasts, 0.4°).
     leadtime_hours
-        Forecast only.
+        Forecast only. Lead time 0 is the analysis of the forecast system.
+
+    Returns
+    -------
+    xarray.Dataset with dims (time, level, latitude, longitude) for EAC4 and
+    (time, step, level, latitude, longitude) for forecasts, where ``time`` is the base time
+    and the coordinate ``valid_time`` is ``time + step``. Variables keep the short names of
+    the CAMS files, for example ``aod550``. Optical depths have the unit ``"1"``.
     """
-    names = _as_list(variables)
+    if dataset not in CAMS_DATASETS:
+        raise ValueError(f"dataset is one of {sorted(CAMS_DATASETS)}")
+    names = [CAMS_ALIASES.get(v, v) for v in _as_list(variables)]
     times = _time_list(time, None, "3h")
     area = _check_area(area)
-    creds = ads_credentials()
-    if creds is None:
-        raise _need("ads", "cams()")
+    leads = [int(h) for h in leadtime_hours]
 
-    def build() -> xr.Dataset:
+    def build(creds: tuple[str, str]) -> xr.Dataset:
         import cdsapi
 
         client = cdsapi.Client(url=creds[0], key=creds[1], quiet=True, progress=False)
-        days = sorted({t.strftime("%Y-%m-%d") for t in times})
-        hours = sorted({t.strftime("%H:%M") for t in times})
-        req: dict[str, Any] = {"variable": names, "data_format": "netcdf"}
-        if dataset == "eac4":
-            req |= {"date": [f"{days[0]}/{days[-1]}"], "time": hours}
-        else:
-            req |= {
-                "date": [f"{days[0]}/{days[-1]}"],
-                "time": hours,
-                "leadtime_hour": [str(h) for h in leadtime_hours],
-                "type": ["forecast"],
-            }
-        if levels:
-            req["pressure_level"] = [str(int(x)) for x in levels]
-        if area:
-            req["area"] = list(area)
+        req = _cams_request(names, times, area, levels, dataset, leads)
         target = cache_dir("cams") / f"{_key(dataset, req)}.download"
-        client.retrieve(CAMS_DATASETS[dataset], req, str(target))
-        ds = _open_maybe_zipped(target)
-        return _fix_units(ds)
+        if not target.exists():
+            tmp = target.with_suffix(".part")
+            client.retrieve(CAMS_DATASETS[dataset], req, str(tmp))
+            tmp.replace(target)
+        ds = _normalise_cams(_open_maybe_zipped(target), dataset)
+        return _select_cams(ds, times, leads, dataset)
 
-    return _cached_xr("cams", _key("cams", dataset, names, times, area, levels), build)
+    def online() -> xr.Dataset:
+        creds = ads_credentials()
+        if creds is None:
+            raise _need("ads", "cams()")
+        key = _key("cams", dataset, names, times, area, levels, leads)
+        return _cached_xr("cams", key, lambda: build(creds))
+
+    return _fetch(None, online, lambda s: s)
+
+
+def _cams_request(names, times, area, levels, dataset, leads) -> dict[str, Any]:
+    """The ADS request. Both CAMS datasets deliver netCDF only as a zip file."""
+    days = sorted({t.strftime("%Y-%m-%d") for t in times})
+    hours = sorted({t.strftime("%H:%M") for t in times})
+    req: dict[str, Any] = {
+        "variable": list(names),
+        "data_format": "netcdf_zip",
+        "date": [f"{days[0]}/{days[-1]}"],
+        "time": hours,
+    }
+    if dataset == "forecast":
+        req |= {"leadtime_hour": [str(h) for h in leads], "type": ["forecast"]}
+    if levels:
+        req["pressure_level"] = [str(int(x)) for x in levels]
+    if area:
+        req["area"] = list(area)
+    return req
+
+
+def _normalise_cams(ds: xr.Dataset, dataset: str) -> xr.Dataset:
+    """Rename the dims of an ADS netCDF file to time, step, level, latitude, longitude."""
+    renames = {
+        "valid_time": "time",
+        "forecast_reference_time": "time",
+        "forecast_period": "step",
+        "pressure_level": "level",
+    }
+    if "forecast_reference_time" in ds.dims and "valid_time" in ds.coords:
+        ds = ds.drop_vars("valid_time")
+    ds = ds.rename({k: v for k, v in renames.items() if k in ds.dims})
+    if dataset == "forecast" and "step" not in ds.dims:
+        ds = ds.expand_dims(step=[np.timedelta64(0, "ns")])
+    keep = {"time", "step", "level", "latitude", "longitude"}
+    ds = ds.drop_vars([c for c in ds.coords if c not in keep])
+    order = [d for d in ("time", "step", "level", "latitude", "longitude") if d in ds.dims]
+    ds = ds.transpose(*order)
+    if "step" in ds.dims:
+        ds = ds.assign_coords(valid_time=ds["time"] + ds["step"])
+    ds = _select_area(ds, None)
+    for var in ds.data_vars.values():
+        var.attrs = {k: v for k, v in var.attrs.items() if not k.startswith("GRIB_")}
+    year = pd.Timestamp(ds["time"].values.max()).year
+    ds.attrs = {
+        "source": f"Copernicus ADS, {CAMS_DATASETS[dataset]}",
+        "attribution": CAMS_ATTRIBUTION.format(year=year),
+    }
+    return _fix_units(ds)
+
+
+def _select_cams(ds: xr.Dataset, times, leads, dataset) -> xr.Dataset:
+    """Keep the requested times and lead times. The request covers a product of days x hours."""
+    have = pd.DatetimeIndex(ds["time"].values)
+    missing = [str(t) for t in times if t not in have]
+    if missing:
+        raise DataAccessError(f"CAMS {dataset} has no data for {missing}")
+    ds = ds.sel(time=list(times))
+    if "step" in ds.dims:
+        ds = ds.sel(step=[pd.Timedelta(hours=h) for h in leads])
+    return ds
 
 
 def _open_maybe_zipped(path: Path) -> xr.Dataset:
@@ -2445,11 +2528,21 @@ GPCP_ATTRIBUTION = (
     "GPCP Climate Data Record, NOAA NCEI. Adler et al. (2018), doi:10.3390/atmos9040138. "
     "No constraints on data access or use."
 )
+# IMERG runs: Early (about 4 h after observation), Late (about 14 h) and Final (about 3.5
+# months, calibrated with rain gauges). GES DISC keys: (frequency, run) -> (short name, DOI).
 IMERG_PRODUCTS = {
-    "half-hourly": "GPM_3IMERGHH",
-    "daily": "GPM_3IMERGDF",
-    "monthly": "GPM_3IMERGM",
+    ("half-hourly", "final"): ("GPM_3IMERGHH", "10.5067/GPM/IMERG/3B-HH/07"),
+    ("half-hourly", "late"): ("GPM_3IMERGHHL", "10.5067/GPM/IMERG/3B-HH-L/07"),
+    ("half-hourly", "early"): ("GPM_3IMERGHHE", "10.5067/GPM/IMERG/3B-HH-E/07"),
+    ("daily", "final"): ("GPM_3IMERGDF", "10.5067/GPM/IMERGDF/DAY/07"),
+    ("daily", "late"): ("GPM_3IMERGDL", "10.5067/GPM/IMERGDL/DAY/07"),
+    ("daily", "early"): ("GPM_3IMERGDE", "10.5067/GPM/IMERGDE/DAY/07"),
+    ("monthly", "final"): ("GPM_3IMERGM", "10.5067/GPM/IMERG/3B-MONTH/07"),
 }
+IMERG_ATTRIBUTION = (
+    "Huffman, G.J., E.F. Stocker, D.T. Bolvin, E.J. Nelkin and J. Tan: {title}, Version 07. "
+    "NASA Goddard Earth Sciences Data and Information Services Center (GES DISC), doi:{doi}."
+)
 
 
 def gpcp(time: Any, *, area: Area | None = None, frequency: str = "monthly") -> xr.Dataset:
@@ -2514,72 +2607,133 @@ def _gpcp_online(times, area, frequency) -> xr.Dataset:
     return out
 
 
+IMERG_STEPS = {"half-hourly": "30min", "daily": "D", "monthly": "MS"}
+
+
 def imerg(
     time: Any,
     *,
     area: Area | None = None,
     frequency: str = "half-hourly",
+    run: str = "final",
     version: str = "07",
 ) -> xr.Dataset:
-    """GPM IMERG Final precipitation (0.1°) from NASA GES DISC. Needs a NASA Earthdata login.
+    """GPM IMERG precipitation (0.1°) from NASA GES DISC. Needs a NASA Earthdata login.
 
     Without credentials it raises :class:`CredentialsError`. It raises the same error, with
     the steps to fix it, when GES DISC answers HTTP 403 "EULA Acceptance Failure"; see
-    :func:`licence_hint`. :func:`gpcp` gives public satellite-gauge precipitation at coarser
-    resolution.
+    :func:`licence_hint`. The reader has no sample: in offline mode it raises
+    :class:`DataAccessError`. :func:`gpcp` gives public satellite-gauge precipitation at
+    coarser resolution.
 
     Parameters
     ----------
     time
         Start times of the IMERG intervals: one value, a list, or a range ``(start, end)``.
+        Daily intervals are UTC days.
     frequency
-        ``"half-hourly"``, ``"daily"`` or ``"monthly"``.
+        ``"half-hourly"``, ``"daily"`` or ``"monthly"`` (Final only).
+    run
+        ``"final"`` (calibrated with rain gauges, about 3.5 months behind real time),
+        ``"late"`` (about 14 h) or ``"early"`` (about 4 h). In 2026-10, GES DISC holds
+        Final V07 up to 2025-09-30 only. Use ``"late"`` for later dates.
 
     Returns
     -------
-    xarray.Dataset with ``precipitation`` in mm/h (half-hourly, monthly) or mm/day (daily).
+    xarray.Dataset with ``precipitation`` in mm/h (half-hourly, monthly) or mm/day (daily),
+    dims (time, latitude, longitude). Latitude runs north to south.
     """
-    strategy = earthdata_credentials()
-    if strategy is None:
-        raise _need("earthdata", "imerg()")
-    step = {"half-hourly": "30min", "daily": "D", "monthly": "MS"}[frequency]
+    if (frequency, run) not in IMERG_PRODUCTS:
+        raise ValueError(f"(frequency, run) is one of {sorted(IMERG_PRODUCTS)}")
+    short_name, doi = IMERG_PRODUCTS[(frequency, run)]
+    step = IMERG_STEPS[frequency]
     times = _time_list(time, step, step)
     area = _check_area(area)
 
-    def build() -> xr.Dataset:
+    def build(strategy: str) -> xr.Dataset:
         import earthaccess
 
         earthaccess.login(strategy=strategy)
-        kw: dict[str, Any] = {
-            "short_name": IMERG_PRODUCTS[frequency],
-            "version": version,
-            "temporal": (times[0].isoformat(), (times[-1] + pd.Timedelta(step) / 2).isoformat()),
-        }
-        granules = earthaccess.search_data(**kw)
+        end = times[-1] + pd.Timedelta(minutes=15)
+        granules = earthaccess.search_data(
+            short_name=short_name,
+            version=version,
+            temporal=(times[0].isoformat(), end.isoformat()),
+        )
         if not granules:
-            raise DataAccessError(f"no IMERG {frequency} granules for {times[0]}..{times[-1]}")
+            raise DataAccessError(
+                f"no {short_name} V{version} granules for {times[0]}..{times[-1]}. "
+                "IMERG Final comes about 3.5 months late; try run='late'."
+            )
         try:
             files = earthaccess.download(granules, local_path=str(cache_dir("imerg")))
         except Exception as err:
             licence = _licence_error(err)
+            if licence is None and type(err).__name__ == "EulaNotAccepted":
+                licence = _licence_error(RuntimeError("EULA Acceptance Failure"))
             if licence is None:
                 raise
             raise licence from err
-        parts = []
-        for f in files:
-            ds = xr.open_dataset(f, group="Grid", engine="h5netcdf", decode_times=True)
-            ds = ds[["precipitation"]].rename(lat="latitude", lon="longitude")
-            ds = ds.transpose("time", "latitude", "longitude")
-            parts.append(_select_area(ds, area).load())
-            ds.close()
+        parts = [_open_imerg(Path(f), area, step) for f in files]
         out = xr.concat(parts, dim="time").sortby("time")
+        out = out.sel(time=~out.get_index("time").duplicated())
+        missing = [str(t) for t in times if t not in out.get_index("time")]
+        if missing:
+            raise DataAccessError(f"{short_name}: no data for {missing}")
+        out = out.sel(time=list(times))
+        title = f"GPM IMERG {run.capitalize()} Precipitation L3 {frequency}"
         out.attrs = {
-            "source": f"NASA GES DISC {IMERG_PRODUCTS[frequency]} V{version}",
-            "attribution": "Huffman et al., GPM IMERG Final Precipitation L3, NASA GES DISC.",
+            "source": f"NASA GES DISC {short_name} V{version}",
+            "attribution": IMERG_ATTRIBUTION.format(title=title, doi=doi),
         }
         return out
 
-    return _cached_xr("imerg", _key("imerg", frequency, version, times, area), build)
+    def online() -> xr.Dataset:
+        strategy = earthdata_credentials()
+        if strategy is None:
+            raise _need("earthdata", "imerg()")
+        key = _key("imerg", frequency, run, version, times, area)
+        return _cached_xr("imerg", key, lambda: build(strategy))
+
+    return _fetch(None, online, lambda s: s)
+
+
+def _imerg_times(values: np.ndarray, units: str, step: str) -> pd.DatetimeIndex:
+    """Decode IMERG times. The HDF5 files say calendar="julian", but the dates are Gregorian."""
+    unit, _, ref = units.partition(" since ")
+    ref_ts = pd.Timestamp(ref.replace("UTC", "").strip().rstrip("Z"))
+    scale = {"seconds": "s", "minutes": "min", "hours": "h", "days": "D"}[unit.strip()]
+    times = pd.DatetimeIndex(ref_ts + pd.to_timedelta(np.asarray(values, dtype=float), unit=scale))
+    if step == "MS":
+        return times.to_period("M").to_timestamp()
+    if step == "D":  # a daily stamp can sit anywhere in its UTC day
+        return times.round("s").floor("D")
+    return times.round(step)
+
+
+def _open_imerg(path: Path, area: Area | None, step: str) -> xr.Dataset:
+    """Open one IMERG file and cut the area.
+
+    Daily files (``.nc4``) keep the variables in the root group. Half-hourly and monthly
+    files (``.HDF5``) keep them in the group ``Grid``. Dims there are (time, lon, lat).
+    """
+    ds = xr.open_dataset(path, engine="h5netcdf", decode_times=False)
+    if "precipitation" not in ds:
+        ds.close()
+        ds = xr.open_dataset(path, group="Grid", engine="h5netcdf", decode_times=False)
+    units = ds["precipitation"].attrs.get("units", "")
+    out = ds[["precipitation"]].rename(lat="latitude", lon="longitude")
+    out = out.transpose("time", "latitude", "longitude")
+    out = out.assign_coords(time=_imerg_times(ds["time"].values, ds["time"].attrs["units"], step))
+    out = _select_area(out, area).load()
+    ds.close()
+    out["precipitation"].attrs = {
+        "long_name": "precipitation rate",
+        "units": {"mm/hr": "mm/h"}.get(units, units),
+    }
+    out["latitude"].attrs = {"units": "degrees_north"}
+    out["longitude"].attrs = {"units": "degrees_east"}
+    return out
 
 
 # =============================================================================================
