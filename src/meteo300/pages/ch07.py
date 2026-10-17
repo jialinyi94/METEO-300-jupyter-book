@@ -65,7 +65,8 @@ CASES = {
         "area": (49.0, -108.0, 29.0, -84.0),
     },
 }
-# The 13 pressure levels of WeatherBench 2, GraphCast, Pangu-Weather and AIFS, in hPa.
+# The 13 pressure levels of WeatherBench 2, GraphCast, Pangu-Weather and AIFS Single v1, in hPa.
+# AIFS Single v2 adds 10 hPa.
 LEVELS_13 = (50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 850, 925, 1000)
 AIFS_RUN = "2026-05-18T00:00"
 AIFS_STEP = 24  # valid at 2026-05-19 00 UTC

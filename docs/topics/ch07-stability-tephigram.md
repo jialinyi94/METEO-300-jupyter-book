@@ -234,7 +234,7 @@ for key in ("lcl", "lfc", "el"):
 
 ### 美国 Topeka，2026-05-19 00 UTC
 
-Topeka 在美国 Kansas 州东北部的大平原上。NOAA 的 Storm Prediction Center，简称 SPC，收集美国的强对流报告。SPC 在 2026-05-18 这一天收到 571 份报告，其中 31 份是龙卷。21 份龙卷报告来自 Kansas 州东北部和 Nebraska 州东南部，时间在 19:46 UTC 和 00:15 UTC 之间。
+Topeka 在美国 Kansas 州东北部的大平原上。NOAA 的 Storm Prediction Center，简称 SPC，收集美国的强对流报告。SPC 在 2026-05-18 这一天收到 571 份报告，其中 31 份是龙卷。20 份龙卷报告来自 Kansas 州东北部和 Nebraska 州东南部，时间在 19:46 UTC 和 00:15 UTC 之间。SPC 的一天从 12 UTC 算到次日 12 UTC，见 [当天的报告](https://www.spc.noaa.gov/climo/reports/260518_rpts.html)。
 
 Topeka 的探空仪在 23:02 UTC 施放，正在这次强对流过程中。
 
@@ -424,7 +424,7 @@ Topeka 的 $w_{\max}$ 约为 80 m s⁻¹。真实雷暴里的上升运动比它�
 
 ## AI 天气连接
 
-Pangu-Weather 和 AIFS 在 13 个等压面上预报大气。GraphCast 的业务版本也用这 13 个等压面：1000、925、850、700、600、500、400、300、250、200、150、100 和 50 hPa。WeatherBench 2 的变量名是 `temperature`、`specific_humidity` 和 `geopotential`，ERA5 的短名是 `t`、`q` 和 `z`。Pangu-Weather 和 GraphCast 都不输出 CAPE。分析师要从 13 个等压面上的温度和比湿算出它。
+Pangu-Weather 和 AIFS Single v1 在 13 个等压面上预报大气。本例的 AIFS Single v2 多了 10 hPa，本页只读取其中 13 个等压面。GraphCast 的业务版本也用这 13 个等压面：1000、925、850、700、600、500、400、300、250、200、150、100 和 50 hPa。WeatherBench 2 的变量名是 `temperature`、`specific_humidity` 和 `geopotential`，ERA5 的短名是 `t`、`q` 和 `z`。Pangu-Weather 和 GraphCast 都不输出 CAPE。分析师要从 13 个等压面上的温度和比湿算出它。
 
 ERA5 有 37 个等压面，探空有 100 多层。下面比较五种廓线算出的气块参数。
 
@@ -519,7 +519,7 @@ print(f"13 层的露点温度误差最大是 {dtd[low][j]:+.1f} K，在 {s['p'].
 
 在 733 hPa，13 层的露点温度比探空低约 13 K。在 716 hPa，13 层的温度比探空高约 2 K。这些薄层对 CAPE 的积分贡献很小。但是它们决定云在哪里，也决定气块能不能冲破逆温。
 
-右图说明更大的误差来自地面。ERA5 的 2 m 温度比探空低 2.5 K，2 m 露点温度低 1.4 K。ERA5 的格点代表约 25 km 见方的平均，观测站只是一个点。气块从更冷、更干的地方出发，所以 CAPE 少了一半。下面只把探空的地面值换成 ERA5 的 2 m 值。
+右图说明更大的误差来自地面。ERA5 的 2 m 温度比探空低 2.5 K，2 m 露点温度低 1.4 K。ERA5 的格点代表约 31 km 见方的平均，观测站只是一个点。气块从更冷、更干的地方出发，所以 CAPE 少了一半。下面只把探空的地面值换成 ERA5 的 2 m 值。
 
 ```{code-cell} python
 s = snd["topeka"]
@@ -531,7 +531,7 @@ swap = ch07.parcel_summary(s["p"], t_swap, td_swap)
 print(f"探空的廓线，ERA5 的地面值：CAPE {swap['cape']:.0f~P}，CIN {swap['cin']:.0f~P}")
 ```
 
-CAPE 从 3186 J kg⁻¹ 降到 1847 J kg⁻¹。地面值解释了 ERA5 的 bias 的大部分。Taszarek 等在 2021 年比较了 ERA5 和欧洲、北美的探空，论文发表在 [Journal of Climate](https://doi.org/10.1175/JCLI-D-20-0484.1)。他们发现 ERA5 常常低估 CAPE 和低层的水汽，CAPE 很大时尤其明显。大多数 AI 天气模型用 ERA5 训练，它们可能继承这个 bias。本例里 AIFS 的 CAPE 也接近 ERA5。
+CAPE 从 3186 J kg⁻¹ 降到 1847 J kg⁻¹。地面值解释了 ERA5 的 bias 的大部分。Taszarek 等，2021 比较了 ERA5 和欧洲、北美的探空，[`doi:10.1175/JCLI-D-20-0484.1`](https://doi.org/10.1175/JCLI-D-20-0484.1)。他们发现 ERA5 常常低估 CAPE 和低层的水汽，CAPE 很大时尤其明显。大多数 AI 天气模型用 ERA5 训练，它们可能继承这个 bias。本例里 AIFS 的 CAPE 也接近 ERA5。
 
 分析师可以对 AI 天气模型的预报做四项检查：
 
