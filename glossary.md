@@ -4,7 +4,7 @@
 
 表格的列：
 
-- 中文术语：本书使用的唯一说法。
+- 中文术语：本书使用的唯一说法。人名术语写英文人名加中文通用词，例如 Coriolis 力。
 - English term：英文术语。
 - 符号：公式里的符号。本书一个符号只表示一个量。
 - 单位：正文使用的单位。
@@ -92,7 +92,7 @@
 | 凝结 | condensation | — | — | — | 冷凝 |
 | 蒸发 | evaporation | — | — | `e` / `evaporation` | — |
 | 饱和 | saturation | — | — | — | — |
-| 克劳修斯-克拉珀龙方程 | Clausius–Clapeyron equation | — | — | — | 克-克方程、克拉珀龙方程、克劳修斯-克拉伯龙方程 |
+| Clausius–Clapeyron 方程 | Clausius–Clapeyron equation | — | — | — | 克劳修斯-克拉珀龙方程、克-克方程、克拉珀龙方程、克劳修斯-克拉伯龙方程 |
 | 降水 | precipitation | — | — | — | — |
 | 降水量 | precipitation amount | — | mm | `tp` / `total_precipitation_6hr` | — |
 
@@ -126,12 +126,12 @@
 | 中文术语 | English term | 符号 | 单位 | 变量名 | 弃用词 |
 |---|---|---|---|---|---|
 | 气压梯度力 | pressure gradient force | PGF | m s⁻² | — | 压力梯度力、压强梯度力 |
-| 科里奥利力 | Coriolis force | — | m s⁻² | — | 科氏力、地转偏向力、柯氏力 |
-| 科里奥利参数 | Coriolis parameter | $f$ | s⁻¹ | — | 科氏参数、地转参数 |
+| Coriolis 力 | Coriolis force | — | m s⁻² | — | 科里奥利力、科氏力、地转偏向力、柯氏力 |
+| Coriolis 参数 | Coriolis parameter | $f$ | s⁻¹ | — | 科里奥利参数、科氏参数、地转参数 |
 | 地球自转角速度 | Earth's angular velocity | $\Omega$ | s⁻¹ | — | — |
 | 摩擦力 | friction | — | m s⁻² | — | — |
 | 地转平衡 | geostrophic balance | — | — | — | — |
-| 罗斯贝数 | Rossby number | Ro | — | — | 罗斯比数 |
+| Rossby 数 | Rossby number | Ro | — | — | 罗斯贝数、罗斯比数 |
 
 ## 稳定度
 
@@ -200,13 +200,13 @@
 | 涡度平流 | vorticity advection | $-\mathbf{v}_h \cdot \nabla \eta$ | s⁻² | — | 涡度输送 |
 | 梯度 | gradient | $\nabla$ | — | — | — |
 | 旋度 | curl | $\nabla \times$ | — | — | — |
-| 拉普拉斯算子 | Laplacian | $\nabla^2$ | — | — | 拉普拉斯算符 |
+| Laplace 算子 | Laplacian | $\nabla^2$ | — | — | 拉普拉斯算子、拉普拉斯算符 |
 | 偏导数 | partial derivative | $\partial$ | — | — | 偏微分 |
 | 偏微分方程 | partial differential equation | — | — | — | — |
 | 随体导数 | material derivative | $D/Dt$ | — | — | 物质导数、个别导数 |
 | 局地变化 | local rate of change | $\partial / \partial t$ | — | — | — |
-| 欧拉视角 | Eulerian view | — | — | — | 欧拉观点 |
-| 拉格朗日视角 | Lagrangian view | — | — | — | 拉格朗日观点 |
+| Euler 视角 | Eulerian view | — | — | — | 欧拉视角、欧拉观点 |
+| Lagrange 视角 | Lagrangian view | — | — | — | 拉格朗日视角、拉格朗日观点 |
 | 流线 | streamline | — | — | — | — |
 | 轨迹 | trajectory | — | — | — | 轨线 |
 | 有限差分 | finite difference | — | — | — | — |
@@ -242,15 +242,15 @@
 | 发射率 | emissivity | $\varepsilon$ | — | — | 比辐射率、发射本领 |
 | 吸收率 | absorptivity | $a$ | — | — | 吸收比 |
 | 黑体 | blackbody | — | — | — | 绝对黑体 |
-| 普朗克函数 | Planck function | $B_\Lambda$ | W m⁻² sr⁻¹ μm⁻¹ | — | — |
+| Planck 函数 | Planck function | $B_\Lambda$ | W m⁻² sr⁻¹ μm⁻¹ | — | 普朗克函数 |
 | 亮温 | brightness temperature | $T_b$ | K | GOES ABI L2 `CMI` | 亮度温度 |
-| 斯特藩-玻尔兹曼定律 | Stefan–Boltzmann law | $\sigma$ | W m⁻² K⁻⁴ | — | 斯蒂芬-玻尔兹曼定律、斯特番-玻尔兹曼定律 |
-| 维恩位移定律 | Wien's displacement law | — | — | — | 维恩定律 |
-| 基尔霍夫定律 | Kirchhoff's law | — | — | — | 克希霍夫定律 |
-| 比尔-朗伯定律 | Beer–Lambert law | — | — | — | 比尔定律、朗伯-比尔定律 |
+| Stefan–Boltzmann 定律 | Stefan–Boltzmann law | $\sigma$ | W m⁻² K⁻⁴ | — | 斯特藩-玻尔兹曼定律、斯蒂芬-玻尔兹曼定律、斯特番-玻尔兹曼定律 |
+| Wien 位移定律 | Wien's displacement law | — | — | — | 维恩位移定律、维恩定律 |
+| Kirchhoff 定律 | Kirchhoff's law | — | — | — | 基尔霍夫定律、克希霍夫定律 |
+| Beer–Lambert 定律 | Beer–Lambert law | — | — | — | 比尔-朗伯定律、比尔定律、朗伯-比尔定律 |
 | 光学厚度 | optical depth | $\tau$ | — | — | 光学深度 |
-| 瑞利散射 | Rayleigh scattering | — | — | — | — |
-| 米散射 | Mie scattering | — | — | — | 米氏散射 |
+| Rayleigh 散射 | Rayleigh scattering | — | — | — | 瑞利散射 |
+| Mie 散射 | Mie scattering | — | — | — | 米散射、米氏散射 |
 | 温室效应 | greenhouse effect | — | — | — | — |
 | 辐射平衡 | radiative equilibrium | — | — | — | 辐射均衡 |
 | 累积量 | accumulated field | — | J m⁻² | — | 累计量 |
@@ -275,12 +275,12 @@
 | 摩擦速度 | friction velocity | $u_*$ | m s⁻¹ | `zust` / `friction_velocity` | 摩阻速度 |
 | 粗糙度长度 | roughness length | $z_0$ | m | `fsr` / `forecast_surface_roughness` | 粗糙长度、地面粗糙度 |
 | 对数风廓线 | logarithmic wind profile | — | — | — | 对数风速廓线 |
-| 莫宁-奥布霍夫长度 | Obukhov length | $L$ | m | — | 奥布霍夫长度 |
-| 理查森数 | Richardson number | Ri | — | — | 理查逊数、里查森数 |
+| Monin–Obukhov 长度 | Obukhov length | $L$ | m | — | 莫宁-奥布霍夫长度、奥布霍夫长度 |
+| Richardson 数 | Richardson number | Ri | — | — | 理查森数、理查逊数、里查森数 |
 | 湍流动能 | turbulent kinetic energy | TKE | m² s⁻² | — | 湍能、湍动能 |
-| 雷诺平均 | Reynolds averaging | — | — | — | — |
+| Reynolds 平均 | Reynolds averaging | — | — | — | 雷诺平均 |
 | 日变化 | diurnal cycle | — | — | — | 日循环、日周期 |
-| 埃克曼螺线 | Ekman spiral | — | — | — | 艾克曼螺线、埃克曼螺旋 |
+| Ekman 螺线 | Ekman spiral | — | — | — | 埃克曼螺线、艾克曼螺线、埃克曼螺旋 |
 
 ## 云与气溶胶
 
@@ -296,11 +296,11 @@
 | 云滴 | cloud droplet | — | μm | — | 云粒 |
 | 雨滴 | raindrop | — | mm | — | — |
 | 冰晶 | ice crystal | — | — | — | — |
-| 开尔文效应 | Kelvin effect; curvature effect | — | — | — | 曲率效应 |
+| Kelvin 效应 | Kelvin effect; curvature effect | — | — | — | 开尔文效应、曲率效应 |
 | 溶质效应 | solute effect | — | — | — | 拉乌尔效应 |
-| 科勒曲线 | Köhler curve | — | — | — | 克勒曲线、柯勒曲线 |
+| Köhler 曲线 | Köhler curve | — | — | — | 科勒曲线、克勒曲线、柯勒曲线 |
 | 碰并 | collision–coalescence | — | — | — | 碰撞并合、碰撞合并 |
-| 贝吉龙过程 | Wegener–Bergeron–Findeisen process | — | — | — | 冰晶效应、伯杰龙过程 |
+| Bergeron 过程 | Wegener–Bergeron–Findeisen process | — | — | — | 贝吉龙过程、冰晶效应、伯杰龙过程 |
 | 云量 | cloud cover | — | — | `tcc` / `total_cloud_cover` | 云覆盖率、云覆盖度、云分数 |
 | 低云量 | low cloud cover | — | — | `lcc` / `low_cloud_cover` | — |
 | 云底高度 | cloud base height | — | m | `cbh` / `cloud_base_height` | — |
@@ -316,8 +316,8 @@
 | 大气环流 | general circulation | — | — | — | 大气总环流、全球环流 |
 | 经圈环流 | meridional overturning circulation | — | — | — | — |
 | 经向质量流函数 | meridional mass streamfunction | $\psi$ | kg s⁻¹ | — | — |
-| 哈得来环流 | Hadley cell | — | — | — | 哈德莱环流、哈德利环流、哈得来环流圈 |
-| 费雷尔环流 | Ferrel cell | — | — | — | 费雷尔环流圈 |
+| Hadley 环流 | Hadley cell | — | — | — | 哈得来环流、哈德莱环流、哈德利环流、哈得来环流圈 |
+| Ferrel 环流 | Ferrel cell | — | — | — | 费雷尔环流、费雷尔环流圈 |
 | 极地环流 | polar cell | — | — | — | 极地环流圈 |
 | 热带辐合带 | intertropical convergence zone | ITCZ | — | — | 赤道辐合带 |
 | 副热带高压 | subtropical high | — | — | — | 副高 |
@@ -418,7 +418,7 @@
 3. 温度平流：选它，不选“热力平流”。“热力”可以指温度，也可以指能量。
 4. 温度：选它，不选“气温”。2 m 的温度写“2 m 温度”，对应 `t2m`。
 5. 直减率：选它，不选“递减率”。“直减率”是大气科学名词审定的用词。
-6. 科里奥利力：选它，不选“地转偏向力”。它和“科里奥利参数”共用一个词根。
+6. Coriolis 力：选它，不选“地转偏向力”。它和“Coriolis 参数”共用人名 Coriolis。
 7. 预报：选它，不选“预测”。AI 天气模型的输出也叫预报。
 8. 数据：选它，不选“资料”。所以写“数据同化”，不写“资料同化”。
 9. 数值模式和 AI 天气模型：物理方程的模型叫“数值模式”，机器学习的模型叫“AI 天气模型”。
@@ -432,3 +432,5 @@
 17. 观测站：选它，不选“站点”和“测站”。
 18. 波长：写 $\Lambda$，不写 $\lambda$。本书按动力学的惯例，用 $\lambda$ 表示经度。
 19. kt：风速的单位 knot 只写符号 kt，和 hPa 一样。“节”只表示文档的节，例如“第 2 课 2.2 节”。
+20. 人名术语：写英文人名加中文通用词，例如 Coriolis 力、Hadley 环流、Clausius–Clapeyron 方程。一个人名有多种中文音译，英文人名只有一种写法。英文人名和中文之间留一个半角空格。旧的音译词都是弃用词，例如“科里奥利力”和“哈得来环流”。用户在 2026-10-17 做了这个决定。
+21. Bergeron 过程和 Monin–Obukhov 长度：人名取自原来的中文术语“贝吉龙过程”和“莫宁-奥布霍夫长度”。English term 一列保留文献的常用名。

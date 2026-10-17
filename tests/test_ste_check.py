@@ -1,5 +1,6 @@
 """Tests for tools/ste_check.py: good samples pass, bad samples fail with the right rule."""
 
+import re
 import sys
 from pathlib import Path
 
@@ -47,6 +48,10 @@ def test_good_sample_has_no_violation():
         "本页取自第 1 课 1.2 节和第 8 课 8.2 节。",
         "第 3 节和本节都讲风。每页有六节。",
         "平均风速是 51 kt，阵风是 74 kt。",
+        "Coriolis 力使北半球的风向右偏。Hadley 环流在 30°N 附近下沉。",
+        "Clausius–Clapeyron 方程描述饱和水汽压随温度的变化。",
+        "Stefan–Boltzmann 定律和 Wien 位移定律都描述黑体。",
+        "Köhler 曲线结合 Kelvin 效应和溶质效应。",
     ],
 )
 def test_good_snippets(text):
@@ -87,6 +92,9 @@ def test_good_snippets(text):
         ("模型预测 Z500。", "rejected-term"),
         ("压力梯度力推动空气。", "rejected-term"),
         ("锋面气旋向东移动。", "rejected-term"),
+        ("科里奥利力使风偏转。", "rejected-term"),
+        ("哈得来环流在 30°N 附近下沉。", "rejected-term"),
+        ("克劳修斯-克拉珀龙方程描述饱和水汽压。", "rejected-term"),
         (
             "The model output was compared with the analysis by the team at the centre, "
             "and the result shows a clear and large error over the whole of the northern "
@@ -99,6 +107,61 @@ def test_good_snippets(text):
 )
 def test_bad_snippets(text, rule):
     assert rule in rules(text)
+
+
+# Terms named after a person are written as the English name plus a Chinese word.
+# The old transliterations are rejected terms. User decision, 2026-10-17.
+EPONYMS = {
+    "科里奥利力": "Coriolis 力",
+    "科里奥利参数": "Coriolis 参数",
+    "罗斯贝数": "Rossby 数",
+    "哈得来环流": "Hadley 环流",
+    "费雷尔环流": "Ferrel 环流",
+    "埃克曼螺线": "Ekman 螺线",
+    "开尔文效应": "Kelvin 效应",
+    "科勒曲线": "Köhler 曲线",
+    "贝吉龙过程": "Bergeron 过程",
+    "克劳修斯-克拉珀龙方程": "Clausius–Clapeyron 方程",
+    "斯特藩-玻尔兹曼定律": "Stefan–Boltzmann 定律",
+    "维恩位移定律": "Wien 位移定律",
+    "基尔霍夫定律": "Kirchhoff 定律",
+    "比尔-朗伯定律": "Beer–Lambert 定律",
+    "普朗克函数": "Planck 函数",
+    "瑞利散射": "Rayleigh 散射",
+    "米散射": "Mie 散射",
+    "理查森数": "Richardson 数",
+    "雷诺平均": "Reynolds 平均",
+    "莫宁-奥布霍夫长度": "Monin–Obukhov 长度",
+    "欧拉视角": "Euler 视角",
+    "拉格朗日视角": "Lagrange 视角",
+    "拉普拉斯算子": "Laplace 算子",
+}
+
+
+@pytest.mark.parametrize(("old", "new"), EPONYMS.items())
+def test_old_eponym_transliteration_is_rejected(old, new):
+    (v,) = ste_check.check_text(f"本页讲{old}。", "x.md", GLOSSARY)
+    assert str(v) == f"x.md:1: rejected-term: {old} → {new}"
+    assert rules(f"本页讲 {new}。") == []
+
+
+def test_every_rejected_word_is_found():
+    missed = [w for w in GLOSSARY.rejected if "rejected-term" not in rules(f"{w}。")]
+    assert missed == []
+
+
+def test_glossary_terms_space_latin_and_han():
+    """STYLE.md 3.8: one half-width space between an English name and the Chinese word."""
+    han = f"[{ste_check.HAN}]"
+    latin = r"[A-Za-z0-9À-ÿ]"
+    lines = (ROOT / "glossary.md").read_text(encoding="utf-8").splitlines()
+    terms = [line.split("|")[1].strip() for line in lines if line.startswith("| ")]
+    bad = [
+        t
+        for t in terms
+        if re.search(f"{latin}{han}|{han}{latin}|{latin}  +{han}|{han}  +{latin}", t)
+    ]
+    assert bad == []
 
 
 def test_output_format_and_line_numbers():
