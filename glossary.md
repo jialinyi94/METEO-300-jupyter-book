@@ -121,6 +121,7 @@
 | 纬向风 | zonal wind; u component | $u$ | m s⁻¹ | `u` / `u_component_of_wind` | u 风、东西风分量 |
 | 经向风 | meridional wind; v component | $v$ | m s⁻¹ | `v` / `v_component_of_wind` | v 风、南北风分量 |
 | 10 m 风 | 10 m wind | $u_{10}$, $v_{10}$ | m s⁻¹ | `u10`, `v10` / `10m_u_component_of_wind`, `10m_v_component_of_wind` | 地面风、近地面风 |
+| 100 m 风 | 100 m wind | $u_{100}$, $v_{100}$ | m s⁻¹ | `u100`, `v100` / `100m_u_component_of_wind`, `100m_v_component_of_wind` | — |
 | 阵风 | wind gust | — | m s⁻¹ | `i10fg` / `instantaneous_10m_wind_gust` | — |
 | 地转风 | geostrophic wind | $\mathbf{v}_g$ | m s⁻¹ | `geostrophic_wind_speed` | — |
 | 非地转风 | ageostrophic wind | $\mathbf{v}_{ag}$ | m s⁻¹ | `ageostrophic_wind_speed` | 偏地转风 |
@@ -136,6 +137,7 @@
 | 急流 | jet stream | — | — | — | 喷流 |
 | 副热带急流 | subtropical jet | — | m s⁻¹ | — | — |
 | 涡驱动急流 | eddy-driven jet | — | m s⁻¹ | — | 极锋急流 |
+| 低空急流 | low-level jet | — | m s⁻¹ | — | 低层急流、夜间急流、边界层急流 |
 | 信风 | trade winds | — | — | — | 贸易风 |
 | 西风带 | westerlies | — | — | — | — |
 
@@ -336,6 +338,25 @@
 | Reynolds 平均 | Reynolds averaging | — | — | — | 雷诺平均 |
 | 日变化 | diurnal cycle | — | — | — | 日循环、日周期 |
 | Ekman 螺线 | Ekman spiral | — | — | — | 埃克曼螺线、艾克曼螺线、埃克曼螺旋 |
+| 脉动量 | turbulent fluctuation | $u'$ | 与变量相同 | — | 脉动值、湍流脉动 |
+| 方差 | variance | $\overline{u'^2}$ | 变量单位的平方 | — | — |
+| 协方差 | covariance | $\overline{a'b'}$ | 两个变量单位的乘积 | — | — |
+| 运动学通量 | kinematic flux | — | — | — | — |
+| 动量通量 | momentum flux | $\overline{u'w'}$ | m² s⁻² | — | — |
+| 涡动协方差 | eddy covariance | — | — | — | 涡度相关、涡动相关 |
+| 超声风速仪 | sonic anemometer | — | — | — | 超声风速计 |
+| 超声温度 | sonic temperature | $T_s$ | °C | — | — |
+| 幂律风廓线 | power-law wind profile | — | — | — | 指数风廓线 |
+| 幂律指数 | power-law exponent | $n$ | — | — | 风切变指数、Hellmann 指数 |
+| 轮毂高度 | hub height | $z_{\mathrm{hub}}$ | m | — | 轮毂高 |
+| 风电出力 | wind power output | $P_{\mathrm{W}}$ | MW | — | 风电功率 |
+| 功率曲线 | power curve | — | — | — | 功率特性曲线 |
+| 容量系数 | capacity factor | — | % | — | 容量因子 |
+| 切入风速 | cut-in wind speed | $V_{\mathrm{in}}$ | m s⁻¹ | — | 启动风速 |
+| 额定风速 | rated wind speed | $V_{\mathrm{rated}}$ | m s⁻¹ | — | — |
+| 切出风速 | cut-out wind speed | $V_{\mathrm{out}}$ | m s⁻¹ | — | 停机风速 |
+| 额定功率 | rated power | — | MW | — | — |
+| 装机容量 | installed capacity | — | GW | — | 装机量 |
 
 ## 云与气溶胶
 
@@ -540,3 +561,6 @@
 25. 层平均温度：两个等压面之间的温度对 $\ln p$ 的平均，记作 $\langle T\rangle$。厚度正比于它。
 26. 滴半径：写 $r_\mathrm{d}$，沿用 METEO 300 第 5 课的符号。下标 d 表示滴。它和混合比 $r$ 是两个符号。表面张力写 $\sigma_\mathrm{w}$，因为 $\sigma$ 已经用于 Stefan–Boltzmann 定律。溶质系数写 $b_\mathrm{s}$，因为 METEO 300 的 $B$ 在本书表示浮力。
 27. 季节振幅：指一年里最高月和最低月的差，即峰谷差。二氧化碳的文献都这样定义。它是正弦振幅的 2 倍。
+28. 涡动协方差：选它，不选“涡度相关”。“涡度”在本书里只表示风的旋转，见“涡度与散度”一节。
+29. 幂律指数：符号写 $n$，不写风能文献常用的 $\alpha$。本书用 $\alpha$ 表示反照率。
+30. 低空急流：选它，不选“夜间急流”。低空急流常在夜间出现，但白天也可以出现。“急流”单独使用时指对流层上部的急流。
