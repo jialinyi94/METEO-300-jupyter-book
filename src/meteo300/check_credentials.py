@@ -18,7 +18,12 @@ from meteo300 import data as d
 
 SERVICES = [
     ("ads", "Copernicus ADS", "cams()", "~/.cdsapirc or ~/.adsapirc with the ADS url"),
-    ("earthdata", "NASA Earthdata", "imerg(), ceres_ebaf()", "~/.netrc or EARTHDATA_*"),
+    (
+        "earthdata",
+        "NASA Earthdata",
+        "imerg(), ceres_ebaf()",
+        "~/.netrc, ~/.config/earthdata/token or EARTHDATA_*",
+    ),
     ("eumetsat", "EUMETSAT Data Store", "meteosat()", "~/.eumdac/credentials"),
     ("knmi", "KNMI Data Platform", "cabauw()", "KNMI_API_KEY or ~/.config/knmi/api_key"),
 ]

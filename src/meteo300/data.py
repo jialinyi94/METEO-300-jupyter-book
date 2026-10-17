@@ -2075,7 +2075,8 @@ HOW_TO_REGISTER = {
         "Register at https://urs.earthdata.nasa.gov, then add this line to ~/.netrc "
         "(chmod 600 ~/.netrc):\n"
         f"  machine {EARTHDATA_HOST} login <USERNAME> password <PASSWORD>\n"
-        "Or set EARTHDATA_TOKEN, or EARTHDATA_USERNAME and EARTHDATA_PASSWORD."
+        "Or write a user token into ~/.config/earthdata/token (chmod 600), "
+        "or set EARTHDATA_TOKEN, or EARTHDATA_USERNAME and EARTHDATA_PASSWORD."
     ),
     "eumetsat": (
         "Register at https://eoportal.eumetsat.int, get your API key and secret at "
@@ -2112,11 +2113,21 @@ def ads_credentials() -> tuple[str, str] | None:
 
 
 def earthdata_credentials() -> str | None:
-    """The earthaccess login strategy that works ("environment" or "netrc"), or None."""
+    """The earthaccess login strategy that works ("environment" or "netrc"), or None.
+
+    A user token in ~/.config/earthdata/token is copied into EARTHDATA_TOKEN, because
+    earthaccess reads the token from the environment.
+    """
     if os.environ.get("EARTHDATA_TOKEN") or (
         os.environ.get("EARTHDATA_USERNAME") and os.environ.get("EARTHDATA_PASSWORD")
     ):
         return "environment"
+    token_file = Path.home() / ".config" / "earthdata" / "token"
+    if token_file.is_file():
+        token = token_file.read_text().strip()
+        if token:
+            os.environ["EARTHDATA_TOKEN"] = token
+            return "environment"
     netrc_path = Path(os.environ.get("NETRC", Path.home() / ".netrc"))
     if netrc_path.is_file():
         import netrc

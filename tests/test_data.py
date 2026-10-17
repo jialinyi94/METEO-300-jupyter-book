@@ -326,6 +326,15 @@ def test_account_readers_need_credentials(no_credentials):
     assert d.knmi_key() == (d.KNMI_ANONYMOUS_KEY, False)
 
 
+def test_earthdata_token_file(no_credentials, capsys):
+    token_file = no_credentials / ".config" / "earthdata" / "token"
+    token_file.parent.mkdir(parents=True)
+    token_file.write_text("SECRET-TOKEN\n")
+    assert d.earthdata_credentials() == "environment"
+    assert os.environ["EARTHDATA_TOKEN"] == "SECRET-TOKEN"
+    assert "SECRET" not in capsys.readouterr().out
+
+
 def test_credentials_are_found_and_never_printed(no_credentials, capsys):
     home = no_credentials
     (home / ".cdsapirc").write_text(
