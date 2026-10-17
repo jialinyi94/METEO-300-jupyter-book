@@ -59,10 +59,33 @@ jobs:
         with:
           path: ./_build/html
 
+  checks:
+    name: Writing standard and code checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+
+      - name: Install the environment
+        run: uv sync --frozen
+
+      - name: Writing standard (STYLE.md)
+        run: uv run --frozen python tools/ste_check.py
+
+      - name: Unit tests
+        run: uv run --frozen pytest -q
+
+      - name: pre-commit hooks
+        run: uv run --frozen pre-commit run --all-files --show-diff-on-failure
+
   deploy:
     name: Deploy to GitHub Pages
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: build
+    needs: [build, checks]
     runs-on: ubuntu-latest
     permissions:
       pages: write

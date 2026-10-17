@@ -50,3 +50,17 @@ select = ["E", "F", "W", "I", "B", "UP", "NPY"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ste_check]
+# Settings of tools/ste_check.py, the automatic checks of STYLE.md.
+paths = ["intro.md", "README.md", "docs"]
+# The old pages wait for deletion (ALP-423).
+exclude = ["docs/thermo", "docs/moist", "docs/radiation", "docs/dynamic", "intro.md"]
+glossary = "glossary.md"
+zh_max_chars = 40
+en_max_words = 25
+max_sentences = 6
+# A sentence with this many numbers or more is a number list. Its numbers do not count.
+number_list_min = 3
+# Words that contain a rejected term but have a different meaning.
+allow = ["陆地表面"]

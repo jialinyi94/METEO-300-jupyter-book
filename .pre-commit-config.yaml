@@ -37,3 +37,20 @@ repos:
         entry: uv run --frozen tools/ruff_md.sh
         language: system
         files: ^docs/.*\.md$
+      - id: ste-check
+        name: writing standard (STYLE.md)
+        entry: uv run --frozen python tools/ste_check.py
+        language: system
+        files: ^(intro\.md|README\.md|docs/.*\.md)$
+      - id: ste-check-all
+        name: writing standard, all pages (glossary or checker changed)
+        entry: uv run --frozen python tools/ste_check.py
+        language: system
+        files: ^(glossary\.md|tools/ste_check\.py|pyproject\.toml)$
+        pass_filenames: false
+      - id: pytest
+        name: pytest
+        entry: uv run --frozen pytest -q
+        language: system
+        files: ^(glossary\.md|tools/.*|tests/.*|src/.*)$
+        pass_filenames: false
