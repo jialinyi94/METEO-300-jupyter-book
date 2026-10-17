@@ -2007,7 +2007,10 @@ def _goes_file(when: pd.Timestamp, band: int, code: str, sat: str, product: str)
 
 
 EUMETVIEW_WMS = "https://view.eumetsat.int/geoserver/ows"
-METEOSAT_ATTRIBUTION = "Contains EUMETSAT data. © EUMETSAT"
+# Article 6.3 of the EUMETSAT Data Policy (amended 2025-11-25) gives the form
+# "[Contains modified] EUMETSAT [Meteosat/Metop] [data/product] [Year of publication or
+# distribution]". The year is the year in which the book publishes the page.
+METEOSAT_ATTRIBUTION = "Contains modified EUMETSAT Meteosat data 2026"
 
 
 def meteosat_image(

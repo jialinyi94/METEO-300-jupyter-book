@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import io
 import os
+import re
 from pathlib import Path
 
 from meteo300 import check_credentials
@@ -259,6 +260,13 @@ def test_offline_co2(offline):
     assert df.loc["1958-03-01", "average"] == pytest.approx(315.71)
     gl = d.co2(site="gl")
     assert gl["deseasonalized"].iloc[0] < gl["deseasonalized"].iloc[-1]
+
+
+def test_meteosat_attribution_follows_the_data_policy():
+    # EUMETSAT Data Policy, Article 6.3:
+    # "[Contains modified] EUMETSAT [Meteosat/Metop] [data/product] [Year]".
+    form = r"(Contains modified )?EUMETSAT (Meteosat|Metop) (data|product) 20\d\d"
+    assert re.fullmatch(form, d.METEOSAT_ATTRIBUTION)
 
 
 def test_offline_goes(offline):
