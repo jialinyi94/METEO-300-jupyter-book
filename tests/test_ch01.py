@@ -102,3 +102,55 @@ def test_cyclic_adds_360():
     out = ch01.cyclic(da)
     assert list(out.longitude.values) == [-180.0, -90.0, 0.0, 90.0, 180.0]
     assert float(out.sel(longitude=180.0)) == float(da.sel(longitude=-180.0))
+
+
+def test_nao_msl(offline):
+    msl = _sample("nao_msl")["mean_sea_level_pressure"]
+    assert msl.attrs["units"] == "Pa"
+    assert msl.sizes == {"time": 90, "latitude": 20, "longitude": 44}
+    assert set(msl.time.dt.month.values) == {12, 1, 2}
+    assert int(msl.time.dt.year.min()) == 1990
+    assert int(msl.time.dt.year.max()) == 2019
+    # The Icelandic low is deeper than the Azores high by far more than 15 hPa in winter.
+    mean = msl.mean("time")
+    iceland = float(mean.sel(latitude=64.5, longitude=-21, method="nearest"))
+    azores = float(mean.sel(latitude=37.5, longitude=-27, method="nearest"))
+    assert azores - iceland > 1500
+
+
+def test_tropd_max_latitude_and_zero_crossing():
+    lat = np.linspace(0, 60, 61)
+    f = np.exp(-(((lat - 31.0) / 8) ** 2))
+    assert ch01.tropd_max_latitude(f, lat, n=30) == pytest.approx(31.0, abs=0.2)
+    crossing = ch01.tropd_zero_crossing(np.array([3.0, 1.0, -1.0, -2.0]), np.arange(0.0, 31, 10))
+    assert crossing == pytest.approx(15.0)
+    assert np.isnan(ch01.tropd_zero_crossing(np.ones(4), np.arange(4.0)))
+
+
+def test_mass_streamfunction_and_tropd_metrics(offline):
+    uv = _sample("clim_uv").sel(season="DJF")
+    psi = ch01.mass_streamfunction(uv["v_component_of_wind"].mean("longitude"))
+    assert psi.dims == ("level", "latitude")
+    # The Hadley cell of the northern winter carries about 2e11 kg/s.
+    assert 1.5e11 < float(psi.max()) < 2.5e11
+    edge = ch01.tropd_psi(psi)
+    assert 25 < edge["N"] < 33
+    assert -40 < edge["S"] < -30
+    msl = _sample("clim_msl")["mean_sea_level_pressure"].sel(season="DJF").mean("longitude")
+    psl = ch01.tropd_psl(msl)
+    assert 25 < psl["N"] < 40
+    assert -40 < psl["S"] < -25
+
+
+def test_inertial_trajectory():
+    path = ch01.inertial_trajectory(50.0, 10.0, hours=15.6)
+    assert path.attrs["coriolis_parameter"] == pytest.approx(1.117e-4, rel=1e-3)
+    # The Coriolis force does no work, so the speed stays the same.
+    np.testing.assert_allclose(np.hypot(path.u, path.v), 10.0, rtol=1e-6)
+    # Northern hemisphere: the parcel starts towards the east and turns right, to the south.
+    early = path.isel(time=10)
+    assert float(early.v) < 0
+    assert float(early.y) < 0
+    # Southern hemisphere: it turns left, to the north.
+    south = ch01.inertial_trajectory(-50.0, 10.0, hours=1.0)
+    assert float(south.v[-1]) > 0

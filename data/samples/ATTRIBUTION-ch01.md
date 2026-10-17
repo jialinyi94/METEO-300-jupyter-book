@@ -62,3 +62,17 @@ The page `docs/topics/ch01-global-circulation.md` reads these files in offline m
   <https://registry.opendata.aws/noaa-goes>. Instrument: Schmit, T. J., et al., 2017: A closer
   look at the ABI on the GOES-R series. Bull. Amer. Meteor. Soc., 98, 681-698.
   <https://doi.org/10.1175/BAMS-D-15-00230.1>
+
+## ch01-era5-msl-monthly-djf-natl.nc
+
+- Content: monthly mean `mean_sea_level_pressure` over the North Atlantic sector, 22.5N to
+  79.5N and 90W to 39E. The months are December, January and February of each year from 1990
+  to 2019, 90 months in total. Every second point of the 1.5 degree grid, so the grid spacing is
+  3 degrees.
+- Source: ERA5 6-hourly data of WeatherBench 2 on Google Cloud Storage,
+  `gs://weatherbench2/datasets/era5/1959-2023_01_10-6h-240x121_equiangular_with_poles_conservative.zarr`,
+  read with `meteo300.data.era5_monthly`.
+- Processing: the mean of the 6-hourly analyses (00, 06, 12, 18 UTC) of each month. Stored as
+  float32 with 5 significant digits.
+- Downloaded: 2026-10.
+- Licence and citation: as `ch01-era5-clim-uv-djf-jja.nc`.

@@ -19,11 +19,235 @@ kernelspec:
 
 赤道附近的空气受热上升，形成热带辐合带。上升的空气在对流层上部流向两极。它在纬度 30° 附近下沉，形成副热带高压。下沉的空气在低层流回赤道。这个闭合的经圈环流叫 Hadley 环流。
 
-Coriolis 力使运动的空气在北半球向右偏，在南半球向左偏。所以在两个半球，高空流向极地的空气都偏向东。Hadley 环流的极地一侧因此有很强的西风，这就是副热带急流。低层流回赤道的空气都偏向西，形成东北信风和东南信风。
+Coriolis 力使运动的空气在北半球向右偏，在南半球向左偏。[](#fig-ch01-inertial) 用一个只受 Coriolis 力的气块说明这一点。
+
+```{code-cell} python
+:tags: [hide-input]
+#| label: fig-ch01-inertial
+#| caption: f 平面上只受 Coriolis 力的气块的轨迹。气块从原点出发，初速度 10 m s⁻¹，方向向东。左图在 50°N，右图在 50°S。蓝色箭头是每隔四分之一个惯性周期的速度，红色箭头是出发时的 Coriolis 力。数据来源：本页的数值积分。
+
+import cartopy.crs as ccrs
+import matplotlib.pyplot as plt
+import numpy as np
+
+from meteo300 import data as d
+from meteo300 import plot as mplot
+from meteo300.pages import ch01
+
+U0, LAT = 10.0, 50.0  # initial speed towards the east (m s-1), latitude (degrees)
+f = 2 * ch01.OMEGA * np.sin(np.deg2rad(LAT))  # Coriolis parameter, s-1
+period = 2 * np.pi / f / 3600  # inertial period, h
+radius = U0 / f / 1000  # radius of the inertial circle, km
+print(f"50°N: f = {f:.3e} s-1，惯性周期 {period:.1f} h，惯性圆半径 {radius:.1f} km")
+
+fig, axes = plt.subplots(1, 2, figsize=(8, 4.4))
+for ax, lat in zip(axes, [LAT, -LAT], strict=True):
+    path = ch01.inertial_trajectory(lat, U0, hours=period)
+    side = np.sign(lat)  # +1: the circle lies south of the start, -1: north of it
+    # After one period the parcel is back at the start, on a circle of radius U0 / |f|.
+    assert np.hypot(path.x[-1], path.y[-1]) < 0.01 * radius
+    assert np.allclose(np.hypot(path.x, path.y + side * radius), radius, rtol=1e-4)
+
+    ax.plot(path.x, path.y, color="#2a78d6", lw=2)
+    quarter = path.sel(time=[k * period / 4 for k in range(4)], method="nearest")
+    ax.quiver(quarter.x, quarter.y, quarter.u, quarter.v, color="#2a78d6",
+              scale=40, width=0.012, zorder=3)
+    for t, x, y in zip(quarter.time.values, quarter.x.values, quarter.y.values, strict=True):
+        ax.annotate(f"{t:.1f} h", (x, y), xytext=(8, 6), textcoords="offset points")
+    ax.annotate("", xy=(0, -side * 45), xytext=(0, 0), arrowprops=dict(color="#d6402a", width=2.5))
+    ax.text(6, -side * 30, "Coriolis 力", color="#d6402a", va="center")
+    ax.plot(0, 0, "ko", ms=5)
+    hemi = "北半球 50°N：向右偏，顺时针转" if lat > 0 else "南半球 50°S：向左偏，逆时针转"
+    ax.set_title(hemi, fontsize=11)
+    ax.text(0.5, 0.5, f"惯性周期 {period:.1f} h\n半径 {radius:.1f} km",
+            transform=ax.transAxes, ha="center", va="center", color="0.3")
+    ax.set(aspect="equal", xlim=(-130, 130), xlabel="向东的距离 / km")
+    ax.set_ylim(sorted([-side * 200, side * 40]))
+    ax.grid(color="0.92")
+axes[0].set_ylabel("向北的距离 / km")
+fig.tight_layout()
+plt.show()
+```
+
+[](#fig-ch01-inertial) 里的气块只受 Coriolis 力。Coriolis 力总是垂直于速度，所以它只改变风向，不改变风速。北半球的气块不断向右偏，沿顺时针转圈。南半球的气块不断向左偏，沿逆时针转圈。这种运动叫惯性振荡，气块画出的圆叫惯性圆。
+
+在 50°N，Coriolis 参数 $f = 2\Omega\sin\varphi \approx 1.12 \times 10^{-4}\ \mathrm{s^{-1}}$。式中 $\Omega$ 是地球自转角速度，$\varphi$ 是纬度。气块转一圈的时间是惯性周期 $2\pi/|f|$，约 15.6 h。惯性圆的半径等于初速度除以 $|f|$，约 89.5 km。圆的直径只跨约 1.6° 纬度，所以本图把 $f$ 当作常数，这个近似叫 f 平面。真实大气里还有气压梯度力，它常常和 Coriolis 力接近平衡，这就是地转平衡。
+
+在两个半球，Hadley 环流高空流向极地的空气都偏向东。Hadley 环流的极地一侧因此有很强的西风，这就是副热带急流。低层流回赤道的空气都偏向西，形成东北信风和东南信风。
+
+副热带急流和北大西洋的西风带不是同一支风。纬向平均的副热带急流只在对流层上部，中心在 30°N 和 200 hPa，纬向风约 42 m s⁻¹。它的正下方是副热带高压，1000 hPa 上纬向平均的纬向风只有约 1 m s⁻¹。西风带从地面一直伸到对流层顶，大约位于纬度 35° 和 65° 之间。温带气旋把西风动量输送到中纬度，并把它向下传到地面。Coriolis 力还使中纬度低层流向极地的空气偏向东，这也维持低层的西风。
+
+```{code-cell} python
+:tags: [hide-input]
+#| label: fig-ch01-natl-u
+#| caption: 1990 年至 2019 年 12 月至 2 月，北大西洋扇区 60°W 至 0° 平均的纬向风。黑线是 0 m s⁻¹ 的等值线。数据来源：ERA5，WeatherBench 2 气候态。
+
+uv_djf = d.page_data(ch01.FILES["clim_uv"], ch01.clim_uv).sel(season="DJF")
+u_djf = uv_djf["u_component_of_wind"]  # m s-1, dims (level, latitude, longitude)
+u_natl = u_djf.sel(longitude=slice(-60, 0)).mean("longitude").sel(latitude=slice(0, 81))
+u_zm_djf = u_djf.mean("longitude")
+
+# Latitude of the maximum, by Eq. (1) of the TropD paper with n = 30 (see below).
+upper = u_natl.sel(level=200, latitude=slice(0, 33))  # subtropical jet
+low = u_natl.sel(level=850, latitude=slice(30, 70))  # eddy-driven jet
+lat_stj = ch01.tropd_max_latitude(upper, upper.latitude, n=30)
+lat_edj = ch01.tropd_max_latitude(low, low.latitude, n=30)
+print(f"北大西洋扇区，200 hPa 的副热带急流：{lat_stj:.0f}°N，{float(upper.max()):.1f} m/s")
+print(f"北大西洋扇区，850 hPa 的涡驱动急流：{lat_edj:.0f}°N，{float(low.max()):.1f} m/s")
+print(f"纬向平均，30°N 的纬向风：200 hPa {float(u_zm_djf.sel(level=200, latitude=30, method='nearest')):.1f} m/s，"
+      f"1000 hPa {float(u_zm_djf.sel(level=1000, latitude=30, method='nearest')):.1f} m/s")
+
+fig, ax = plt.subplots(figsize=(7, 3.8))
+cf = ax.contourf(u_natl.latitude, u_natl.level, u_natl, levels=np.arange(-10, 32.5, 2.5),
+                 cmap="RdBu_r", extend="both")
+ax.contour(u_natl.latitude, u_natl.level, u_natl, levels=[0], colors="k", linewidths=1)
+ax.annotate("副热带急流", (lat_stj, 200), xytext=(25, 420), arrowprops=dict(arrowstyle="-"))
+ax.annotate("涡驱动急流", (lat_edj, 850), xytext=(56, 520), arrowprops=dict(arrowstyle="-"))
+ax.set(ylim=(1000, 100), xlim=(0, 80), xticks=range(0, 81, 10), xlabel="纬度 / °N", ylabel="气压 / hPa")
+cbar = fig.colorbar(cf, ax=ax)
+# DejaVu Sans draws the superscript minus, which some CJK fonts lack.
+cbar.set_label("纬向风 / m s⁻¹", fontfamily=[plt.rcParams["font.sans-serif"][0], "DejaVu Sans"])
+plt.show()
+```
+
+[](#fig-ch01-natl-u) 只在北大西洋扇区里求经度平均。对流层上部有两个风速中心。偏南的中心在 18°N 和 200 hPa 附近，这是副热带急流。偏北的中心在 45°N 附近，它从对流层顶一直伸到地面，这是涡驱动急流。温带气旋维持涡驱动急流。它的低层部分就是北大西洋的西风带，850 hPa 的纬向风在 47°N 附近最强。
+
+北大西洋低层的西风带位于亚速尔高压和冰岛低压之间。它是这两个气压中心之间的气压梯度对应的地转风。英国在这条西风带里，所以冬季常有西风和温带气旋。纬向平均把不同经度的急流平均在一起。所以 [](#fig-ch01-section) 的北半球只有一个高空风速中心，它在 30°N 附近。
 
 中纬度的温度向极地降低。METEO 300 第 10 课 10.11 节用热成风说明，这个温度梯度使西风随几何高度增大。所以西风带的风在对流层顶附近最强。中纬度的热量主要由温带气旋和反气旋输送。纬向平均以后，这些天气系统的作用表现为 Ferrel 环流。Ferrel 环流的转向和 Hadley 环流相反。
 
-地面上，这些环流对应几条气压带。赤道附近是低压带，纬度 30° 附近是副热带高压带，纬度 60° 附近是副极地低压带。海陆分布把北半球的气压带分成几个中心。冬季的北大西洋北部有冰岛低压，南部有亚速尔高压。两个中心之间是强西风和风暴路径，英国正好在这里。
+地面上，这些环流对应几条气压带。赤道附近是赤道低压带，纬度 30° 附近是副热带高压带，纬度 60° 附近是副极地低压带。[](#fig-ch01-belts) 是 12 月至 2 月纬向平均的海平面气压。
+
+```{code-cell} python
+:tags: [hide-input]
+#| label: fig-ch01-belts
+#| caption: 1990 年至 2019 年 12 月至 2 月，纬向平均的海平面气压。红色虚线是 PSL 指标，蓝色点线是 PSI 指标，两种指标都用 TropD 的方法算出。黄色区域是两个 Hadley 环流。数据来源：ERA5，WeatherBench 2 气候态。
+
+msl_all = d.page_data(ch01.FILES["clim_msl"], ch01.clim_msl)["mean_sea_level_pressure"]
+msl_zm = msl_all.sel(season="DJF").mean("longitude") / 100  # hPa
+psi_djf = ch01.mass_streamfunction(uv_djf["v_component_of_wind"].mean("longitude"))  # kg s-1
+psl = ch01.tropd_psl(msl_zm)  # subtropical maximum of msl
+edge = ch01.tropd_psi(psi_djf)  # poleward edge of each Hadley cell
+print(f"PSL 指标：{psl['N']:.1f}°N，{-psl['S']:.1f}°S")
+print(f"PSI 指标：{edge['N']:.1f}°N，{-edge['S']:.1f}°S")
+
+fig, ax = plt.subplots(figsize=(8, 3.9))
+ax.axvspan(edge["S"], edge["N"], color="#f6e7b4", label="Hadley 环流")
+ax.axvspan(-90, -70, color="0.88", label="南极大陆，外推值")
+ax.plot(msl_zm.latitude, msl_zm, color="k", lw=2)
+for h in "NS":
+    ax.axvline(psl[h], color="#d6402a", ls="--", label="PSL 指标" if h == "N" else None)
+    ax.axvline(edge[h], color="#2a78d6", ls=":", lw=2, label="PSI 指标" if h == "N" else None)
+
+belts = [  # name, latitude band (degrees), "min" or "max", text offset in points
+    ("赤道低压带", (-15, 15), "min", (0, -28)),
+    ("副热带高压带", (15, 50), "max", (48, 8)),
+    ("副热带高压带", (-50, -15), "max", (-48, 8)),
+    ("副极地低压带", (45, 80), "min", (10, -26)),
+    ("副极地低压带", (-80, -45), "min", (40, 0)),
+]
+for name, (lo, hi), kind, offset in belts:
+    band = msl_zm.sel(latitude=slice(lo, hi))
+    i = int(np.argmin(band.values) if kind == "min" else np.argmax(band.values))
+    lat_i, p_i = float(band.latitude[i]), float(band[i])
+    ax.plot(lat_i, p_i, "o", color="k", ms=4)
+    ax.annotate(f"{name}\n{p_i:.0f} hPa", (lat_i, p_i), xytext=offset, textcoords="offset points",
+                ha="center", va="center", fontsize=9)
+ax.set_xticks(range(-90, 91, 30), ["90°S", "60°S", "30°S", "0°", "30°N", "60°N", "90°N"])
+ax.set(xlim=(-90, 90), ylim=(980, 1028), xlabel="纬度", ylabel="海平面气压 / hPa")
+ax.legend(loc="lower right", fontsize=8, ncols=2, framealpha=0.9)
+plt.show()
+```
+
+[](#fig-ch01-belts) 里，赤道低压带很宽，约 1010 hPa。北半球的副热带高压带在 30°N 附近，约 1020 hPa。南半球的副热带高压带在 36°S 附近，约 1017 hPa。南半球的副极地低压带在 64.5°S 附近，约 986 hPa，它环绕南极大陆。北半球的副极地低压带在 60°N 附近，只有约 1012 hPa。纬向平均把冰岛低压、阿留申低压和大陆上的高压平均在一起，所以这条低压带很浅。
+
+图中的竖线用 TropD 的方法算出。TropD 是 Adam 等在 2018 年发表的一套计算热带宽度的方法，论文见 <https://doi.org/10.5194/gmd-11-4339-2018>。PSL 指标是纬度 15° 和 60° 之间海平面气压最大的纬度。PSI 指标是 Hadley 环流的边界，也就是 500 hPa 的 $\psi$ 从热带的极值向极地第一次变号的纬度。本节后面定义 $\psi$。函数 `ch01.tropd_psl` 和 `ch01.tropd_psi` 按论文的定义计算这两种指标。
+
+12 月至 2 月，PSL 指标是 31.4°N 和 34.8°S，PSI 指标是 28.9°N 和 35.1°S。两种指标在南半球只差 0.3°，在北半球差 2.5°。副热带高压带在 Hadley 环流的下沉支附近，所以两种指标接近。南极大陆和青藏高原上的海平面气压是外推值。灰色区域里的曲线不可信。
+
+海陆分布把北半球的气压带分成几个中心。冬季的北大西洋北部有冰岛低压，南部有亚速尔高压。两个中心之间是强西风和风暴路径，英国正好在这里。这两个中心的强弱每个月都在变，而且常常反向变化。[](#fig-ch01-nao) 用经验正交函数找出这种变化。
+
+```{code-cell} python
+:tags: [hide-input]
+#| label: fig-ch01-nao
+#| caption: 1990 年至 2019 年 12 月、1 月和 2 月，北大西洋海平面气压月平均距平的第一模态。上图的色块是主成分增加一个标准差时的距平，黑线是这 90 个月的平均海平面气压。下图是标准化的主成分。数据来源：ERA5，WeatherBench 2。
+
+import warnings
+
+from xeofs.single import EOF
+
+nao_msl = d.page_data(ch01.FILES["nao_msl"], ch01.nao_msl)["mean_sea_level_pressure"] / 100  # hPa
+nao_anom = nao_msl.groupby("time.month") - nao_msl.groupby("time.month").mean("time")
+
+model = EOF(n_modes=3, use_coslat=True)  # weights sqrt(cos(latitude)), as for equal areas
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", FutureWarning)  # xeofs 3.0.4 and pandas MultiIndex
+    model.fit(nao_anom, dim="time")
+frac = float(model.explained_variance_ratio().sel(mode=1))
+pc = model.scores().sel(mode=1)
+pc = (pc - pc.mean()) / pc.std()  # standardised principal component
+pattern = (nao_anom * pc).mean("time")  # hPa per standard deviation of the principal component
+
+ICELAND, AZORES = (64.1, -21.9), (37.7, -25.7)  # Reykjavik and Ponta Delgada
+def at(da, point):
+    return da.sel(latitude=point[0], longitude=point[1], method="nearest")
+
+sign = -np.sign(float(at(pattern, ICELAND)))  # positive phase: low pressure near Iceland
+pattern, pc = sign * pattern, sign * pc
+
+# Check xeofs with numpy: the same weights and a singular value decomposition.
+w = np.sqrt(np.cos(np.deg2rad(nao_anom.latitude)))
+s = np.linalg.svd((nao_anom * w).values.reshape(nao_anom.sizes["time"], -1), compute_uv=False)
+assert abs(s[0] ** 2 / (s**2).sum() - frac) < 1e-3
+
+opposite = int((np.sign(at(nao_anom, ICELAND)) != np.sign(at(nao_anom, AZORES))).sum())
+print(f"第一模态的方差贡献：{frac:.1%}")
+print(f"冰岛 {float(at(pattern, ICELAND)):+.1f} hPa，亚速尔 {float(at(pattern, AZORES)):+.1f} hPa，"
+      f"两地距平符号相反的月数：{opposite} / {nao_anom.sizes['time']}")
+
+# Geostrophic zonal wind at sea level, mean of 60°W to 0°: u_g = -(dp/dy) / (rho f).
+def westerly_centre(p_hpa, rho=1.25):
+    p = p_hpa.sel(longitude=slice(-60, 0)).mean("longitude").sel(latitude=slice(30, 75)) * 100
+    f_lat = 2 * ch01.OMEGA * np.sin(np.deg2rad(p.latitude))
+    u_g = -p.differentiate("latitude") * 180 / np.pi / 6.371e6 / (rho * f_lat)
+    return ch01.tropd_max_latitude(u_g, u_g.latitude, n=6), float(u_g.max())
+
+for k in (1, -1):
+    lat_c, u_max = westerly_centre(nao_msl.mean("time") + k * pattern)
+    print(f"主成分为 {k:+d} 时，地转西风的中心在 {lat_c:.1f}°N，最大 {u_max:.1f} m/s")
+
+fig = plt.figure(figsize=(8, 5.6))
+grid = fig.add_gridspec(2, 1, height_ratios=[3, 1], hspace=0.12)
+proj = ccrs.LambertConformal(central_longitude=-25, central_latitude=50)
+ax = fig.add_subplot(grid[0], projection=proj)
+pc_kw = dict(transform=ccrs.PlateCarree())
+cf = ax.contourf(pattern.longitude, pattern.latitude, pattern, levels=np.arange(-8, 8.5, 1),
+                 cmap="RdBu_r", extend="both", **pc_kw)
+cs = ax.contour(nao_msl.longitude, nao_msl.latitude, nao_msl.mean("time"),
+                levels=np.arange(980, 1040, 8), colors="k", linewidths=0.6, **pc_kw)
+ax.clabel(cs, fmt="%d", fontsize=7)
+mplot.coastlines(ax, "110m", linewidth=0.5)
+for name, (lat, lon) in [("冰岛", ICELAND), ("亚速尔群岛", AZORES)]:
+    ax.plot(lon, lat, "k^", ms=7, **pc_kw)
+    ax.text(lon + 2, lat - 3, name, fontsize=10, **pc_kw)
+ax.set_extent([-90, 39, 22.5, 79.5], crs=ccrs.PlateCarree())
+ax.set_title(f"第一模态：北大西洋涛动，方差贡献 {frac:.1%}", fontsize=11)
+fig.colorbar(cf, ax=ax, shrink=0.85, label="距平 / hPa")
+
+ax2 = fig.add_subplot(grid[1])
+x = np.arange(pc.sizes["time"])
+ax2.bar(x, pc, color=np.where(pc > 0, "#d6402a", "#2a78d6"), width=0.8)
+years = pc.time.dt.year.values
+first = [i for i in x if pc.time.dt.month.values[i] == 1 and years[i] % 5 == 0]
+ax2.set_xticks(first, [str(years[i]) for i in first])
+ax2.set(xlim=(-1, x[-1] + 1), ylabel="主成分")
+ax2.axhline(0, color="k", lw=0.6)
+plt.show()
+```
+
+经验正交函数分析把很多个月的距平场分解成几个固定的空间型，每个空间型叫一个模态。每个模态有一条时间序列，叫主成分。模态的方差贡献是它解释的距平方差占总方差的比例。北大西洋第一模态的方差贡献是 38.6%。它有两个符号相反的中心，一个在冰岛附近，一个在亚速尔附近。这个模态就是北大西洋涛动。
+
+主成分为正时，冰岛低压加深，亚速尔高压加强。两者之间的气压梯度变大，所以西风带变强，西风的中心也偏北。主成分为负时，变化正好相反。按地转风估算，主成分为 +1 和 −1 时，60°W 和 0° 之间平均的西风中心分别在 51.9°N 和 43.7°N。90 个月里，冰岛和亚速尔的距平有 66 个月符号相反，所以北大西洋涛动像一个跷跷板。2009 年 12 月至 2010 年 2 月，三个月的主成分都低于 −1.9，那个冬季英国很冷。
 
 本页用两种平均。气候态是很多年里同一季节的时间平均。纬向平均是沿同一纬度一整圈的平均：
 
@@ -53,14 +277,36 @@ $$
 | Ferrel 环流 | Ferrel cell | — |
 | 热带辐合带 | intertropical convergence zone | ITCZ |
 | 副热带高压 | subtropical high | — |
+| 赤道低压带 | equatorial low-pressure belt | — |
+| 副热带高压带 | subtropical high-pressure belt | — |
+| 副极地低压带 | subpolar low-pressure belt | — |
+| 冰岛低压 | Icelandic Low | — |
+| 亚速尔高压 | Azores High | — |
+| 阿留申低压 | Aleutian Low | — |
+| 北大西洋涛动 | North Atlantic Oscillation | NAO |
 | 信风 | trade winds | — |
 | 西风带 | westerlies | — |
 | 急流 | jet stream | — |
+| 副热带急流 | subtropical jet | — |
+| 涡驱动急流 | eddy-driven jet | — |
 | 风暴路径 | storm track | — |
 | 热成风 | thermal wind | $\mathbf{v}_T$ |
 | Coriolis 力 | Coriolis force | — |
+| Coriolis 参数 | Coriolis parameter | $f$ |
+| 地球自转角速度 | Earth's angular velocity | $\Omega$ |
+| f 平面 | f-plane | — |
+| 惯性振荡 | inertial oscillation | — |
+| 惯性圆 | inertial circle | — |
+| 惯性周期 | inertial period | — |
+| 气压梯度力 | pressure gradient force | PGF |
+| 地转平衡 | geostrophic balance | — |
+| 地转风 | geostrophic wind | $\mathbf{v}_g$ |
 | 气候态 | climatology | — |
 | 距平 | anomaly | — |
+| 经验正交函数 | empirical orthogonal function | EOF |
+| 模态 | mode | — |
+| 主成分 | principal component | PC |
+| 方差贡献 | explained variance fraction | — |
 | 纬向平均 | zonal mean | $[A]$ |
 | 纬向风 | zonal wind | $u$ |
 | 经向风 | meridional wind | $v$ |
@@ -80,14 +326,6 @@ $$
 GOES-16 是美国的静止气象卫星，位于西经 75° 的赤道上空。它的 ABI 仪器每 10 min 拍一张全圆盘图像。第 13 波段的中心波长是 10.3 µm，这是一个红外窗区波段。这个波段测到的是亮温。云顶越冷，亮温越低。
 
 ```{code-cell} python
-import cartopy.crs as ccrs
-import matplotlib.pyplot as plt
-import numpy as np
-
-from meteo300 import data as d
-from meteo300 import plot as mplot
-from meteo300.pages import ch01
-
 goes = d.page_data(ch01.FILES["goes_image"], ch01.goes_image)
 tb = goes["brightness_temperature"]  # K, dims (y, x) in m
 print(goes.attrs["platform"], goes.attrs["start_time"])
@@ -153,9 +391,11 @@ plt.show()
 
 案例时刻的海平面气压来自 ARCO-ERA5。ARCO-ERA5 是 Google 把 ERA5 转成的 Zarr 数据集，也不需要账号。
 
+[](#fig-ch01-nao) 的月平均来自 WeatherBench 2 的 ERA5 数据。这份数据每 6 h 一个时刻，网格间距是 1.5°。`d.era5_monthly` 对每个月的全部时刻求平均。
+
 卫星图像来自 GOES-16 的 ABI L2 产品。2025-04-07 起，GOES-East 是 GOES-19。本页的案例在这之前，所以用 GOES-16。NOAA 把 GOES 数据放在 AWS 的开放数据桶 `noaa-goes16` 里，不需要账号。ABI 的论文是 Schmit 等，2017，<https://doi.org/10.1175/BAMS-D-15-00230.1>。
 
-本页从这些数据做了四个小样本，放在 `data/samples/` 里：
+本页从这些数据做了五个小样本，放在 `data/samples/` 里：
 
 | 文件 | 内容 | 大小 |
 |---|---|---|
@@ -163,6 +403,7 @@ plt.show()
 | `ch01-era5-clim-msl-djf-jja.nc` | 海平面气压的两个季节的气候态，1.5° 网格 | 0.1 MB |
 | `ch01-era5-msl-20250124t00.nc` | 案例时刻的海平面气压和同一日、同一时刻的气候态，1.5° 网格 | 0.1 MB |
 | `ch01-goes16-c13-20250124t0000.nc` | 案例时刻第 13 波段的亮温，8 × 8 像元平均 | 0.7 MB |
+| `ch01-era5-msl-monthly-djf-natl.nc` | 北大西洋海平面气压的月平均，1990 年至 2019 年的 12 月、1 月和 2 月，3° 网格 | 0.1 MB |
 
 模块 `meteo300.pages.ch01` 里的函数记录了样本的制作方法。在线时，`d.page_data` 运行这些函数。离线时，它读取样本。样本的来源和许可见 `data/samples/ATTRIBUTION-ch01.md`。
 
@@ -188,19 +429,13 @@ v_zm = zonal["v_component_of_wind"]  # m s-1
 print(dict(u_zm.sizes))
 ```
 
-然后从 $[v]$ 求 $\psi$。`xarray.DataArray.cumulative_integrate` 用梯形公式从 50 hPa 向下积分。这里假设 50 hPa 以上的经向质量通量可以忽略。地球半径和标准重力加速度取自 `metpy.constants`。
+然后从 $[v]$ 求 $\psi$。函数 `ch01.mass_streamfunction` 用 `xarray.DataArray.cumulative_integrate` 按梯形公式从 50 hPa 向下积分。这里假设 50 hPa 以上的经向质量通量可以忽略。地球半径和标准重力加速度取自 `metpy.constants`。[](#fig-ch01-belts) 的 PSI 指标也用这个函数。
 
 ```{code-cell} python
 from metpy.constants import earth_avg_radius, g
 from metpy.units import units
 
-R_E = earth_avg_radius.m_as("m")
-g0 = g.m_as("m s^-2")
-
-v_p = v_zm.assign_coords(p=v_zm.level * 100.0).swap_dims(level="p")  # hPa -> Pa
-integral = v_p.cumulative_integrate("p")  # m s-1 Pa
-coef = 2 * np.pi * R_E * np.cos(np.deg2rad(v_zm.latitude)) / g0  # s2
-psi = (coef * integral).swap_dims(p="level").transpose("level", "latitude")  # kg s-1
+psi = ch01.mass_streamfunction(v_zm)  # kg s-1, dims (level, latitude)
 
 north = psi.sel(latitude=slice(0, 35)).max()  # Hadley cell of the northern hemisphere
 south = psi.sel(latitude=slice(-35, 0)).min()  # Hadley cell of the southern hemisphere

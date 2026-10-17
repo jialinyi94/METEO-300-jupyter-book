@@ -118,6 +118,8 @@
 | 热成风 | thermal wind | $\mathbf{v}_T$ | m s⁻¹ | — | 热风 |
 | 垂直风切变 | vertical wind shear | $\partial \mathbf{v}_h / \partial z$ | s⁻¹ | — | 风切、垂直切变 |
 | 急流 | jet stream | — | — | — | 喷流 |
+| 副热带急流 | subtropical jet | — | m s⁻¹ | — | — |
+| 涡驱动急流 | eddy-driven jet | — | m s⁻¹ | — | 极锋急流 |
 | 信风 | trade winds | — | — | — | 贸易风 |
 | 西风带 | westerlies | — | — | — | — |
 
@@ -132,6 +134,10 @@
 | 摩擦力 | friction | — | m s⁻² | — | — |
 | 地转平衡 | geostrophic balance | — | — | — | — |
 | Rossby 数 | Rossby number | Ro | — | — | 罗斯贝数、罗斯比数 |
+| f 平面 | f-plane | — | — | — | — |
+| 惯性振荡 | inertial oscillation | — | — | — | 惯性振动 |
+| 惯性圆 | inertial circle | — | km | — | — |
+| 惯性周期 | inertial period | — | h | — | — |
 
 ## 稳定度
 
@@ -321,6 +327,13 @@
 | 极地环流 | polar cell | — | — | — | 极地环流圈 |
 | 热带辐合带 | intertropical convergence zone | ITCZ | — | — | 赤道辐合带 |
 | 副热带高压 | subtropical high | — | — | — | 副高 |
+| 赤道低压带 | equatorial low-pressure belt | — | — | — | 赤道低压槽 |
+| 副热带高压带 | subtropical high-pressure belt | — | — | — | — |
+| 副极地低压带 | subpolar low-pressure belt | — | — | — | 副极地低压槽 |
+| 冰岛低压 | Icelandic Low | — | — | — | — |
+| 亚速尔高压 | Azores High | — | — | — | — |
+| 阿留申低压 | Aleutian Low | — | — | — | — |
+| 北大西洋涛动 | North Atlantic Oscillation | NAO | — | — | 北大西洋振荡 |
 | 气团 | air mass | — | — | — | — |
 | 锋 | front | — | — | — | 锋面 |
 | 冷锋 | cold front | — | — | — | — |
@@ -364,6 +377,10 @@
 | 数据同化 | data assimilation | — | — | — | 资料同化 |
 | 气候态 | climatology | — | — | — | 气候平均态、气候场、气候均值 |
 | 距平 | anomaly | — | — | — | — |
+| 经验正交函数 | empirical orthogonal function | EOF | — | — | 经验正交分解 |
+| 模态 | mode | — | — | — | — |
+| 主成分 | principal component | PC | — | — | 主分量 |
+| 方差贡献 | explained variance fraction | — | % | — | 方差贡献率 |
 
 ## AI 天气预报与评估
 
@@ -434,3 +451,4 @@
 19. kt：风速的单位 knot 只写符号 kt，和 hPa 一样。“节”只表示文档的节，例如“第 2 课 2.2 节”。
 20. 人名术语：写英文人名加中文通用词，例如 Coriolis 力、Hadley 环流、Clausius–Clapeyron 方程。一个人名有多种中文音译，英文人名只有一种写法。英文人名和中文之间留一个半角空格。旧的音译词都是弃用词，例如“科里奥利力”和“哈得来环流”。用户在 2026-10-17 做了这个决定。
 21. Bergeron 过程和 Monin–Obukhov 长度：人名取自原来的中文术语“贝吉龙过程”和“莫宁-奥布霍夫长度”。English term 一列保留文献的常用名。
+22. 西风带和两种急流：中纬度的西风叫“西风带”，不另立“中纬度西风带”。对流层上部、纬度 30° 附近的急流叫“副热带急流”。温带气旋维持的、从地面伸到对流层顶的急流叫“涡驱动急流”，不叫“极锋急流”。
