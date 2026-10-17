@@ -3,6 +3,7 @@
 A blue Earth disc. A white Rossby wave (a continuous field, like ERA5) runs from the left and ends
 on the first node of an orange triangular mesh (a graph network, like an AI weather model).
 """
+
 import math
 import sys
 from pathlib import Path
@@ -25,14 +26,18 @@ EDGES = ["ab", "ac", "bd", "cd", "bc"]
 
 def svg(disc, wave, node, edge):
     e = "".join(
-        f'<line x1="{NODES[p][0]}" y1="{NODES[p][1]}" x2="{NODES[q][0]}" y2="{NODES[q][1]}"/>' for p, q in EDGES
+        f'<line x1="{NODES[p][0]}" y1="{NODES[p][1]}" x2="{NODES[q][0]}" y2="{NODES[q][1]}"/>'
+        for p, q in EDGES
     )
-    n = "".join(f'<circle cx="{x}" cy="{y}" r="{4.2 if k == "a" else 3.4}"/>' for k, (x, y) in NODES.items())
+    n = "".join(
+        f'<circle cx="{x}" cy="{y}" r="{4.2 if k == "a" else 3.4}"/>' for k, (x, y) in NODES.items()
+    )
+    ends = 'stroke-linecap="round" stroke-linejoin="round"'
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <title>从 ERA5 到 AI 天气模型</title>
   <circle cx="32" cy="32" r="31" fill="{disc}"/>
   <g stroke="{edge}" stroke-width="2.4" stroke-linecap="round">{e}</g>
-  <path d="{wave_path()}" fill="none" stroke="{wave}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="{wave_path()}" fill="none" stroke="{wave}" stroke-width="5" {ends}/>
   <g fill="{node}">{n}</g>
 </svg>
 """
