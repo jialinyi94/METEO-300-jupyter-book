@@ -36,8 +36,9 @@ dependencies = [
     "requests>=2.34.2",
     "xeofs>=3.0.4",
     "tephi>=0.4.0",
-    # earthkit: only the packages without eccodes. earthkit-data, earthkit-plots and
-    # earthkit-geo need eccodes >= 2.48, which conflicts with the pin above.
+    # earthkit: only the packages without eccodes. earthkit-data and earthkit-plots need
+    # eccodes >= 2.48, which conflicts with the pin above. earthkit-geo needs eckit and
+    # mir-python, and crashes at exit when pyproj is imported too.
     "earthkit-meteo>=1.2.1",
     "earthkit-transforms>=1.0.0",
     # "import earthkit.transforms" imports geopandas, but the package does not require it.

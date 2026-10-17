@@ -90,4 +90,3 @@ def test_the_check_finds_a_colorbar_call(tmp_path):
     )
     found = _last_artist_calls(page, root=tmp_path)
     assert found == ["docs/page.md:3: colorbar(...)"]
-

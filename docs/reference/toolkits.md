@@ -51,21 +51,38 @@ ECMWF 把 `ecmwf-datastores-client` 作为新的客户端，但不要求用户�
 
 ## earthkit
 
-earthkit 是 ECMWF 的一组软件包。它们处理数据访问、画图和插值。
+earthkit 是 ECMWF 的一组软件包。它们处理数据访问、气象计算、统计汇总、画图和插值。
+全部 earthkit 软件包都使用 Apache-2.0 许可证。
 
 | 软件包 | 用途 | 成熟度 | 最新版本 | 发布日期 | 检查日期 | 本书 | 替代 |
 |---|---|---|---|---|---|---|---|
 | [earthkit](https://pypi.org/project/earthkit/) | 一次安装全部 earthkit 软件包 | 稳定 | 1.0.0 | 2026-06-29 | 2026-10-17 | 未安装 | — |
 | [earthkit-data](https://pypi.org/project/earthkit-data/) | 用一个接口读取 GRIB、netCDF、CDS 和 MARS 数据 | 稳定 | 1.3.0 | 2026-10-15 | 2026-10-17 | 未安装 | cfgrib、climetlab |
+| [earthkit-meteo](https://pypi.org/project/earthkit-meteo/) | 气象计算，例如热力学量、风和太阳位置 | 稳定 | 1.2.1 | 2026-10-15 | 2026-10-17 | 1.2.1 | MetPy |
+| [earthkit-transforms](https://pypi.org/project/earthkit-transforms/) | 按时间、区域和集合成员做统计，例如日平均和气候态 | 稳定 | 1.0.0 | 2026-06-29 | 2026-10-17 | 1.0.0 | xarray |
+| [earthkit-utils](https://pypi.org/project/earthkit-utils/) | earthkit 软件包共用的工具 | 稳定 | 1.0.3 | 2026-10-15 | 2026-10-17 | 1.0.3 | — |
 | [earthkit-plots](https://pypi.org/project/earthkit-plots/) | 气象地图和图表 | Beta | 1.0.4 | 2026-08-26 | 2026-10-17 | 未安装 | cartopy |
+| [earthkit-geo](https://pypi.org/project/earthkit-geo/) | 地理计算 | 稳定 | 1.2.0 | 2026-10-15 | 2026-10-17 | 未安装 | pyproj |
 | [earthkit-regrid](https://pypi.org/project/earthkit-regrid/) | 网格之间的插值 | Pre-Alpha | 0.5.1 | 2025-12-11 | 2026-10-17 | 未安装 | xESMF |
+
+本书安装 earthkit-meteo 和 earthkit-transforms。它们不依赖 eccodes。
+`import earthkit.transforms` 要导入 geopandas，但 earthkit-transforms 没有把 geopandas 列为依赖。
+所以本书另外安装 geopandas。
+
+本书暂时不安装 earthkit-data、earthkit-plots 和 earthkit-geo：
+
+- earthkit-data 1.3.0 要求 eccodes 2.48.0 或更新的版本。本书把 eccodes 固定为 2.42.0，原因见“GRIB 和卫星数据”一节。
+- earthkit-plots 依赖 earthkit-data，所以有同样的冲突。
+- earthkit-geo 依赖 eckit 和 mir-python。它和 pyproj 一起导入时，程序在退出时崩溃。
+- 软件包 earthkit 安装全部 earthkit 软件包，包括上面三个。
 
 ## 气象计算
 
 | 软件包 | 用途 | 成熟度 | 最新版本 | 发布日期 | 检查日期 | 本书 | 替代 |
 |---|---|---|---|---|---|---|---|
 | [MetPy](https://pypi.org/project/MetPy/) | 气象计算、斜温图和观测站填图 | 稳定 | 1.7.1 | 2025-08-29 | 2026-10-17 | 1.7.1 | — |
-| [tephi](https://pypi.org/project/tephi/) | 温熵图 | Beta | 0.4.0.post0 | 2026-01-30 | 2026-10-17 | 未安装 | MetPy 的斜温图 |
+| [tephi](https://pypi.org/project/tephi/) | 温熵图 | Beta | 0.4.0.post0 | 2026-01-30 | 2026-10-17 | 0.4.0.post0 | MetPy 的斜温图 |
+| [xeofs](https://pypi.org/project/xeofs/) | 用 xarray 计算经验正交函数 | 未标注 | 3.0.4 | 2024-10-28 | 2026-10-17 | 3.0.4 | — |
 | [climlab](https://pypi.org/project/climlab/) | 简单的辐射和能量平衡气候模式 | 未标注 | 0.9.2 | 2026-03-18 | 2026-10-17 | 未安装 | — |
 | [pvlib](https://pypi.org/project/pvlib/) | 太阳位置和地面短波辐射 | Beta | 0.16.1 | 2026-09-26 | 2026-10-17 | 未安装 | — |
 
