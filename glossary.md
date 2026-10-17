@@ -509,6 +509,7 @@
 | 数值天气预报 | numerical weather prediction | NWP | — | — | 数值预报 |
 | 数值模式 | numerical weather prediction model | — | — | — | 数值模型 |
 | AI 天气模型 | AI weather model | — | — | — | AI 气象模型、气象大模型、机器学习天气模型 |
+| 试验版本 | experimental version | — | — | ECMWF 开放数据 2025-02-25 以前的 AIFS，模型名 `aifs` | 实验版本、实验版 |
 | 预报 | forecast | — | — | — | 预测 |
 | 可预报性 | predictability | — | — | — | 可预测性 |
 | 起报时间 | initialization time | — | UTC | WeatherBench 2 预报数据的 `time` | 初始化时间、初始时间、起始时间 |
@@ -530,6 +531,7 @@
 | hit | hit | — | — | — | 命中 |
 | miss | miss | — | — | — | 漏报、未命中 |
 | false alarm | false alarm | — | — | — | 空报 |
+| hit rate | hit rate | — | — | — | 命中率 |
 | correlation | Pearson correlation coefficient | — | — | earthkit-meteo `score.pearson_correlation` | 相关系数、皮尔逊相关系数 |
 | 百分位数 | percentile | — | 与变量相同 | — | 百分位、分位点 |
 | 标准误差 | standard error | — | 与变量相同 | — | 标准误 |
