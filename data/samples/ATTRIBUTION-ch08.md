@@ -83,8 +83,14 @@ The page `docs/topics/ch08-geopotential-thickness.md` reads these files in offli
 - Processing: the repository holds only these scores. It holds no forecast field of GraphCast
   or IFS HRES.
 - Downloaded: 2026-10.
-- Licence: the ERA5 inputs use CC BY 4.0, with the attribution above. The scores are derived
-  numbers.
+- Licence: the scores are derived numbers. The file holds no forecast or analysis value.
+  - ERA5 inputs: CC BY 4.0, with the attribution above.
+  - IFS HRES and the IFS HRES analysis: data from ECMWF, under the ECMWF terms of use in the
+    `LICENSE` file of each WeatherBench 2 directory. ECMWF is the source of these data.
+  - GraphCast forecasts: produced by Google DeepMind and published in WeatherBench 2. The
+    WeatherBench 2 bucket and data guide state no licence for them (checked 2026-10-17). The
+    GraphCast model weights use CC BY-NC-SA 4.0. Ask before you use these scores for commercial
+    work.
 - Citations: Rasp et al., 2024, as above. GraphCast: Lam, R., et al., 2023: Learning skillful
   medium-range global weather forecasting. Science, 382, 1416-1421,
   doi:10.1126/science.adi2336.
