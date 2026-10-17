@@ -56,7 +56,8 @@ The page `docs/topics/t2-radiation.md` reads these files in offline mode.
 - Source: KNMI Data Platform, dataset `cesar_surface_radiation_lc1_t10` version 1.0 (CESAR
   observatory). <https://dataplatform.knmi.nl/>
 - Processing: `meteo300.data.cabauw(..., dataset="surface_radiation")` selects the week and the
-  four variables. The values are stored with 5 significant digits.
+  four variables. The values are not changed: the CSV keeps the float32 values of the KNMI
+  file.
 - Downloaded: 2026-10.
 - Licence: CC BY 4.0.
 - Attribution: KNMI, CESAR observatory Cabauw, KNMI Data Platform.
