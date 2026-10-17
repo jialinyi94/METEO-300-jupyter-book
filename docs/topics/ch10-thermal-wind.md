@@ -344,7 +344,7 @@ vectors.round(1)
 ```{code-cell} python
 lat0, lon0 = ch10.STATION_POINT
 a = ch05.EARTH_RADIUS  # m
-step = np.deg2rad(0.25)  # 格距，rad
+step = np.deg2rad(0.25)  # 网格间距，rad
 t850 = era5["t"].sel(level=850)
 
 

@@ -171,20 +171,20 @@ speed = mpcalc.wind_speed(p500["u"], p500["v"])
 speed_g = mpcalc.wind_speed(ug, vg)
 ```
 
-下面手算 45°N、20°W 的地转风。这一点在急流的南侧，等值线几乎是直线。手算用中心差分，格距是 0.25°：
+下面手算 45°N、20°W 的地转风。这一点在急流的南侧，等值线几乎是直线。手算用中心差分，网格间距是 0.25°：
 
 $$
 \frac{\partial \Phi}{\partial y} \approx \frac{\Phi(\varphi + \Delta\varphi) - \Phi(\varphi - \Delta\varphi)}{2 R_\mathrm{E}\,\Delta\varphi}, \qquad
 \frac{\partial \Phi}{\partial x} \approx \frac{\Phi(\lambda + \Delta\lambda) - \Phi(\lambda - \Delta\lambda)}{2 R_\mathrm{E} \cos\varphi\,\Delta\lambda}
 $$
 
-式中 $R_\mathrm{E}$ 是地球半径，$\lambda$ 是经度，$\Delta\varphi$ 和 $\Delta\lambda$ 是格距的弧度值。
+式中 $R_\mathrm{E}$ 是地球半径，$\lambda$ 是经度，$\Delta\varphi$ 和 $\Delta\lambda$ 是网格间距的弧度值。
 
 ```{code-cell} python
 lat0, lon0 = 45.0, -20.0
 a = ch05.EARTH_RADIUS  # m
 omega = 7.292e-5  # s-1
-step = np.deg2rad(0.25)  # 格距，rad
+step = np.deg2rad(0.25)  # 网格间距，rad
 z500 = pl["z"].sel(level=500)  # 位势，m2 s-2
 
 

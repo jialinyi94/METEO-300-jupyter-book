@@ -241,7 +241,7 @@
 | 中心差分 | centred difference | — | — | — | 中央差分 |
 | 网格 | grid | — | — | — | 格网 |
 | 格点 | grid point | — | — | — | 网格点、格网点 |
-| 网格间距 | grid spacing | $\Delta\lambda$, $\Delta\varphi$ | °, km | — | 格点间距、网格距 |
+| 网格间距 | grid spacing | $\Delta\lambda$, $\Delta\varphi$ | °, km | — | 格距、格点间距、网格距 |
 | 分辨率 | resolution | — | ° | — | 解析度 |
 | 纬向 | zonal | $x$ | — | — | 东西向 |
 | 经向 | meridional | $y$ | — | — | 南北向 |

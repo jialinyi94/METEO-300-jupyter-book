@@ -305,11 +305,11 @@ ug_phi, vg_phi = mpcalc.geostrophic_wind(phi500)
 assert float(abs(ug - ug_phi).max().metpy.dequantify()) < 1e-6
 ```
 
-下面在苏格兰东南部上空取一点，那里的等值线几乎是直线。代码用中心差分手算地转风速，格距是 0.25°。代码还算出相邻两条 60 m 等值线的距离。读者可以在 [](#fig-ch08-maps) 上量出这个距离。
+下面在苏格兰东南部上空取一点，那里的等值线几乎是直线。代码用中心差分手算地转风速，网格间距是 0.25°。代码还算出相邻两条 60 m 等值线的距离。读者可以在 [](#fig-ch08-maps) 上量出这个距离。
 
 ```{code-cell} python
 lat0, lon0 = 56.0, -2.0
-step = np.deg2rad(0.25)  # 格距，rad
+step = np.deg2rad(0.25)  # 网格间距，rad
 radius = 6371229.0  # m
 f0 = 2 * 7.292115e-5 * np.sin(np.deg2rad(lat0))  # s-1
 
@@ -402,7 +402,7 @@ import scores
 rmse_scores = float(scores.continuous.rmse(fc, obs, reduce_dims=dims, weights=w)) / g0
 
 lat = np.deg2rad(obs["latitude"].values)
-half = np.deg2rad(0.75)  # 半个格距
+half = np.deg2rad(0.75)  # 半个网格间距
 band = np.sin(np.minimum(lat + half, np.pi / 2)) - np.sin(np.maximum(lat - half, -np.pi / 2))
 south, north, west, east = ch08.REGIONS[region]
 la, lo = obs["latitude"].values[:, None], obs["longitude"].values[None, :]
