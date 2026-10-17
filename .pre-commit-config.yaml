@@ -53,7 +53,7 @@ repos:
         pass_filenames: false
       - id: pytest
         name: pytest
-        entry: uv run --frozen pytest -q
+        entry: env METEO300_OFFLINE=1 uv run --frozen pytest -q
         language: system
         files: ^(glossary\.md|tools/.*|tests/.*|src/.*)$
         pass_filenames: false

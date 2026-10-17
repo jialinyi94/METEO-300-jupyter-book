@@ -2352,6 +2352,10 @@ def cams(
     times = _time_list(time, None, "3h")
     area = _check_area(area)
     leads = [int(h) for h in leadtime_hours]
+    # Check the account before the offline test, as the other account readers do.
+    creds = ads_credentials()
+    if creds is None:
+        raise _need("ads", "cams()")
 
     def build(creds: tuple[str, str]) -> xr.Dataset:
         import cdsapi
@@ -2367,9 +2371,6 @@ def cams(
         return _select_cams(ds, times, leads, dataset)
 
     def online() -> xr.Dataset:
-        creds = ads_credentials()
-        if creds is None:
-            raise _need("ads", "cams()")
         key = _key("cams", dataset, names, times, area, levels, leads)
         return _cached_xr("cams", key, lambda: build(creds))
 
@@ -2649,6 +2650,10 @@ def imerg(
     step = IMERG_STEPS[frequency]
     times = _time_list(time, step, step)
     area = _check_area(area)
+    # Check the account before the offline test, as the other account readers do.
+    strategy = earthdata_credentials()
+    if strategy is None:
+        raise _need("earthdata", "imerg()")
 
     def build(strategy: str) -> xr.Dataset:
         import earthaccess
@@ -2689,9 +2694,6 @@ def imerg(
         return out
 
     def online() -> xr.Dataset:
-        strategy = earthdata_credentials()
-        if strategy is None:
-            raise _need("earthdata", "imerg()")
         key = _key("imerg", frequency, run, version, times, area)
         return _cached_xr("imerg", key, lambda: build(strategy))
 
