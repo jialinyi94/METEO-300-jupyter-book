@@ -4,10 +4,10 @@ project:
   id: 8af17319-8168-40c6-bf42-bf1935b58e70
 
   # ---------------------------------------------------------------------------------------------
-  # Title, subtitle and authors: PLACEHOLDERS. The user has not decided yet (ALP-423).
+  # Title, subtitle and authors: decided 2026-10-17 (ALP-423).
   # Change them here only. No other file repeats them.
-  title: 用真实数据学大气科学
-  subtitle: 写给 AI 天气分析师的数据书
+  title: 从 ERA5 到 AI 天气模型
+  subtitle: 用真实数据学大气科学
   authors:
     - name: Jialin Yi
   # ---------------------------------------------------------------------------------------------
@@ -16,9 +16,10 @@ project:
   keywords: ["atmospheric science", "ERA5", "AI weather models", "METEO 300", "MetPy", "xarray"]
   github: https://github.com/jialinyi94/METEO-300-jupyter-book
   # The text adapts METEO 300 (CC BY-NC-SA 4.0), so the content uses the same licence.
+  # The code uses MIT. Full texts: LICENSE-CONTENT and LICENSE.
   license:
     content: CC-BY-NC-SA-4.0
-    code: Apache-2.0
+    code: MIT
   numbering:
     figure:
       template: 图 %s
