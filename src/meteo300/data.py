@@ -2941,6 +2941,10 @@ def _open_cabauw(path: Path) -> xr.Dataset:
     keep = [v for v in ds.data_vars if ds[v].dtype.kind == "f" and "time" in ds[v].dims]
     keep = [v for v in keep if "source index" not in ds[v].attrs.get("long_name", "").lower()]
     out = ds[keep]
+    # KNMI stores time as float32 hours since the start of the month. The decoded labels are
+    # off by up to 0.2 s, for example 23:49:59.93 or 00:10:00.00002. Round them to the minute,
+    # so that a selection that ends at hh:m0 keeps the value labelled hh:m0.
+    out = out.assign_coords(time=pd.DatetimeIndex(out["time"].values).round("min"))
     # KNMI writes scale factors as units: "1e-3" is g/kg (specific humidity), "1e-2" is %.
     for name in out.data_vars:
         units = out[name].attrs.get("units")

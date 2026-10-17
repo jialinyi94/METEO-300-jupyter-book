@@ -289,6 +289,33 @@ def test_offline_cabauw(offline):
     assert ds["TA"].attrs["units"] == "K"
 
 
+def test_cabauw_keeps_the_last_value_of_a_day(offline):
+    """KNMI stores time as float32 hours. A selection that ends at 23:50 keeps 23:50."""
+    ds = d.cabauw("2025-07-31T00:00", "2025-07-31T23:50")
+    times = pd.DatetimeIndex(ds["time"].values)
+    assert len(times) == 144
+    assert times[-1] == pd.Timestamp("2025-07-31T23:50")
+    assert (times == times.round("min")).all()
+
+
+def test_open_cabauw_rounds_float32_hours(tmp_path):
+    hours = (np.arange(6 * 24 * 30, dtype="float64") / 6).astype("float32")
+    time = xr.DataArray(hours, dims="time", attrs={"units": "hours since 2026-04-01 00:00:00"})
+    raw = xr.Dataset(
+        {"TA": (("time", "z"), np.full((hours.size, 2), 280.0, dtype="float32"))},
+        coords={"time": time, "z": [200.0, 2.0]},
+    )
+    path = tmp_path / "cesar_tower_meteo_lc1_t10_v1.1_202604.nc"
+    raw.to_netcdf(path, encoding={"time": {"dtype": "float32"}})
+    decoded = pd.DatetimeIndex(xr.load_dataset(path)["time"].values)
+    assert (decoded != decoded.round("min")).any()  # the float32 error that the reader removes
+    ds = d._open_cabauw(path)
+    times = pd.DatetimeIndex(ds["time"].values)
+    assert (times == times.round("min")).all()
+    assert times[-1] == pd.Timestamp("2026-04-30T23:50")
+    assert ds.sel(time=slice("2026-04-30T00:00", "2026-04-30T23:50")).sizes["time"] == 144
+
+
 def test_offline_turbulence_flux_by_hand(offline):
     df = d.turbulence_20hz("2024-07-01T12:00")
     assert len(df) == 36000 and df.attrs["sampling_hz"] == 20
