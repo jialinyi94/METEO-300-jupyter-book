@@ -82,9 +82,11 @@ ERA5 是 ECMWF 为 Copernicus 气候变化服务制作的全球再分析。
   - `gs://gcp-public-data-arco-era5/ar/full_37-1h-0p25deg-chunk-1.zarr-v3`
   - `gs://weatherbench2/datasets/era5/1959-2023_01_10-6h-240x121_equiangular_with_poles_conservative.zarr`
   - `gs://weatherbench2/datasets/era5-hourly-climatology/1990-2019_6h_240x121_equiangular_with_poles_conservative.zarr`
+- 网址：<https://cds.climate.copernicus.eu/datasets/reanalysis-era5-pressure-levels>
 - 许可：CC BY 4.0。Copernicus 在 2025-07-02 把 Climate Data Store 的许可改为 CC BY 4.0。
 - 引用：Hersbach, H. et al., 2020: The ERA5 global reanalysis. QJRMS, 146, 1999–2049. [doi:10.1002/qj.3803](https://doi.org/10.1002/qj.3803)。
-- 署名：Contains modified Copernicus Climate Change Service information。
+- 署名：Contains modified Copernicus Climate Change Service information 2026。
+- CDS 要求引用数据集条目。等压面数据的 DOI 是 [10.24381/cds.bd0915c6](https://doi.org/10.24381/cds.bd0915c6)，单层数据的 DOI 是 [10.24381/cds.adbb2d47](https://doi.org/10.24381/cds.adbb2d47)。
 - 样本：`era5_ciaran_pl.nc`、`era5_ciaran_sfc.nc`、`era5_global_1p5.nc`、`era5_monthly_1p5.nc`、`era5_daily_toa.nc`、`era5_climatology_1p5.nc`。
 - 使用页面：[ch01](../topics/ch01-global-circulation.md)、[ch03](../topics/ch03-pressure-hydrostatic.md)、[ch04](../topics/ch04-thermodynamics-stability.md)、[ch05](../topics/ch05-dynamics-geostrophic.md)、[ch06](../topics/ch06-water-vapour.md)、[ch07](../topics/ch07-stability-tephigram.md)、[ch08](../topics/ch08-geopotential-thickness.md)、[ch09](../topics/ch09-vector-calculus.md)、[ch10](../topics/ch10-thermal-wind.md)、[ch11](../topics/ch11-vorticity-divergence.md)、[ch12](../topics/ch12-extratropical-cyclone.md)、[t1](../topics/t1-cloud-composition.md)、[t2](../topics/t2-radiation.md)、[t3](../topics/t3-boundary-layer.md)。
 
@@ -111,7 +113,7 @@ IGRA2 是 NOAA NCEI 的全球探空数据集。
 - 时间：大多数观测站在 00 UTC 和 12 UTC 观测。最早的数据在 1905 年。
 - 读取：`sounding(time, station)`。`station` 可以写 IGRA2 编号，例如 `UKM00003808`，也可以写 WMO 编号。
 - 网址：<https://www.ncei.noaa.gov/products/weather-balloon/integrated-global-radiosonde-archive>
-- 许可：NOAA 数据，使用不受限制。
+- 许可：data.gov 上的 IGRA2 元数据写明 CC0 1.0。
 - 引用：Durre, I. et al., 2016: Integrated Global Radiosonde Archive, Version 2. NOAA NCEI. [doi:10.7289/V5X63K0Q](https://doi.org/10.7289/V5X63K0Q)。
 - 样本：`sounding_igra2.csv`，有 Camborne 的两次探空和 Norman 的一次探空。
 - 使用页面：[ch03](../topics/ch03-pressure-hydrostatic.md)、[ch04](../topics/ch04-thermodynamics-stability.md)、[ch07](../topics/ch07-stability-tephigram.md)、[ch10](../topics/ch10-thermal-wind.md)。
@@ -127,7 +129,7 @@ IGRA2 是 NOAA NCEI 的全球探空数据集。
 
 - 内容：和 IGRA2 相同的探空，以及从探空算出的指数。
 - 读取：`sounding(time, station, source="wyoming")`，通过 siphon 读取。
-- 网址：<https://weather.uwyo.edu/upperair/sounding.html>
+- 网址：<https://weather.uwyo.edu/upperair/sounding.shtml>。旧的网址已经失效。
 - 许可：网站没有写明许可。所以本书不提交 Wyoming 样本。
 - 使用页面：IGRA2 读取失败时，作为备用来源。
 
@@ -164,9 +166,9 @@ ECMWF 公开一部分业务预报。IFS 是数值模式，AIFS Single 是 AI 天
 - 起报时间：每天 00、06、12、18 UTC。
 - 预报时效：IFS 在 00 UTC 和 12 UTC 的预报，0 h 到 144 h 每 3 h 一个，150 h 到 360 h 每 6 h 一个。IFS 在 06 UTC 和 18 UTC 的预报到 144 h。AIFS 每次预报都是 0 h 到 360 h，每 6 h 一个。
 - 读取：`ecmwf_forecast(params, steps=..., levels=..., model="ifs" 或 "aifs-single", run=...)`。
-  读取试验版 AIFS 时写 `model="aifs"`，`run` 要早于 2025-02-25。
+  读取试验版 AIFS 时写 `model="aifs"`。`run` 不能晚于 2025-02-25 00 UTC。
 - 网址：<https://www.ecmwf.int/en/forecasts/datasets/open-data>
-- 许可：CC BY 4.0。署名写 Source: www.ecmwf.int。
+- 许可：CC BY 4.0。ECMWF 的使用条款要求写版权、来源、许可和免责声明。来源写 Source: www.ecmwf.int。
 - 样本：`ecmwf_opendata.nc`，起报时间 2026-10-15 00 UTC，IFS 和 AIFS。
 - 使用页面：[ch03](../topics/ch03-pressure-hydrostatic.md)、[ch04](../topics/ch04-thermodynamics-stability.md)、[ch05](../topics/ch05-dynamics-geostrophic.md)、[ch06](../topics/ch06-water-vapour.md)、[ch07](../topics/ch07-stability-tephigram.md)、[ch09](../topics/ch09-vector-calculus.md)、[ch10](../topics/ch10-thermal-wind.md)、[ch11](../topics/ch11-vorticity-divergence.md)、[ch12](../topics/ch12-extratropical-cyclone.md)、[t1](../topics/t1-cloud-composition.md)、[t2](../topics/t2-radiation.md)、[t3](../topics/t3-boundary-layer.md)。
   ch03 和 ch12 读取试验版 AIFS。
@@ -178,6 +180,7 @@ ECMWF 公开一部分业务预报。IFS 是数值模式，AIFS Single 是 AI 天
 - Google 镜像缺少少数旧的起报，例如 2025 年 1 月下旬的试验版 AIFS。ch03 用的 2025-01-22 起报只在 AWS 镜像上。
 - AWS 镜像常常返回 503 Slow Down。读取函数对 AWS 最多重试 6 次，每次间隔 20 s。环境变量 `METEO300_ECMWF_SOURCES=aws` 让函数直接读取 AWS。
 - ECMWF 门户在请求过多时返回 429。
+- 2026-05-12 起，AIFS Single v2 的开放数据有 14 个等压面，还增加了位势高度 `gh`。
 - cfgrib 把位势高度的单位写成 `gpm`。读取函数把它改成 `m`。
 - 页面要写明 `run`。不写时，函数读取最新的起报，页面的结果每天都会变。
 
@@ -188,7 +191,7 @@ WeatherBench 2 是 Google Research 的 AI 天气模型评估基准。
 
 - 内容：多个模型的预报、ERA5 真值、IFS HRES 真值，以及算好的评分。
 - 模型：`graphcast`、`pangu`、`neuralgcm`、`fuxi`、`hres`。
-- 网格：1.5° 和 0.25°。评分文件按年份和网格分开。
+- 网格：本书读取 1.5° 和 0.25° 的数据。WeatherBench 2 还有 5.625° 的数据。评分文件按年份和网格分开。
 - 读取：`weatherbench2(model, variables, time, lead_times=..., levels=...)` 和 `wb2_scores(model)`。
 - 网址：<https://weatherbench2.readthedocs.io/>
 - 许可：ERA5 部分的许可是 CC BY 4.0。各模型预报的许可没有统一写明。所以本书不提交 WeatherBench 2 样本。
@@ -204,7 +207,7 @@ WeatherBench 2 是 Google Research 的 AI 天气模型评估基准。
 (ds-graphcastgfs)=
 ### GraphCastGFS
 
-NOAA NCEP 用 GFS 分析场驱动 GraphCast，每天发布预报。
+NOAA NCEP 用 GDAS 分析场驱动 GraphCast，每天起报 4 次。存储桶里有 2024-02-05 到 2026-04-16 的 GraphCastGFS 预报。2026-04-16 以后，这个存储桶的新预报是 AIGFS。
 
 - 网格：0.25°。
 - 读取：`meteo300.pages.ch02.graphcastgfs_10m_wind`，只读取 10 m 风。
@@ -218,12 +221,13 @@ NOAA NCEP 用 GFS 分析场驱动 GraphCast，每天发布预报。
 (ds-co2)=
 ### NOAA GML 二氧化碳
 
-- 内容：二氧化碳的月平均体积混合比，单位 ppm，以及去掉季节循环的值。
+- 内容：二氧化碳在干空气中的月平均摩尔分数，单位 ppm，以及去掉季节循环的值。
 - 观测站：Mauna Loa 从 1958 年 3 月开始。全球海洋表面平均值从 1979 年 1 月开始。
 - 读取：`co2(site="mlo")` 或 `co2(site="gl")`。缓存 7 天后更新。
 - 网址：<https://gml.noaa.gov/ccgg/trends/>
 - 许可：免费使用。NOAA GML 要求引用数据来源。
 - 引用：Lan, X., P. Tans and K. W. Thoning: Trends in globally-averaged CO2 determined from NOAA Global Monitoring Laboratory measurements. [doi:10.15138/9N0H-ZH07](https://doi.org/10.15138/9N0H-ZH07)。
+- Mauna Loa 数据的引用：Xin Lan, NOAA/GML 和 Ralph Keeling, Scripps Institution of Oceanography。
 - 样本：`co2_mm_mlo.csv`、`co2_mm_gl.csv`。
 - 使用页面：[t1](../topics/t1-cloud-composition.md)，读取 Mauna Loa 的月平均值。
 
@@ -235,7 +239,7 @@ AERONET 是 NASA 的地基太阳光度计网。
 - 内容：多个波长的气溶胶光学厚度和 Ångström 指数。
 - 读取：`aeronet_aod(site, start, end, level=1.5, daily=True)`，通过 AERONET 第 3 版网络服务读取。
 - 网址：<https://aeronet.gsfc.nasa.gov/>
-- 许可：数据公开。AERONET 要求用户在发表前联系观测站负责人。所以本书不提交 AERONET 样本。
+- 许可：AERONET 说这些数据属于公有领域。AERONET 要求用户咨询观测站负责人，负责人有权知道数据的其他用途。所以本书不提交 AERONET 样本。
 - 使用页面：暂无。
 
 (ds-cams)=
@@ -243,13 +247,13 @@ AERONET 是 NASA 的地基太阳光度计网。
 
 CAMS 是 Copernicus 大气监测服务。它提供气溶胶、臭氧和其他成分的再分析和预报。
 
-- 数据集：EAC4 再分析，网格 0.75°，每 3 h 一个值，从 2003 年开始。CAMS 全球预报，每天两次。
+- 数据集：EAC4 再分析，网格 0.75°，每 3 h 一个值，从 2003 年开始。CAMS 全球预报，网格 0.4°，每天在 00 UTC 和 12 UTC 起报。
 - 读取：`cams(variables, time, area=..., dataset="eac4" 或 "forecast")`，通过 cdsapi 读取。
 - 账户：Copernicus Atmosphere Data Store。凭证在 `~/.adsapirc` 或 `~/.cdsapirc` 里。用户还要在网站上接受每个数据集的许可。
 - 网址：<https://ads.atmosphere.copernicus.eu/>
 - 许可：CC BY 4.0。
 - 署名：Contains modified Copernicus Atmosphere Monitoring Service information。
-- 引用：Copernicus Atmosphere Monitoring Service, 2026: CAMS global atmospheric composition forecasts. ADS. [doi:10.24381/04a0b097](https://doi.org/10.24381/04a0b097)。
+- 引用：Copernicus Atmosphere Monitoring Service, 2021: CAMS global atmospheric composition forecasts. Copernicus Atmosphere Monitoring Service Atmosphere Data Store. [doi:10.24381/04a0b097](https://doi.org/10.24381/04a0b097)。
 - 页面样本：`t1-cams-aod-20260304.nc`，2026-03-04 到 2026-03-06 的 550 nm 气溶胶光学厚度。t1 通过 `page_data` 读取它。
 - 使用页面：[t1](../topics/t1-cloud-composition.md)，读取 `cams(..., dataset="forecast", leadtime_hours=[0])`。预报时效 0 h 的值是预报系统的分析场。
 
@@ -266,7 +270,7 @@ CAMS 是 Copernicus 大气监测服务。它提供气溶胶、臭氧和其他成
 GOES-R 系列卫星的 ABI 成像仪有 16 个波段。
 
 - 内容：本书用二级产品 CMIP。可见光波段是反射率，红外波段是亮温。
-- 区域和时间：CONUS 区域每 5 min 一幅，全圆盘每 10 min 一幅。红外波段的分辨率是 2 km。
+- 区域和时间：CONUS 区域每 5 min 一幅，全圆盘每 10 min 一幅。红外波段在星下点的分辨率是 2 km。
 - 读取：`goes_abi(time, band=13, sector="CONUS", satellite="east")`。函数用 satpy 打开文件。
 - 网址：<https://registry.opendata.aws/noaa-goes/>
 - 许可：NOAA 开放数据，使用不受限制。
@@ -321,7 +325,7 @@ VIIRS 是 NOAA-20 等极轨卫星上的成像仪。NASA LAADS DAAC 保存它的�
 GPCP 合并卫星和雨量计的数据，得到全球降水量。
 
 - 月数据：第 2.3 版，网格 2.5°，从 1979 年开始。
-- 日数据：第 1.3 版，网格 1°，从 1996 年开始。
+- 日数据：第 1.3 版，网格 1°，从 1996 年 10 月开始。
 - 读取：`gpcp(time, area=..., frequency="monthly" 或 "daily")`，从 AWS 上的 NOAA 气候数据记录读取。
 - 网址：<https://registry.opendata.aws/noaa-cdr-atmospheric/>
 - 许可：NOAA 气候数据记录，使用不受限制。
@@ -332,7 +336,7 @@ GPCP 合并卫星和雨量计的数据，得到全球降水量。
 (ds-imerg)=
 ### GPM IMERG
 
-- 内容：全球降水率，网格 0.1°，从 2000 年 6 月开始。半小时数据每 30 min 一个值。日数据是一个 UTC 日的降水量，单位 mm/day。
+- 内容：全球降水率，网格 0.1°，从 1998 年 1 月开始。半小时数据每 30 min 一个值。日数据是一个 UTC 日的降水量，单位 mm/day。
 - 读取：`imerg(time, area=..., frequency=..., run=...)`，通过 earthaccess 读取第 07 版。
   `frequency` 是 `"half-hourly"`、`"daily"` 或 `"monthly"`。
   `run` 是 `"final"`、`"late"` 或 `"early"`。Final 用雨量计订正，比实时晚约 3.5 个月。Late 晚约 14 h，Early 晚约 4 h。
@@ -355,6 +359,7 @@ GPCP 合并卫星和雨量计的数据，得到全球降水量。
 - 账户：NASA Earthdata。凭证在 `~/.netrc` 里。
 - 网址：<https://ceres.larc.nasa.gov/data/>
 - 许可：NASA 开放数据，使用不受限制。
+- 引用：CERES EBAF Edition 4.2.1. NASA LaRC ASDC. [doi:10.5067/TERRA-AQUA-NOAA20/CERES/EBAF_L3B004.2.1](https://doi.org/10.5067/TERRA-AQUA-NOAA20/CERES/EBAF_L3B004.2.1)。
 - 页面样本：`t2-ceres-toa-2025.nc`，2025 年大气顶辐照度的年平均和逐月纬向平均。t2 通过 `page_data` 读取它。
 - 使用页面：[t2](../topics/t2-radiation.md)。
 
