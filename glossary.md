@@ -30,6 +30,7 @@
 | 位势高度 | geopotential height | $Z$ | m | `z` 除以 $g_0$ | 高度、重力位势高度 |
 | 标准重力加速度 | standard gravity | $g_0$ | m s⁻² | — | 标准重力 |
 | 地形高度 | surface geopotential height; orography | $Z_s$ | m | `z` 地面场除以 $g_0$ / `geopotential_at_surface` | 地形海拔 |
+| 海陆掩码 | land-sea mask | — | — | `lsm` / `land_sea_mask` | 海陆掩膜、陆海掩码 |
 | 离地位势高度 | geopotential height above ground | $Z - Z_s$ | m | — | — |
 | 厚度 | thickness | $\Delta Z$ | m | — | 位势厚度 |
 | 压高公式 | hypsometric equation | — | — | — | 测高方程、测高公式、压高方程 |
@@ -115,6 +116,8 @@
 | 地转风 | geostrophic wind | $\mathbf{v}_g$ | m s⁻¹ | `geostrophic_wind_speed` | — |
 | 非地转风 | ageostrophic wind | $\mathbf{v}_{ag}$ | m s⁻¹ | `ageostrophic_wind_speed` | 偏地转风 |
 | 梯度风 | gradient wind | — | m s⁻¹ | — | — |
+| 穿越角 | cross-isobar angle | $\gamma - \gamma_g$ | ° | — | 越等压线角 |
+| 非地转风比例 | ageostrophic wind fraction | — | — | — | — |
 | 热成风 | thermal wind | $\mathbf{v}_T$ | m s⁻¹ | — | 热风 |
 | 垂直风切变 | vertical wind shear | $\partial \mathbf{v}_h / \partial z$ | s⁻¹ | — | 风切、垂直切变 |
 | 急流 | jet stream | — | — | — | 喷流 |
@@ -134,6 +137,7 @@
 | 摩擦力 | friction | — | m s⁻² | — | — |
 | 地转平衡 | geostrophic balance | — | — | — | — |
 | Rossby 数 | Rossby number | Ro | — | — | 罗斯贝数、罗斯比数 |
+| 尺度分析 | scale analysis | — | — | — | 量级分析 |
 | f 平面 | f-plane | — | — | — | — |
 | 惯性振荡 | inertial oscillation | — | — | — | 惯性振动 |
 | 惯性圆 | inertial circle | — | km | — | — |
@@ -360,6 +364,7 @@
 | 气旋生成 | cyclogenesis | — | — | — | 气旋发生、气旋新生 |
 | 爆发性气旋 | explosive cyclone | — | — | — | 炸弹气旋 |
 | 风暴路径 | storm track | — | — | — | 风暴轴 |
+| 重力波 | gravity wave | — | — | — | — |
 
 ## 观测与数据
 
