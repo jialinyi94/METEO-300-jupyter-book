@@ -49,9 +49,11 @@ The page `docs/topics/ch12-extratropical-cyclone.md` reads these files in offlin
 - Source: ECMWF open data, through the client `ecmwf-opendata`, which tries the mirror on
   Google Cloud first, then AWS and ECMWF. The model names are `aifs`, the experimental AIFS
   that ECMWF replaced with AIFS Single v1 on 2025-02-25, and `ifs`, IFS cycle 49r1.
-- Request: `meteo300.pages.ch12.forecast_msl()`, which calls the internal function
-  `meteo300.data._ecmwf_online(["msl"], steps, None, model, run, (62, -36, 44, 12))` for each
-  model and run. `meteo300.data.ecmwf_forecast` does not accept the model name `aifs`.
+- Request: `meteo300.pages.ch12.forecast_msl()`, which calls
+  `meteo300.data.ecmwf_forecast("msl", steps=steps, model=model, run=run,
+  area=(62, -36, 44, 12))` for each model and run. Before 2026-10-17 the function called the
+  internal download function of `meteo300.data` with the same arguments. Both give the same
+  data.
 - Processing: the GRIB2 messages are read with cfgrib. The step dimension becomes the valid
   time. Area selection. Stored as float32 with zlib compression and 4 significant digits,
   that is to 10 Pa.

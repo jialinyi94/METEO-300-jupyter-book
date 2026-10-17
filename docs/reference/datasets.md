@@ -158,11 +158,13 @@ Iowa Environmental Mesonet 保存全世界机场的 METAR 报告。
 ### ECMWF 开放数据
 
 ECMWF 公开一部分业务预报。IFS 是数值模式，AIFS Single 是 AI 天气模型。
+2025-02-25 以前，开放数据里的 AI 天气模型是 AIFS 的试验版本，模型名是 `aifs`。
 
 - 网格：0.25°，GRIB2 格式。
 - 起报时间：每天 00、06、12、18 UTC。
 - 预报时效：IFS 在 00 UTC 和 12 UTC 的预报，0 h 到 144 h 每 3 h 一个，150 h 到 360 h 每 6 h 一个。IFS 在 06 UTC 和 18 UTC 的预报到 144 h。AIFS 每次预报都是 0 h 到 360 h，每 6 h 一个。
 - 读取：`ecmwf_forecast(params, steps=..., levels=..., model="ifs" 或 "aifs-single", run=...)`。
+  读取试验版 AIFS 时写 `model="aifs"`，`run` 要早于 2025-02-25。
 - 网址：<https://www.ecmwf.int/en/forecasts/datasets/open-data>
 - 许可：CC BY 4.0。署名写 Source: www.ecmwf.int。
 - 样本：`ecmwf_opendata.nc`，起报时间 2026-10-15 00 UTC，IFS 和 AIFS。

@@ -56,6 +56,10 @@ The page `docs/topics/ch03-pressure-hydrostatic.md` reads these files in offline
 - Source: ECMWF open data, mirror on AWS. In January 2025 the experimental AIFS was in the
   directory `aifs/`.
   <https://ecmwf-forecasts.s3.eu-central-1.amazonaws.com/20250122/00z/aifs/0p25/oper/20250122000000-48h-oper-fc.grib2>
+- Request: `meteo300.pages.ch03.aifs_levels()`, which calls
+  `meteo300.data.ecmwf_forecast(["z", "t", "q"], steps=48, levels=<the 13 levels>,
+  model="aifs", run="2025-01-22T00", area=(70, -35, 35, 25))`. The Google mirror does not
+  have this run, so the client reads it from AWS.
 - Processing: the GRIB2 messages of `z`, `t` and `q` on pressure levels are read with HTTP
   range requests. Longitudes are wrapped to -180 to 180 degrees. Every fourth grid point of
   the 0.25 degree grid is kept. Stored as float32 with zlib compression and 6 significant
