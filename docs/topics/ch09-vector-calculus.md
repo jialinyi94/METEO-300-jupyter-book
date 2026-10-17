@@ -153,6 +153,8 @@ $\beta$ 是风和温度梯度的夹角。风从冷的一侧吹向暖的一侧时
 | 纬度加权 | latitude weighting | — |
 | RMS | root mean square | RMS |
 | RMSE | root mean squared error | RMSE |
+| MSE | mean squared error | MSE |
+| MAE | mean absolute error | MAE |
 | 损失函数 | loss function | — |
 
 ## 真实数据
@@ -411,7 +413,7 @@ earthkit-meteo 和手算的结果相同。加权的 RMSE 是 0.878 K，不加权
 
 左图显示，这些格点的误差也偏大。不加权时，它们贡献了 43% 的误差平方，加权后只有 18%。所以不加权的 RMSE 夸大了极地的误差，少算了人们生活的中低纬度。比较两个模型时，两个 RMSE 必须用同样的权重。
 
-AIFS Single 在 N320 网格上读写数据。这种网格靠近极地的每一行格点更少，每个格点代表的面积大致相等。但是 ECMWF 开放数据把 AIFS 的输出插值到 0.25° 的经纬度网格上。所以用开放数据评估 AIFS 时，仍然要做纬度加权。
+AIFS Single 在 N320 网格上读写数据。这种网格靠近极地的每一行格点更少，每个格点代表的面积大致相等。但是 ECMWF 开放数据把 AIFS 的输出插值到 0.25° 的经纬度网格上。所以用开放数据评估 AIFS 时，仍然要做纬度加权。这两种网格见 [ECMWF 的 AIFS 数据页](https://www.ecmwf.int/en/forecasts/datasets/aifs-machine-learning-data)。
 
 ### 物理约束的损失函数
 
@@ -439,7 +441,7 @@ print(f"50°N、5°W：平面网格 {float(variants['平面网格'].sel(point)):
 
 ### 检查 AI 预报的导数场
 
-多数 AI 天气模型用 MSE 训练，所以它们的预报比真实大气平滑。平滑的场在温度和风上看不太出来，在导数上很明显。下面用 AIFS 的两个预报计算同样的四个场，并和 ERA5 比较。
+确定性的 AI 天气模型用逐点的误差训练。GraphCast 和 AIFS 用 MSE，Pangu-Weather 和 FuXi 用 MAE。这类模型的预报比真实大气平滑，预报时效越长越平滑。AIFS 的论文把这种平滑归因于 MSE。平滑的场在温度和风上看不太出来，在导数上很明显。下面用 AIFS 的两个预报计算同样的四个场，并和 ERA5 比较。
 
 函数 `ch09.kinematics` 用和上面相同的 MetPy 函数。函数 `ch09.compare` 对每个场算出两个数。第一个是 AIFS 的加权 RMS 和 ERA5 的加权 RMS 之比。第二个是两个场的加权 correlation。
 
