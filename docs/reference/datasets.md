@@ -2,9 +2,9 @@
 title: 数据集
 ---
 
-本页列出本书用到的数据集。本页的信息在 2026-10-17 检查。
+本页列出本书用到的数据集。每个条目写明检查日期。检查包括打开条目的官方链接，核对分辨率、时间范围和许可。
 
-每个条目写明数据的内容、分辨率、时间范围、读取函数、许可和使用页面。
+每个条目写明数据的内容、分辨率、时间范围、读取函数、许可、使用页面和检查日期。
 读取函数在 `meteo300.data` 里。用法见 [数据读取演示](data-access-demo.md)。
 “使用页面”列出已经写完并读取这个数据集的页面。
 
@@ -89,6 +89,7 @@ ERA5 是 ECMWF 为 Copernicus 气候变化服务制作的全球再分析。
 - CDS 要求引用数据集条目。等压面数据的 DOI 是 [10.24381/cds.bd0915c6](https://doi.org/10.24381/cds.bd0915c6)，单层数据的 DOI 是 [10.24381/cds.adbb2d47](https://doi.org/10.24381/cds.adbb2d47)。
 - 样本：`era5_ciaran_pl.nc`、`era5_ciaran_sfc.nc`、`era5_global_1p5.nc`、`era5_monthly_1p5.nc`、`era5_daily_toa.nc`、`era5_climatology_1p5.nc`。
 - 使用页面：[ch01](../topics/ch01-global-circulation.md)、[ch03](../topics/ch03-pressure-hydrostatic.md)、[ch04](../topics/ch04-thermodynamics-stability.md)、[ch05](../topics/ch05-dynamics-geostrophic.md)、[ch06](../topics/ch06-water-vapour.md)、[ch07](../topics/ch07-stability-tephigram.md)、[ch08](../topics/ch08-geopotential-thickness.md)、[ch09](../topics/ch09-vector-calculus.md)、[ch10](../topics/ch10-thermal-wind.md)、[ch11](../topics/ch11-vorticity-divergence.md)、[ch12](../topics/ch12-extratropical-cyclone.md)、[t1](../topics/t1-cloud-composition.md)、[t2](../topics/t2-radiation.md)、[t3](../topics/t3-boundary-layer.md)。
+- 检查日期：2026-10-17。
 
 注意事项：
 
@@ -117,6 +118,7 @@ IGRA2 是 NOAA NCEI 的全球探空数据集。
 - 引用：Durre, I. et al., 2016: Integrated Global Radiosonde Archive, Version 2. NOAA NCEI. [doi:10.7289/V5X63K0Q](https://doi.org/10.7289/V5X63K0Q)。
 - 样本：`sounding_igra2.csv`，有 Camborne 的两次探空和 Norman 的一次探空。
 - 使用页面：[ch03](../topics/ch03-pressure-hydrostatic.md)、[ch04](../topics/ch04-thermodynamics-stability.md)、[ch07](../topics/ch07-stability-tephigram.md)、[ch10](../topics/ch10-thermal-wind.md)。
+- 检查日期：2026-10-17。
 
 注意事项：
 
@@ -132,6 +134,7 @@ IGRA2 是 NOAA NCEI 的全球探空数据集。
 - 网址：<https://weather.uwyo.edu/upperair/sounding.shtml>。旧的网址已经失效。
 - 许可：网站没有写明许可。所以本书不提交 Wyoming 样本。
 - 使用页面：IGRA2 读取失败时，作为备用来源。
+- 检查日期：2026-10-17。
 
 ## 地面观测
 
@@ -147,6 +150,7 @@ Iowa Environmental Mesonet 保存全世界机场的 METAR 报告。
 - 许可：公有领域。IEM 希望用户注明 Iowa Environmental Mesonet of Iowa State University。
 - 样本：`metar_egll.csv`，风暴 Ciarán 期间的 London Heathrow。
 - 使用页面：[ch02](../topics/ch02-station-observations.md)、[ch06](../topics/ch06-water-vapour.md)。ch02 用 `meteo300.pages.ch02` 的读取函数，一次读取一个观测网的报告。
+- 检查日期：2026-10-17。
 
 注意事项：
 
@@ -172,6 +176,7 @@ ECMWF 公开一部分业务预报。IFS 是数值模式，AIFS Single 是 AI 天
 - 样本：`ecmwf_opendata.nc`，起报时间 2026-10-15 00 UTC，IFS 和 AIFS。
 - 使用页面：[ch03](../topics/ch03-pressure-hydrostatic.md)、[ch04](../topics/ch04-thermodynamics-stability.md)、[ch05](../topics/ch05-dynamics-geostrophic.md)、[ch06](../topics/ch06-water-vapour.md)、[ch07](../topics/ch07-stability-tephigram.md)、[ch09](../topics/ch09-vector-calculus.md)、[ch10](../topics/ch10-thermal-wind.md)、[ch11](../topics/ch11-vorticity-divergence.md)、[ch12](../topics/ch12-extratropical-cyclone.md)、[t1](../topics/t1-cloud-composition.md)、[t2](../topics/t2-radiation.md)、[t3](../topics/t3-boundary-layer.md)。
   ch03 和 ch12 读取试验版 AIFS。
+- 检查日期：2026-10-17。
 
 注意事项：
 
@@ -197,6 +202,7 @@ WeatherBench 2 是 Google Research 的 AI 天气模型评估基准。
 - 许可：ERA5 部分的许可是 CC BY 4.0。各模型预报的许可没有统一写明。所以本书不提交 WeatherBench 2 样本。
 - 引用：Rasp, S. et al., 2024: WeatherBench 2. JAMES, 16, e2023MS004019. [doi:10.1029/2023MS004019](https://doi.org/10.1029/2023MS004019)。
 - 使用页面：[ch08](../topics/ch08-geopotential-thickness.md)。离线时，ch08 读取从这些预报算出的评分样本。
+- 检查日期：2026-10-17。
 - WeatherBench 2 的 ERA5 和 ERA5 气候态见 [ERA5](#ds-era5) 条目。
 
 注意事项：
@@ -215,6 +221,7 @@ NOAA NCEP 用 GDAS 分析场驱动 GraphCast，每天起报 4 次。存储桶里
 - 许可：CC0。
 - 样本：`ch02-graphcastgfs-10m-wind-20250123T00.nc`，来源和许可见 `data/samples/ATTRIBUTION-ch02.md`。
 - 使用页面：[ch02](../topics/ch02-station-observations.md)。
+- 检查日期：2026-10-17。
 
 ## 大气成分
 
@@ -230,6 +237,7 @@ NOAA NCEP 用 GDAS 分析场驱动 GraphCast，每天起报 4 次。存储桶里
 - Mauna Loa 数据的引用：Xin Lan, NOAA/GML 和 Ralph Keeling, Scripps Institution of Oceanography。
 - 样本：`co2_mm_mlo.csv`、`co2_mm_gl.csv`。
 - 使用页面：[t1](../topics/t1-cloud-composition.md)，读取 Mauna Loa 的月平均值。
+- 检查日期：2026-10-17。
 
 (ds-aeronet)=
 ### AERONET
@@ -241,6 +249,7 @@ AERONET 是 NASA 的地基太阳光度计网。
 - 网址：<https://aeronet.gsfc.nasa.gov/>
 - 许可：AERONET 说这些数据属于公有领域。AERONET 要求用户咨询观测站负责人，负责人有权知道数据的其他用途。所以本书不提交 AERONET 样本。
 - 使用页面：暂无。
+- 检查日期：2026-10-17。
 
 (ds-cams)=
 ### CAMS
@@ -256,6 +265,7 @@ CAMS 是 Copernicus 大气监测服务。它提供气溶胶、臭氧和其他成
 - 引用：Copernicus Atmosphere Monitoring Service, 2021: CAMS global atmospheric composition forecasts. Copernicus Atmosphere Monitoring Service Atmosphere Data Store. [doi:10.24381/04a0b097](https://doi.org/10.24381/04a0b097)。
 - 页面样本：`t1-cams-aod-20260304.nc`，2026-03-04 到 2026-03-06 的 550 nm 气溶胶光学厚度。t1 通过 `page_data` 读取它。
 - 使用页面：[t1](../topics/t1-cloud-composition.md)，读取 `cams(..., dataset="forecast", leadtime_hours=[0])`。预报时效 0 h 的值是预报系统的分析场。
+- 检查日期：2026-10-17。
 
 注意事项：
 
@@ -276,6 +286,7 @@ GOES-R 系列卫星的 ABI 成像仪有 16 个波段。
 - 许可：NOAA 开放数据，使用不受限制。
 - 样本：GOES-19 第 13 波段，2026-10-15 18:01 UTC。
 - 使用页面：[ch01](../topics/ch01-global-circulation.md)、[t2](../topics/t2-radiation.md)。ch01 读取 GOES-16 的全圆盘图像，t2 还读取一级辐亮度。
+- 检查日期：2026-10-17。
 
 注意事项：
 
@@ -298,6 +309,7 @@ EUMETSAT 运营欧洲的静止气象卫星 Meteosat。
 - 署名：EUMETSAT 要求写 `[Contains modified] EUMETSAT [Meteosat/Metop] [data/product] [Year]`，例如 Contains modified EUMETSAT Meteosat data 2026。
 - 数据政策：<https://www-cdn.eumetsat.int/files/2026-01/45173%20-%20Data_Policy.pdf>，第 4 条到第 6 条。
 - 使用页面：暂无。[ch12](../topics/ch12-extratropical-cyclone.md) 把它列为备选数据集。
+- 检查日期：2026-10-17。
 
 (ds-viirs)=
 ### VIIRS
@@ -312,6 +324,7 @@ VIIRS 是 NOAA-20 等极轨卫星上的成像仪。NASA LAADS DAAC 保存它的�
 - 许可：NASA 的地球科学数据可以自由使用和再分发。NASA 要求引用数据集。
 - 样本：`ch12-viirs-m15-2024120703.nc`，2024-12-07 02:54 UTC 到 03:00 UTC 的扫描。来源和许可见 `data/samples/ATTRIBUTION-ch12.md`。
 - 使用页面：[ch12](../topics/ch12-extratropical-cyclone.md)。
+- 检查日期：2026-10-17。
 
 % ste-ignore
 引用：VIIRS Calibration Support Team (VCST), 2021: VIIRS/JPSS1 Moderate Resolution 6-Min L1B Swath 750m. NASA LAADS DAAC. [doi:10.5067/VIIRS/VJ102MOD.021](https://doi.org/10.5067/VIIRS/VJ102MOD.021)。
@@ -332,6 +345,7 @@ GPCP 合并卫星和雨量计的数据，得到全球降水量。
 - 引用：Adler, R. F. et al., 2018: The Global Precipitation Climatology Project monthly analysis, new version 2.3. Atmosphere, 9, 138. [doi:10.3390/atmos9040138](https://doi.org/10.3390/atmos9040138)。
 - 样本：`gpcp_monthly.nc`，2020 年 1 月和 7 月。
 - 使用页面：暂无。`gpcp_monthly.nc` 只用于 [数据读取演示](data-access-demo.md)。
+- 检查日期：2026-10-17。
 
 (ds-imerg)=
 ### GPM IMERG
@@ -348,6 +362,7 @@ GPCP 合并卫星和雨量计的数据，得到全球降水量。
 - 引用：Huffman, G. J., E. F. Stocker, D. T. Bolvin, E. J. Nelkin and J. Tan, 2023: GPM IMERG Late Precipitation L3 1 day 0.1 degree x 0.1 degree V07. NASA GES DISC. [doi:10.5067/GPM/IMERGDL/DAY/07](https://doi.org/10.5067/GPM/IMERGDL/DAY/07)。
 - 页面样本：`t1-imerg-late-20260305.nc`，2026-03-05 和 2026-03-06 两个 UTC 日的降水量。t1 通过 `page_data` 读取它。
 - 使用页面：[t1](../topics/t1-cloud-composition.md)，读取 `imerg(..., frequency="daily", run="late")`。
+- 检查日期：2026-10-17。
 
 ## 辐射
 
@@ -362,6 +377,7 @@ GPCP 合并卫星和雨量计的数据，得到全球降水量。
 - 引用：CERES EBAF Edition 4.2.1. NASA LaRC ASDC. [doi:10.5067/TERRA-AQUA-NOAA20/CERES/EBAF_L3B004.2.1](https://doi.org/10.5067/TERRA-AQUA-NOAA20/CERES/EBAF_L3B004.2.1)。
 - 页面样本：`t2-ceres-toa-2025.nc`，2025 年大气顶辐照度的年平均和逐月纬向平均。t2 通过 `page_data` 读取它。
 - 使用页面：[t2](../topics/t2-radiation.md)。
+- 检查日期：2026-10-17。
 
 注意事项：
 
@@ -394,6 +410,7 @@ KNMI 在荷兰 Cabauw 运营一座 213 m 的观测塔。
 - 页面样本：`t3-cabauw-tower-202604.nc`，2026-04-16 到 2026-04-30 的 `tower_meteo`。
 - 页面样本：`t3-cabauw-surface-202604.csv`，同一时段的 `surface_flux` 和 `surface_meteo`。t3 通过 `page_data` 读取这两个文件。
 - 使用页面：[t2](../topics/t2-radiation.md) 读取 `surface_radiation`，[t3](../topics/t3-boundary-layer.md) 读取 `tower_meteo`、`surface_flux` 和 `surface_meteo`。
+- 检查日期：2026-10-17。
 
 注意事项：
 
@@ -413,6 +430,7 @@ DE-Har 是德国 Hartheim 的森林观测站。Zenodo 公开它的 20 Hz 原始�
 - 样本：`2024-07-01T120000_AIU-1660.ghg`，2024-07-01 12:00 UTC 起的 30 min。
 - 页面样本：`t3-dehar-20hz-20240701t2100.nc`，2024-07-01 21:00 UTC 起的 30 min。
 - 使用页面：[t3](../topics/t3-boundary-layer.md)。离线时，t3 从样本读取 12:00 UTC 的时段，从页面样本读取 21:00 UTC 的时段。
+- 检查日期：2026-10-17。
 
 % ste-ignore
 引用：Christen, A., S. Haberstroh, T. Plapp, D. Schindler and M. Sulzer, 2026: Eddy Covariance measurements at Hartheim Research Forest Site (DE-Har) [RAW]. Zenodo.
@@ -433,3 +451,4 @@ DE-Har 是德国 Hartheim 的森林观测站。Zenodo 公开它的 20 Hz 原始�
 - 网址：<https://www.naturalearthdata.com/>
 - 许可：公有领域。
 - 使用页面：[ch01](../topics/ch01-global-circulation.md)、[ch03](../topics/ch03-pressure-hydrostatic.md)、[ch04](../topics/ch04-thermodynamics-stability.md)、[ch05](../topics/ch05-dynamics-geostrophic.md)、[ch06](../topics/ch06-water-vapour.md)、[ch07](../topics/ch07-stability-tephigram.md)、[ch08](../topics/ch08-geopotential-thickness.md)、[ch09](../topics/ch09-vector-calculus.md)、[ch10](../topics/ch10-thermal-wind.md)、[ch11](../topics/ch11-vorticity-divergence.md)、[ch12](../topics/ch12-extratropical-cyclone.md)、[t1](../topics/t1-cloud-composition.md)、[t2](../topics/t2-radiation.md) 的地图。
+- 检查日期：2026-10-17。
