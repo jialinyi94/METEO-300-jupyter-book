@@ -7,7 +7,6 @@ title: 数据集
 每个条目写明数据的内容、分辨率、时间范围、读取函数、许可和使用页面。
 读取函数在 `meteo300.data` 里。用法见 [数据读取演示](data-access-demo.md)。
 “使用页面”列出已经写完并读取这个数据集的页面。
-“计划页面”按本书目录规划，列出还没有写完的页面。这些页面写完后，以页面的内容为准。
 
 ## 总表
 
@@ -23,6 +22,7 @@ title: 数据集
 | [NOAA GML 二氧化碳](#ds-co2) | 大气成分 | `co2` | 否 | 有 |
 | [GOES ABI](#ds-goes) | 卫星 | `goes_abi` | 否 | 有 |
 | [Meteosat](#ds-meteosat) | 卫星 | `meteosat_image`、`meteosat` | 数值数据需要 | 无 |
+| [VIIRS](#ds-viirs) | 卫星 | `meteo300.pages.ch12.viirs_m15` | 是 | 有 |
 | [AERONET](#ds-aeronet) | 气溶胶 | `aeronet_aod` | 否 | 无 |
 | [CAMS](#ds-cams) | 大气成分 | `cams` | 是 | 无 |
 | [GPCP](#ds-gpcp) | 降水量 | `gpcp` | 否 | 有 |
@@ -84,8 +84,7 @@ ERA5 是 ECMWF 为 Copernicus 气候变化服务制作的全球再分析。
 - 引用：Hersbach, H. et al., 2020: The ERA5 global reanalysis. QJRMS, 146, 1999–2049. [doi:10.1002/qj.3803](https://doi.org/10.1002/qj.3803)。
 - 署名：Contains modified Copernicus Climate Change Service information。
 - 样本：`era5_ciaran_pl.nc`、`era5_ciaran_sfc.nc`、`era5_global_1p5.nc`、`era5_monthly_1p5.nc`、`era5_daily_toa.nc`、`era5_climatology_1p5.nc`。
-- 使用页面：[ch01](../topics/ch01-global-circulation.md)、[ch03](../topics/ch03-pressure-hydrostatic.md)、[ch04](../topics/ch04-thermodynamics-stability.md)、[ch05](../topics/ch05-dynamics-geostrophic.md)、[ch06](../topics/ch06-water-vapour.md)、[ch07](../topics/ch07-stability-tephigram.md)、[ch08](../topics/ch08-geopotential-thickness.md)、[ch09](../topics/ch09-vector-calculus.md)、[ch10](../topics/ch10-thermal-wind.md)、[t2](../topics/t2-radiation.md)。
-- 计划页面：[t1](../topics/t1-cloud-composition.md)、[t3](../topics/t3-boundary-layer.md)、[ch11](../topics/ch11-vorticity-divergence.md)、[ch12](../topics/ch12-extratropical-cyclone.md)。
+- 使用页面：[ch01](../topics/ch01-global-circulation.md)、[ch03](../topics/ch03-pressure-hydrostatic.md)、[ch04](../topics/ch04-thermodynamics-stability.md)、[ch05](../topics/ch05-dynamics-geostrophic.md)、[ch06](../topics/ch06-water-vapour.md)、[ch07](../topics/ch07-stability-tephigram.md)、[ch08](../topics/ch08-geopotential-thickness.md)、[ch09](../topics/ch09-vector-calculus.md)、[ch10](../topics/ch10-thermal-wind.md)、[ch11](../topics/ch11-vorticity-divergence.md)、[ch12](../topics/ch12-extratropical-cyclone.md)、[t1](../topics/t1-cloud-composition.md)、[t2](../topics/t2-radiation.md)、[t3](../topics/t3-boundary-layer.md)。
 
 注意事项：
 
@@ -114,7 +113,6 @@ IGRA2 是 NOAA NCEI 的全球探空数据集。
 - 引用：Durre, I. et al., 2016: Integrated Global Radiosonde Archive, Version 2. NOAA NCEI. [doi:10.7289/V5X63K0Q](https://doi.org/10.7289/V5X63K0Q)。
 - 样本：`sounding_igra2.csv`，有 Camborne 的两次探空和 Norman 的一次探空。
 - 使用页面：[ch03](../topics/ch03-pressure-hydrostatic.md)、[ch04](../topics/ch04-thermodynamics-stability.md)、[ch07](../topics/ch07-stability-tephigram.md)、[ch10](../topics/ch10-thermal-wind.md)。
-- 计划页面：[t1](../topics/t1-cloud-composition.md)。
 
 注意事项：
 
@@ -168,8 +166,8 @@ ECMWF 公开一部分业务预报。IFS 是数值模式，AIFS Single 是 AI 天
 - 网址：<https://www.ecmwf.int/en/forecasts/datasets/open-data>
 - 许可：CC BY 4.0。署名写 Source: www.ecmwf.int。
 - 样本：`ecmwf_opendata.nc`，起报时间 2026-10-15 00 UTC，IFS 和 AIFS。
-- 使用页面：[ch03](../topics/ch03-pressure-hydrostatic.md)、[ch04](../topics/ch04-thermodynamics-stability.md)、[ch05](../topics/ch05-dynamics-geostrophic.md)、[ch06](../topics/ch06-water-vapour.md)、[ch07](../topics/ch07-stability-tephigram.md)、[ch09](../topics/ch09-vector-calculus.md)、[ch10](../topics/ch10-thermal-wind.md)、[t2](../topics/t2-radiation.md)。
-- 计划页面：[ch12](../topics/ch12-extratropical-cyclone.md)。
+- 使用页面：[ch03](../topics/ch03-pressure-hydrostatic.md)、[ch04](../topics/ch04-thermodynamics-stability.md)、[ch05](../topics/ch05-dynamics-geostrophic.md)、[ch06](../topics/ch06-water-vapour.md)、[ch07](../topics/ch07-stability-tephigram.md)、[ch09](../topics/ch09-vector-calculus.md)、[ch10](../topics/ch10-thermal-wind.md)、[ch11](../topics/ch11-vorticity-divergence.md)、[ch12](../topics/ch12-extratropical-cyclone.md)、[t1](../topics/t1-cloud-composition.md)、[t2](../topics/t2-radiation.md)、[t3](../topics/t3-boundary-layer.md)。
+  ch03 和 ch12 读取试验版 AIFS。
 
 注意事项：
 
@@ -194,7 +192,6 @@ WeatherBench 2 是 Google Research 的 AI 天气模型评估基准。
 - 许可：ERA5 部分的许可是 CC BY 4.0。各模型预报的许可没有统一写明。所以本书不提交 WeatherBench 2 样本。
 - 引用：Rasp, S. et al., 2024: WeatherBench 2. JAMES, 16, e2023MS004019. [doi:10.1029/2023MS004019](https://doi.org/10.1029/2023MS004019)。
 - 使用页面：[ch08](../topics/ch08-geopotential-thickness.md)。离线时，ch08 读取从这些预报算出的评分样本。
-- 计划页面：[ch12](../topics/ch12-extratropical-cyclone.md)。
 - WeatherBench 2 的 ERA5 和 ERA5 气候态见 [ERA5](#ds-era5) 条目。
 
 注意事项：
@@ -226,7 +223,7 @@ NOAA NCEP 用 GFS 分析场驱动 GraphCast，每天发布预报。
 - 许可：免费使用。NOAA GML 要求引用数据来源。
 - 引用：Lan, X., P. Tans and K. W. Thoning: Trends in globally-averaged CO2 determined from NOAA Global Monitoring Laboratory measurements. [doi:10.15138/9N0H-ZH07](https://doi.org/10.15138/9N0H-ZH07)。
 - 样本：`co2_mm_mlo.csv`、`co2_mm_gl.csv`。
-- 计划页面：[t1](../topics/t1-cloud-composition.md)。
+- 使用页面：[t1](../topics/t1-cloud-composition.md)，读取 Mauna Loa 的月平均值。
 
 (ds-aeronet)=
 ### AERONET
@@ -237,7 +234,7 @@ AERONET 是 NASA 的地基太阳光度计网。
 - 读取：`aeronet_aod(site, start, end, level=1.5, daily=True)`，通过 AERONET 第 3 版网络服务读取。
 - 网址：<https://aeronet.gsfc.nasa.gov/>
 - 许可：数据公开。AERONET 要求用户在发表前联系观测站负责人。所以本书不提交 AERONET 样本。
-- 计划页面：[t1](../topics/t1-cloud-composition.md)。
+- 使用页面：暂无。
 
 (ds-cams)=
 ### CAMS
@@ -249,7 +246,10 @@ CAMS 是 Copernicus 大气监测服务。它提供气溶胶、臭氧和其他成
 - 账户：Copernicus Atmosphere Data Store。凭证在 `~/.adsapirc` 或 `~/.cdsapirc` 里。用户还要在网站上接受每个数据集的许可。
 - 网址：<https://ads.atmosphere.copernicus.eu/>
 - 许可：CC BY 4.0。
-- 计划页面：[t1](../topics/t1-cloud-composition.md)。
+- 署名：Contains modified Copernicus Atmosphere Monitoring Service information。
+- 引用：Copernicus Atmosphere Monitoring Service, 2026: CAMS global atmospheric composition forecasts. ADS. [doi:10.24381/04a0b097](https://doi.org/10.24381/04a0b097)。
+- 页面样本：`t1-cams-aod-20260304.nc`，2026-03-04 到 2026-03-06 的 550 nm 气溶胶光学厚度。t1 通过 `page_data` 读取它。
+- 使用页面：[t1](../topics/t1-cloud-composition.md)，读取 `cams(..., dataset="forecast", leadtime_hours=[0])`。预报时效 0 h 的值是预报系统的分析场。
 
 注意事项：
 
@@ -270,7 +270,6 @@ GOES-R 系列卫星的 ABI 成像仪有 16 个波段。
 - 许可：NOAA 开放数据，使用不受限制。
 - 样本：GOES-19 第 13 波段，2026-10-15 18:01 UTC。
 - 使用页面：[ch01](../topics/ch01-global-circulation.md)、[t2](../topics/t2-radiation.md)。ch01 读取 GOES-16 的全圆盘图像，t2 还读取一级辐亮度。
-- 计划页面：[t1](../topics/t1-cloud-composition.md)。
 
 注意事项：
 
@@ -292,7 +291,25 @@ EUMETSAT 运营欧洲的静止气象卫星 Meteosat。
 - 整点数据指参考时间是整点 UTC 的全圆盘扫描。`meteosat("2025-07-01T12:00")` 读取的是整点数据。
 - 署名：EUMETSAT 要求写 `[Contains modified] EUMETSAT [Meteosat/Metop] [data/product] [Year]`，例如 Contains modified EUMETSAT Meteosat data 2026。
 - 数据政策：<https://www-cdn.eumetsat.int/files/2026-01/45173%20-%20Data_Policy.pdf>，第 4 条到第 6 条。
-- 计划页面：[t1](../topics/t1-cloud-composition.md)、[ch12](../topics/ch12-extratropical-cyclone.md)。
+- 使用页面：暂无。[ch12](../topics/ch12-extratropical-cyclone.md) 把它列为备选数据集。
+
+(ds-viirs)=
+### VIIRS
+
+VIIRS 是 NOAA-20 等极轨卫星上的成像仪。NASA LAADS DAAC 保存它的一级数据。
+
+- 内容：本书用 NOAA-20 的 M15 波段，中心波长 10.76 µm。M 波段的像元在星下点是 750 m。
+- 读取：`meteo300.pages.ch12.viirs_m15()`。函数用 earthaccess 下载一个 6 min 的 L1B 文件和它的地理定位文件，约 120 MB。
+  satpy 读取 M15 波段的亮温，再把像元平均到 0.05° 的经纬度网格上。
+- 账户：NASA Earthdata。凭证在 `~/.netrc` 里。
+- 网址：<https://ladsweb.modaps.eosdis.nasa.gov/>
+- 许可：NASA 的地球科学数据可以自由使用和再分发。NASA 要求引用数据集。
+- 样本：`ch12-viirs-m15-2024120703.nc`，2024-12-07 02:54 UTC 到 03:00 UTC 的扫描。来源和许可见 `data/samples/ATTRIBUTION-ch12.md`。
+- 使用页面：[ch12](../topics/ch12-extratropical-cyclone.md)。
+
+% ste-ignore
+引用：VIIRS Calibration Support Team (VCST), 2021: VIIRS/JPSS1 Moderate Resolution 6-Min L1B Swath 750m. NASA LAADS DAAC. [doi:10.5067/VIIRS/VJ102MOD.021](https://doi.org/10.5067/VIIRS/VJ102MOD.021)。
+地理定位文件的 DOI 是 [10.5067/VIIRS/VJ103MOD.021](https://doi.org/10.5067/VIIRS/VJ103MOD.021)。
 
 ## 降水量
 
@@ -309,18 +326,22 @@ GPCP 合并卫星和雨量计的数据，得到全球降水量。
 - 引用：Adler, R. F. et al., 2018: The Global Precipitation Climatology Project monthly analysis, new version 2.3. Atmosphere, 9, 138. [doi:10.3390/atmos9040138](https://doi.org/10.3390/atmos9040138)。
 - 样本：`gpcp_monthly.nc`，2020 年 1 月和 7 月。
 - 使用页面：暂无。`gpcp_monthly.nc` 只用于 [数据读取演示](data-access-demo.md)。
-- 计划页面：[ch12](../topics/ch12-extratropical-cyclone.md)。
 
 (ds-imerg)=
 ### GPM IMERG
 
-- 内容：全球降水率，网格 0.1°，每 30 min 一个值，从 2000 年 6 月开始。
-- 读取：`imerg(time, area=..., frequency="half-hourly")`，通过 earthaccess 读取第 07 版。
+- 内容：全球降水率，网格 0.1°，从 2000 年 6 月开始。半小时数据每 30 min 一个值。日数据是一个 UTC 日的降水量，单位 mm/day。
+- 读取：`imerg(time, area=..., frequency=..., run=...)`，通过 earthaccess 读取第 07 版。
+  `frequency` 是 `"half-hourly"`、`"daily"` 或 `"monthly"`。
+  `run` 是 `"final"`、`"late"` 或 `"early"`。Final 用雨量计订正，比实时晚约 3.5 个月。Late 晚约 14 h，Early 晚约 4 h。
+  2026 年 10 月检查时，GES DISC 的 Final 只到 2025-09-30。以后的日期用 `"late"`。
 - 账户：NASA Earthdata。凭证在 `~/.netrc` 里。
 - 条款：用户还要在 Earthdata 账户里批准 GES DISC 应用。步骤见 [账户和条款](#ds-accounts)。
 - 网址：<https://gpm.nasa.gov/data/imerg>
 - 许可：NASA 开放数据，使用不受限制。
-- 计划页面：[ch12](../topics/ch12-extratropical-cyclone.md)。离线时，页面用 GPCP 样本代替。
+- 引用：Huffman, G. J., E. F. Stocker, D. T. Bolvin, E. J. Nelkin and J. Tan, 2023: GPM IMERG Late Precipitation L3 1 day 0.1 degree x 0.1 degree V07. NASA GES DISC. [doi:10.5067/GPM/IMERGDL/DAY/07](https://doi.org/10.5067/GPM/IMERGDL/DAY/07)。
+- 页面样本：`t1-imerg-late-20260305.nc`，2026-03-05 和 2026-03-06 两个 UTC 日的降水量。t1 通过 `page_data` 读取它。
+- 使用页面：[t1](../topics/t1-cloud-composition.md)，读取 `imerg(..., frequency="daily", run="late")`。
 
 ## 辐射
 
@@ -362,8 +383,9 @@ KNMI 在荷兰 Cabauw 运营一座 213 m 的观测塔。
 - 许可：CC BY 4.0。
 - 样本：`cesar_tower_meteo_lc1_t10_v1.1_202507.nc`，2025 年 7 月的 `tower_meteo`。离线时，`cabauw` 只能读取这个样本。
 - 页面样本：`t2-cabauw-radiation-20250628.csv`，2025-06-28 到 2025-07-04 的 `surface_radiation`。t2 通过 `page_data` 读取它。
-- 使用页面：[t2](../topics/t2-radiation.md)，读取 `surface_radiation`。
-- 计划页面：[t3](../topics/t3-boundary-layer.md)，读取 `tower_meteo`。
+- 页面样本：`t3-cabauw-tower-202604.nc`，2026-04-16 到 2026-04-30 的 `tower_meteo`。
+- 页面样本：`t3-cabauw-surface-202604.csv`，同一时段的 `surface_flux` 和 `surface_meteo`。t3 通过 `page_data` 读取这两个文件。
+- 使用页面：[t2](../topics/t2-radiation.md) 读取 `surface_radiation`，[t3](../topics/t3-boundary-layer.md) 读取 `tower_meteo`、`surface_flux` 和 `surface_meteo`。
 
 注意事项：
 
@@ -381,7 +403,8 @@ DE-Har 是德国 Hartheim 的森林观测站。Zenodo 公开它的 20 Hz 原始�
 - 网址：[Zenodo 18713191](https://doi.org/10.5281/zenodo.18713191) 是 2024 年，[Zenodo 18712865](https://doi.org/10.5281/zenodo.18712865) 是 2023 年。
 - 许可：CC BY 4.0。
 - 样本：`2024-07-01T120000_AIU-1660.ghg`，2024-07-01 12:00 UTC 起的 30 min。
-- 计划页面：[t3](../topics/t3-boundary-layer.md)。
+- 页面样本：`t3-dehar-20hz-20240701t2100.nc`，2024-07-01 21:00 UTC 起的 30 min。
+- 使用页面：[t3](../topics/t3-boundary-layer.md)。离线时，t3 从样本读取 12:00 UTC 的时段，从页面样本读取 21:00 UTC 的时段。
 
 % ste-ignore
 引用：Christen, A., S. Haberstroh, T. Plapp, D. Schindler and M. Sulzer, 2026: Eddy Covariance measurements at Hartheim Research Forest Site (DE-Har) [RAW]. Zenodo.
@@ -401,4 +424,4 @@ DE-Har 是德国 Hartheim 的森林观测站。Zenodo 公开它的 20 Hz 原始�
 - 读取：`meteo300.plot.coastlines(ax)`。文件在 `data/natural_earth/`，画图不需要网络。
 - 网址：<https://www.naturalearthdata.com/>
 - 许可：公有领域。
-- 使用页面：[ch01](../topics/ch01-global-circulation.md)、[ch03](../topics/ch03-pressure-hydrostatic.md)、[ch04](../topics/ch04-thermodynamics-stability.md)、[ch05](../topics/ch05-dynamics-geostrophic.md)、[ch06](../topics/ch06-water-vapour.md)、[ch07](../topics/ch07-stability-tephigram.md)、[ch08](../topics/ch08-geopotential-thickness.md)、[ch09](../topics/ch09-vector-calculus.md)、[ch10](../topics/ch10-thermal-wind.md)、[t2](../topics/t2-radiation.md) 的地图。
+- 使用页面：[ch01](../topics/ch01-global-circulation.md)、[ch03](../topics/ch03-pressure-hydrostatic.md)、[ch04](../topics/ch04-thermodynamics-stability.md)、[ch05](../topics/ch05-dynamics-geostrophic.md)、[ch06](../topics/ch06-water-vapour.md)、[ch07](../topics/ch07-stability-tephigram.md)、[ch08](../topics/ch08-geopotential-thickness.md)、[ch09](../topics/ch09-vector-calculus.md)、[ch10](../topics/ch10-thermal-wind.md)、[ch11](../topics/ch11-vorticity-divergence.md)、[ch12](../topics/ch12-extratropical-cyclone.md)、[t1](../topics/t1-cloud-composition.md)、[t2](../topics/t2-radiation.md) 的地图。
