@@ -487,7 +487,7 @@ def plot_trajectories(wind0: xr.Dataset, frozen: xr.Dataset, traj: xr.Dataset, t
     axs[0].plot([], [], color="0.3", lw=2, ls="--", label="沿流线走 24 h")
     axs[0].plot([], [], "x", color="k", ms=8, mew=2, label="低压中心")
     axs[1].plot([], [], color="0.3", lw=2, marker="o", ms=4.5, label="轨迹，圆点间隔 6 h")
-    axs[1].plot([], [], color="k", lw=1.2, marker="x", ms=7, mew=2, label="低压中心，间隔 6 h")
+    axs[1].plot([], [], color="k", lw=1.2, marker="x", ms=7, mew=2, label="气旋中心，间隔 6 h")
     for ax in axs:
         ax.legend(loc="lower left", fontsize=8, framealpha=0.9)
     return fig

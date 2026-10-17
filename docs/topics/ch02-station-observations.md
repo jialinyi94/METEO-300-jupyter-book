@@ -101,6 +101,7 @@ $$
 | METAR 报文 | METAR report | — |
 | 修正海平面气压 | QNH | — |
 | 海平面气压 | mean sea level pressure | $p_{\mathrm{msl}}$ |
+| 低压中心 | low centre | — |
 | 能见度 | visibility | — |
 | kt | knot | kt |
 | 风速 | wind speed | $V$ |

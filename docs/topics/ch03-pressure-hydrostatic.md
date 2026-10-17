@@ -81,6 +81,7 @@ p = p_0\, e^{-Z/H}, \qquad H = \frac{R_d \overline{T_v}}{g_0}
 | 气压 | pressure | $p$ |
 | 地面气压 | surface pressure | $p_s$ |
 | 海平面气压 | mean sea level pressure | $p_{\mathrm{msl}}$ |
+| 低压中心 | low centre | — |
 | 密度 | density | $\rho$ |
 | 理想气体定律 | ideal gas law | — |
 | 干空气气体常数 | gas constant for dry air | $R_d$ |
@@ -108,7 +109,7 @@ p = p_0\, e^{-Z/H}, \qquad H = \frac{R_d \overline{T_v}}{g_0}
 
 本页的个例是风暴 Éowyn。2025-01-24，这个温带气旋袭击了爱尔兰和英国。ERA5 里，它的中心海平面气压在 18 h 内降低了 39 hPa。这样快的加深叫爆发性气旋。2025-01-24 00 UTC，它的中心在爱尔兰以西，中心海平面气压是 941.7 hPa。
 
-Camborne 观测站在英格兰西南端的康沃尔。它在风暴中心的东南偏东方向，相距约 700 km。观测站每天施放两次探空仪。下面是 2025-01-24 00 UTC 的探空。探空仪的升空时间是 2025-01-23 23:17 UTC。
+Camborne 观测站在英格兰西南端的康沃尔。它在低压中心的东南偏东方向，相距约 700 km。观测站每天施放两次探空仪。下面是 2025-01-24 00 UTC 的探空。探空仪的升空时间是 2025-01-23 23:17 UTC。
 
 下面的代码读取本页的全部数据。联网时，函数从 IGRA2、ERA5 和 ECMWF 开放数据下载数据。离线时，`d.page_data` 读取 `data/samples/` 里的样本。
 

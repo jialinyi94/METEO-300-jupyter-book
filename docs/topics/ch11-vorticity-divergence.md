@@ -142,6 +142,8 @@ $\theta$ 是位温。大气稳定时，$\theta$ 随气压减小而增大，所�
 | 随体导数 | material derivative | $D/Dt$ |
 | 涡度平流 | vorticity advection | $-\mathbf{v}_h \cdot \nabla \eta$ |
 | 槽 | trough | — |
+| 低压中心 | low centre | — |
+| 气旋中心 | cyclone centre | — |
 | 脊 | ridge | — |
 | 对流层顶 | tropopause | — |
 | 无辐散层 | level of nondivergence | — |
@@ -231,7 +233,7 @@ speed250 = np.hypot(era["u"].sel(level=250), era["v"].sel(level=250))
 fig = ch11.plot_div250(div250, era["msl"].sel(time=ch11.MAP_TIME), speed250, centre=centre)
 ```
 
-[](#fig-ch11-div250) 里，250 hPa 的急流在低压中心的南侧，从大西洋伸向法国。最强的辐散在低压中心的东北侧，和 [](#fig-ch11-eta500) 右图东北侧的红色区域重合。低压中心向东北移动，正好进入这片辐散区。
+[](#fig-ch11-div250) 里，250 hPa 的急流在低压中心的南侧，从大西洋伸向法国。最强的辐散在低压中心的东北侧，和 [](#fig-ch11-eta500) 右图东北侧的红色区域重合。气旋中心向东北移动，正好进入这片辐散区。
 
 下面的代码在低压中心周围 200 km 内平均三个量。第一行用 18 UTC 的中心，第二行用 12 h 以后的中心。三个量都取 18 UTC 的场。
 
@@ -249,7 +251,7 @@ assert near.iloc[1, 0] > 0 and near.iloc[1, 1] > 0 and near.iloc[1, 2] < 0
 near.round(2)
 ```
 
-在低压中心 12 h 以后到达的地方，500 hPa 的涡度平流为正，250 hPa 在辐散，500 hPa 的 $\omega$ 为负，空气在上升。这三个量连成了知识点一节的连锁：槽前的正涡度平流、高层辐散、上升运动和地面减压。18 UTC 的中心上空也在辐散和上升，但那里的涡度平流是弱的负值。
+在气旋中心 12 h 以后到达的地方，500 hPa 的涡度平流为正，250 hPa 在辐散，500 hPa 的 $\omega$ 为负，空气在上升。这三个量连成了知识点一节的连锁：槽前的正涡度平流、高层辐散、上升运动和地面减压。18 UTC 的中心上空也在辐散和上升，但那里的涡度平流是弱的负值。
 
 ## 数据集
 

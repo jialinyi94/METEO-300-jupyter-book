@@ -109,6 +109,7 @@ $(u_1, v_1)$ 是 $p_1$ 上的地转风，$(u_2, v_2)$ 是 $p_2$ 上的地转风�
 | 温度平流 | temperature advection | $-\mathbf{v}_h \cdot \nabla T$ |
 | 暖平流 | warm advection | — |
 | 冷平流 | cold advection | — |
+| 低压中心 | low centre | — |
 | 风矢端图 | hodograph | — |
 | 急流 | jet stream | — |
 | 对流层顶 | tropopause | — |
@@ -124,7 +125,7 @@ $(u_1, v_1)$ 是 $p_1$ 上的地转风，$(u_2, v_2)$ 是 $p_2$ 上的地转风�
 
 ### 2026-04-10，爱尔兰西南的暖平流
 
-2026-04-10，一个温带气旋停在爱尔兰西北的大西洋上。12 UTC，ERA5 的气旋中心在 55.25°N、20°W，中心海平面气压是 963.2 hPa。气旋的东南侧有一条暖平流带，它经过爱尔兰西南部。
+2026-04-10，一个温带气旋停在爱尔兰西北的大西洋上。12 UTC，ERA5 的低压中心在 55.25°N、20°W，中心海平面气压是 963.2 hPa。气旋的东南侧有一条暖平流带，它经过爱尔兰西南部。
 
 Valentia 天文台在爱尔兰西南端的 Kerry 郡海岸。这个观测站每天施放两次探空仪。12 UTC 的探空仪在 12:27 UTC 施放。00 UTC 到 12 UTC，这里 850 hPa 的温度从 −4.5 °C 升到 1.2 °C。到 2026-04-11 00 UTC，它又降到 −5.5 °C。
 
@@ -149,7 +150,7 @@ snd = d.page_data(ch10.SAMPLES["soundings"], ch10.soundings)
 
 lat_c, lon_c = ch05.storm_centre(era5["msl"])
 msl_c = float(era5["msl"].min()) / 100
-print(f"气旋中心：{lat_c:.2f}°N，{-lon_c:.2f}°W，海平面气压 {msl_c:.1f} hPa")
+print(f"低压中心：{lat_c:.2f}°N，{-lon_c:.2f}°W，海平面气压 {msl_c:.1f} hPa")
 t850_obs = snd[snd["pressure"] == 850].set_index("time")["temperature"]
 print("Valentia 探空的 850 hPa 温度 (°C)：")
 print(t850_obs.to_string())
@@ -169,7 +170,7 @@ p850, adv850 = grid.sel(level=850), adv.sel(level=850)
 fig = ch10.plot_map(p850["t"], p850["u"], p850["v"], adv850, msl=era5["msl"])
 ```
 
-[](#fig-ch10-t850) 里，气旋中心在左上方。暖平流带从气旋中心的北边向东伸，再沿爱尔兰西海岸向南。它经过 Valentia 以后转向东南。带里的南风和西南风从暖的一侧吹向冷的一侧，横穿等温线。气旋西南侧的西风和西北风把冷空气吹向东南，那里是冷平流带。
+[](#fig-ch10-t850) 里，低压中心在左上方。暖平流带从低压中心的北边向东伸，再沿爱尔兰西海岸向南。它经过 Valentia 以后转向东南。带里的南风和西南风从暖的一侧吹向冷的一侧，横穿等温线。气旋西南侧的西风和西北风把冷空气吹向东南，那里是冷平流带。
 
 Valentia 在暖平流带里。ERA5 在 Valentia 的格点上给 2.4 K h⁻¹ 的暖平流。英国上空的等温线稀疏，那里的平流很弱。
 
@@ -294,7 +295,7 @@ u_t, v_t = -factor * dtdy, factor * dtdx  # m s-1
 fig = ch10.plot_thermal_map(tbar, u_t, v_t)
 ```
 
-[](#fig-ch10-thermal) 里，红色箭头都平行于等温线，冷空气在箭头的左边。这是热成风的第一条规则。热成风最大的地方在 Valentia 西南的海上，超过 35 m s⁻¹。那里的等温线最密，是冷空气和暖空气的交界。气旋中心上空是冷空气，所以箭头绕着中心逆时针转。
+[](#fig-ch10-thermal) 里，红色箭头都平行于等温线，冷空气在箭头的左边。这是热成风的第一条规则。热成风最大的地方在 Valentia 西南的海上，超过 35 m s⁻¹。那里的等温线最密，是冷空气和暖空气的交界。低压中心上空是冷空气，所以箭头绕着中心逆时针转。
 
 下面在 Valentia 的格点上比较四个向量。第一个是用温度梯度算出的热成风。第二个是用位势梯度算出的两层地转风的差，MetPy 的 `geostrophic_wind` 计算地转风。第三个是 ERA5 两层风的差。第四个是探空两层风的差。earthkit-meteo 的 `wind.speed` 和 `wind.direction` 算出风速和风向，风向是风的来向。
 

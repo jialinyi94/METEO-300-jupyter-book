@@ -455,12 +455,12 @@ def plot_angles(angles: dict, weights: dict, title: str = "ERA5"):
 
 
 def plot_fraction(near: pd.DataFrame, far: pd.DataFrame, radius_km: float):
-    """Ageostrophic wind fraction on each level, near the storm centre and far from it.
+    """Ageostrophic wind fraction on each level, near the low centre and far from it.
 
     ``near`` and ``far`` have one column per data source and the levels as index.
     """
     fig, axs = plt.subplots(1, 2, figsize=(8.4, 4.0), layout="constrained", sharey=True)
-    titles = [f"(a) 离风暴中心 {radius_km:.0f} km 以内", f"(b) 离风暴中心 {radius_km:.0f} km 以外"]
+    titles = [f"(a) 离低压中心 {radius_km:.0f} km 以内", f"(b) 离低压中心 {radius_km:.0f} km 以外"]
     for ax, table, title in zip(axs, (near, far), titles, strict=True):
         for name in table.columns:
             ax.plot(
