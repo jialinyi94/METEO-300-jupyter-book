@@ -124,8 +124,11 @@
 | 100 m 风 | 100 m wind | $u_{100}$, $v_{100}$ | m s⁻¹ | `u100`, `v100` / `100m_u_component_of_wind`, `100m_v_component_of_wind` | — |
 | 阵风 | wind gust | — | m s⁻¹ | `i10fg` / `instantaneous_10m_wind_gust` | — |
 | 地转风 | geostrophic wind | $\mathbf{v}_g$ | m s⁻¹ | `geostrophic_wind_speed` | — |
+| 地转风速 | geostrophic wind speed | $V_g$ | m s⁻¹ | — | — |
 | 非地转风 | ageostrophic wind | $\mathbf{v}_{ag}$ | m s⁻¹ | `ageostrophic_wind_speed` | 偏地转风 |
 | 梯度风 | gradient wind | — | m s⁻¹ | — | — |
+| 次地转风 | subgeostrophic wind | — | m s⁻¹ | — | 亚地转风 |
+| 超地转风 | supergeostrophic wind | — | m s⁻¹ | — | — |
 | 穿越角 | cross-isobar angle | $\gamma - \gamma_g$ | ° | — | 越等压线角 |
 | 非地转风比例 | ageostrophic wind fraction | — | — | — | — |
 | 热成风 | thermal wind | $\mathbf{v}_T$ | m s⁻¹ | — | 热风 |
@@ -151,6 +154,9 @@
 | 地球自转角速度 | Earth's angular velocity | $\Omega$ | s⁻¹ | — | — |
 | 摩擦力 | friction | — | m s⁻² | — | — |
 | 地转平衡 | geostrophic balance | — | — | — | — |
+| 梯度风平衡 | gradient wind balance | — | — | — | 梯度平衡 |
+| 向心加速度 | centripetal acceleration | $V^2/R$ | m s⁻² | — | — |
+| 曲率半径 | radius of curvature | $R$ | km | — | — |
 | Rossby 数 | Rossby number | Ro | — | — | 罗斯贝数、罗斯比数 |
 | 尺度分析 | scale analysis | — | — | — | 量级分析 |
 | f 平面 | f-plane | — | — | — | — |
