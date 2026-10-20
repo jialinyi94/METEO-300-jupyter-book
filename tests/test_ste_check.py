@@ -27,31 +27,32 @@ def test_good_sample_has_no_violation():
 @pytest.mark.parametrize(
     "text",
     [
-        "气压随几何高度增加而减小。",
+        "pressure 随 geometric height 增加而减小。",
         "模型给 159。",
         "取值区间为 ［850, 1000］ hPa。",
         "取值区间为 ［-1, 1］。",
         "日期是 2023-01-15，时间是 06:00 UTC。",
-        "位势高度和几何高度不同。",
-        "等压面上的温度平流决定冷暖。",
-        "地面能量平衡包括感热通量和潜热通量。",
-        "风速是 10 m s⁻¹。",
-        "相对湿度是 85%，纬度是 30°N。",
-        "被动遥感测量辐照度。",
+        "geopotential height 和 geometric height 不同。",
+        "isobaric surface 上的 temperature advection 决定冷暖。",
+        "surface energy balance 包括 sensible heat flux 和 latent heat flux。",
+        "wind speed 是 10 m s⁻¹。",
+        "relative humidity 是 85%，latitude 是 30°N。",
+        "被动遥感测量 irradiance。",
         "Use `(a, b)` and $[a, b]$ in code and math.",
-        "温度露点差越小，空气越接近饱和。",
-        "数值天气预报和数值模式都用物理方程。",
-        "降水气候态来自 30 年的数据。",
-        "标准大气中六个等压面的位势高度分别是 111 m、1457 m、3012 m、5574 m、9164 m 和 11784 m。",
+        "dewpoint depression 越小，空气越接近 saturation。",
+        "numerical weather prediction 和 numerical weather prediction model 都用物理方程。",
+        "precipitation climatology 来自 30 年的 data。",
+        "standard atmosphere 中六个 isobaric surface 的 geopotential height 分别是 "
+        "111 m、1457 m、3012 m、5574 m、9164 m 和 11784 m。",
         "The air is saturated at this level.",
-        "1990s 的数据更少。",
+        "1990s 的 data 更少。",
         "本页取自第 1 课 1.2 节和第 8 课 8.2 节。",
-        "第 3 节和本节都讲风。每页有六节。",
-        "平均风速是 51 kt，阵风是 74 kt。",
-        "Coriolis 力使北半球的风向右偏。Hadley 环流在 30°N 附近下沉。",
-        "Clausius–Clapeyron 方程描述饱和水汽压随温度的变化。",
-        "Stefan–Boltzmann 定律和 Wien 位移定律都描述黑体。",
-        "Köhler 曲线结合 Kelvin 效应和溶质效应。",
+        "第 3 节和本节都讲 wind。每页有六节。",
+        "平均 wind speed 是 51 kt，wind gust 是 74 kt。",
+        "Coriolis force 使北半球的 wind 向右偏。Hadley cell 在 30°N 附近下沉。",
+        "Clausius–Clapeyron equation 描述 saturation vapour pressure 随 temperature 的变化。",
+        "Stefan–Boltzmann law 和 Wien's displacement law 都描述 blackbody。",
+        "Köhler curve 结合 Kelvin effect 和 solute effect。",
     ],
 )
 def test_good_snippets(text):
@@ -62,14 +63,15 @@ def test_good_snippets(text):
     ("text", "rule"),
     [
         (
-            "气压随几何高度增加而减小，这个规律在对流层和平流层都成立，"
-            "并且在全球每一个地方都可以用静力方程解释清楚。",
+            "pressure 随 geometric height 增加而减小，"
+            "这个规律在 troposphere 和 stratosphere 都成立，"
+            "并且在全球每一个地方、每一个季节和每一个时刻都可以用 hydrostatic equation 解释清楚。",
             "zh-sentence-length",
         ),
-        ("温度被模型低估。", "passive-voice"),
+        ("temperature 被模型低估。", "passive-voice"),
         ("模型给出了 159。", "passive-voice"),
-        ("我们得到了位温。", "passive-voice"),
-        ("ERA5（再分析）有 37 个等压面。", "parentheses"),
+        ("我们得到了 potential temperature。", "passive-voice"),
+        ("ERA5（reanalysis）有 37 个 isobaric surface。", "parentheses"),
         ("ERA5 (a reanalysis) is useful.", "parentheses"),
         ("取值在 850–1000 hPa 之间。", "interval-format"),
         ("取值在 850~1000 hPa 之间。", "interval-format"),
@@ -77,12 +79,12 @@ def test_good_snippets(text):
         ("取值在 [850, 1000] hPa 之间。", "interval-format"),
         ("取值在 ［850，1000］ hPa 之间。", "interval-format"),
         ("取值在 ［1000, 850］ hPa 之间。", "interval-format"),
-        ("等压面是 500hPa。", "unit-space"),
-        ("温度是 15℃。", "unit-space"),
-        ("平均风速是 51 节。", "unit-symbol"),
+        ("isobaric surface 是 500hPa。", "unit-space"),
+        ("temperature 是 15℃。", "unit-space"),
+        ("平均 wind speed 是 51 节。", "unit-symbol"),
         ("1节约等于 0.514 m s⁻¹。", "unit-symbol"),
-        ("METAR 风速的单位是节。", "unit-symbol"),
-        ("以节为单位的风速约是 m s⁻¹ 的两倍。", "unit-symbol"),
+        ("METAR wind speed 的单位是节。", "unit-symbol"),
+        ("以节为单位的 wind speed 约是 m s⁻¹ 的两倍。", "unit-symbol"),
         ("2 m 气温升高。", "rejected-term"),
         ("500 hPa 高度升高。", "rejected-term"),
         ("ERA5 的气压层有 37 层。", "rejected-term"),
@@ -109,32 +111,32 @@ def test_bad_snippets(text, rule):
     assert rule in rules(text)
 
 
-# Terms named after a person are written as the English name plus a Chinese word.
-# The old transliterations are rejected terms. User decision, 2026-10-17.
+# Terms named after a person are written in English. The old transliterations are
+# rejected terms. User decisions, 2026-10-17 and 2026-10-20.
 EPONYMS = {
-    "科里奥利力": "Coriolis 力",
-    "科里奥利参数": "Coriolis 参数",
-    "罗斯贝数": "Rossby 数",
-    "哈得来环流": "Hadley 环流",
-    "费雷尔环流": "Ferrel 环流",
-    "埃克曼螺线": "Ekman 螺线",
-    "开尔文效应": "Kelvin 效应",
-    "科勒曲线": "Köhler 曲线",
-    "贝吉龙过程": "Bergeron 过程",
-    "克劳修斯-克拉珀龙方程": "Clausius–Clapeyron 方程",
-    "斯特藩-玻尔兹曼定律": "Stefan–Boltzmann 定律",
-    "维恩位移定律": "Wien 位移定律",
-    "基尔霍夫定律": "Kirchhoff 定律",
-    "比尔-朗伯定律": "Beer–Lambert 定律",
-    "普朗克函数": "Planck 函数",
-    "瑞利散射": "Rayleigh 散射",
-    "米散射": "Mie 散射",
-    "理查森数": "Richardson 数",
-    "雷诺平均": "Reynolds 平均",
-    "莫宁-奥布霍夫长度": "Monin–Obukhov 长度",
-    "欧拉视角": "Euler 视角",
-    "拉格朗日视角": "Lagrange 视角",
-    "拉普拉斯算子": "Laplace 算子",
+    "科里奥利力": "Coriolis force",
+    "科里奥利参数": "Coriolis parameter",
+    "罗斯贝数": "Rossby number",
+    "哈得来环流": "Hadley cell",
+    "费雷尔环流": "Ferrel cell",
+    "埃克曼螺线": "Ekman spiral",
+    "开尔文效应": "Kelvin effect",
+    "科勒曲线": "Köhler curve",
+    "贝吉龙过程": "Wegener–Bergeron–Findeisen process",
+    "克劳修斯-克拉珀龙方程": "Clausius–Clapeyron equation",
+    "斯特藩-玻尔兹曼定律": "Stefan–Boltzmann law",
+    "维恩位移定律": "Wien's displacement law",
+    "基尔霍夫定律": "Kirchhoff's law",
+    "比尔-朗伯定律": "Beer–Lambert law",
+    "普朗克函数": "Planck function",
+    "瑞利散射": "Rayleigh scattering",
+    "米散射": "Mie scattering",
+    "理查森数": "Richardson number",
+    "雷诺平均": "Reynolds averaging",
+    "莫宁-奥布霍夫长度": "Obukhov length",
+    "欧拉视角": "Eulerian view",
+    "拉格朗日视角": "Lagrangian view",
+    "拉普拉斯算子": "Laplacian",
 }
 
 
@@ -176,12 +178,12 @@ def test_chinese_metric_name_is_rejected(old, new):
     "text",
     [
         "AIFS 的 RMSE 是 2.1 K，bias 是 −0.3 K，correlation 是 0.9。",
-        "MSE 最小的预报最平滑。ACC 衡量两个距平场的形状有多像。",
-        "AIFS 的 14 个预报里有 13 个 hit，IFS 有 7 个 miss。",
+        "MSE 最小的 forecast 最平滑。ACC 衡量两个 anomaly 场的形状有多像。",
+        "AIFS 的 14 个 forecast 里有 13 个 hit，IFS 有 7 个 miss。",
         "hit rate 和 false alarm 要一起报告。",
-        "WeatherBench 2 用 SEEPS 和 CRPS 评估降水。",
-        "探空报告的位势高度和积分的位势高度相差不到 6 m。",
-        "标准误差是标准差除以样本数的平方根。",
+        "WeatherBench 2 用 SEEPS 和 CRPS 评估 precipitation。",
+        "sounding 报告的 geopotential height 和积分的 geopotential height 相差不到 6 m。",
+        "standard error 是 standard deviation 除以样本数的平方根。",
     ],
 )
 def test_english_metric_names_pass(text):
@@ -191,7 +193,7 @@ def test_english_metric_names_pass(text):
 def test_words_that_contain_a_metric_name():
     # "标准偏差" is the standard deviation, not the bias.
     (v,) = ste_check.check_text("标准偏差。", "x.md", GLOSSARY)
-    assert str(v) == "x.md:1: rejected-term: 标准偏差 → 标准差"
+    assert str(v) == "x.md:1: rejected-term: 标准偏差 → standard deviation"
     # The allow list of pyproject.toml keeps the other correlation coefficients.
     cfg = ste_check.load_config(ROOT)
     glossary = ste_check.load_glossary(ROOT / cfg["glossary"], list(cfg["allow"]))
@@ -199,8 +201,7 @@ def test_words_that_contain_a_metric_name():
         assert ste_check.check_text(text, "x.md", glossary, cfg) == []
 
 
-# Six dynamics terms are written as the English original words. The Chinese
-# words are rejected terms. User decision, 2026-10-20.
+# The six dynamics terms were the first terms written in English. User decision, 2026-10-20.
 DYNAMICS_TERMS = {
     "地转风速": "geostrophic wind speed",
     "次地转风": "subgeostrophic wind",
@@ -221,11 +222,11 @@ def test_chinese_dynamics_term_is_rejected(old, new):
 @pytest.mark.parametrize(
     "text",
     [
-        "低压周围的风是 subgeostrophic wind，高压周围的风是 supergeostrophic wind。",
-        "这一点的 geostrophic wind speed 是 33.0 m s⁻¹，风比地转风慢 3%。",
-        "这种三个力的平衡叫 gradient wind balance，满足它的风叫梯度风。",
+        "low 周围的 wind 是 subgeostrophic wind，high 周围的 wind 是 supergeostrophic wind。",
+        "这一点的 geostrophic wind speed 是 33.0 m s⁻¹，wind 比 geostrophic wind 慢 3%。",
+        "这种三个力的平衡叫 gradient wind balance，满足它的 wind 叫 gradient wind。",
         "$R$ 是路径的 radius of curvature，$V^2/R$ 叫 centripetal acceleration。",
-        "整个区域还有许多细小的斑点，非地转风速约 ［3, 6］ m s⁻¹。",
+        "整个区域还有许多细小的斑点，ageostrophic wind speed 约 ［3, 6］ m s⁻¹。",
     ],
 )
 def test_english_dynamics_terms_pass(text):
@@ -254,7 +255,7 @@ def test_glossary_terms_space_latin_and_han():
 def test_output_format_and_line_numbers():
     text = "第一段。\n\n第二段有气温。\n"
     (v,) = ste_check.check_text(text, "docs/x.md", GLOSSARY)
-    assert str(v) == "docs/x.md:3: rejected-term: 气温 → 温度"
+    assert str(v) == "docs/x.md:3: rejected-term: 气温 → temperature"
 
 
 def test_code_cells_frontmatter_and_math_are_skipped():
@@ -273,7 +274,7 @@ def test_prose_directive_is_checked_but_options_are_not():
 
 
 def test_ignore_block():
-    text = "% ste-ignore-start\n气温（错误）。\n\n气温。\n% ste-ignore-end\n\n温度。\n"
+    text = "% ste-ignore-start\n气温（错误）。\n\n气温。\n% ste-ignore-end\n\ntemperature。\n"
     assert rules(text) == []
 
 
@@ -281,7 +282,31 @@ def test_main_exit_code(tmp_path, capsys):
     bad = tmp_path / "bad.md"
     bad.write_text("气温升高。\n", encoding="utf-8")
     good = tmp_path / "good.md"
-    good.write_text("温度升高。\n", encoding="utf-8")
+    good.write_text("temperature 升高。\n", encoding="utf-8")
     assert ste_check.main([str(good)]) == 0
     assert ste_check.main([str(bad)]) == 1
     assert "rejected-term" in capsys.readouterr().out
+
+
+# All terms are written in English. The Chinese name in the column 中文 of glossary.md
+# is a rejected term. User decision, 2026-10-20.
+@pytest.mark.parametrize(
+    ("old", "new"),
+    [("气压", "pressure"), ("地转风", "geostrophic wind"), ("Coriolis 力", "Coriolis force")],
+)
+def test_chinese_name_is_rejected(old, new):
+    (v,) = ste_check.check_text(f"本页讲{old}。", "x.md", GLOSSARY)
+    assert str(v) == f"x.md:1: rejected-term: {old} → {new}"
+    assert rules(f"本页讲 {new}。") == []
+
+
+def test_chinese_column_of_a_term_table_is_not_checked():
+    text = "| 术语 | 中文 | 符号 |\n|---|---|---|\n| pressure | 气压 | $p$ |\n\n气压。\n"
+    assert rules(text) == ["rejected-term"]
+
+
+def test_common_words_that_contain_a_term_are_allowed():
+    cfg = ste_check.load_config(ROOT)
+    glossary = ste_check.load_glossary(ROOT / cfg["glossary"], list(cfg["allow"]))
+    text = "中纬度的西风里有风暴，预报员看 wind speed。"
+    assert ste_check.check_text(text, "x.md", glossary, cfg) == []

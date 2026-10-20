@@ -1,6 +1,6 @@
 # METEO-300-jupyter-book
 
-一本用真实数据学大气科学的数据书，写给 AI 天气分析师。网站用 Jupyter Book 2 构建。
+一本用真实 data 学大气科学的数据书，写给 AI 天气分析师。网站用 Jupyter Book 2 构建。
 
 <!-- 书名、副标题和作者只写在 myst.yml 里。 -->
 
@@ -8,10 +8,10 @@
 
 本书的每一页回答四个问题：
 
-1. 真实数据长什么样？
-2. 最常用的数据集是哪一个？
-3. 哪些软件包处理和计算这些数据？
-4. 这些数据和 AI 天气模型有什么联系？
+1. 真实 data 长什么样？
+2. 最常用的 dataset 是哪一个？
+3. 哪些软件包处理和计算这些 data？
+4. 这些 data 和 AI weather model 有什么联系？
 
 知识点取自宾夕法尼亚州立大学的公开课程 [METEO 300](https://www.e-education.psu.edu/meteo300/)。
 
@@ -70,7 +70,7 @@ eccodes 和 pyproj 各带有一份 PROJ 库。eccodes 的那一份先加载时�
 
 - 正文、图和练习以 CC BY-NC-SA 4.0 发布，全文见 `LICENSE-CONTENT`。正文改编自 METEO 300，原课程使用这个许可，所以本书也使用它。
 - 代码以 MIT 发布，全文见 `LICENSE`。代码包括 `src/`、`tools/`、`tests/` 和页面里的代码单元。
-- `data/samples/` 里的数据样本沿用各自来源的许可，见同一目录里的署名文件。
+- `data/samples/` 里的 data 样本沿用各自来源的许可，见同一目录里的署名文件。
 
 ## English summary
 

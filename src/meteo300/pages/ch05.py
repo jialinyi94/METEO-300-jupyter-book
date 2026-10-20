@@ -351,8 +351,10 @@ def plot_maps(sfc: xr.Dataset, pl: xr.Dataset):
     axs[0].clabel(cs, cs.levels[1::3], fontsize=7, fmt="%d")
     q = _quiver(axs[0], lon, lat, sfc["u10"], sfc["v10"], scale=420)
     axs[0].quiverkey(q, 0.86, 1.03, 20, "20 m/s", labelpos="W", fontproperties={"size": 8})
-    fig.colorbar(cf, ax=axs[0], orientation="horizontal", shrink=0.85, label="10 m 风速 (m/s)")
-    axs[0].set_title("(a) 海平面气压 (hPa) 和 10 m 风", loc="left", fontsize=10)
+    fig.colorbar(
+        cf, ax=axs[0], orientation="horizontal", shrink=0.85, label="10 m wind speed (m/s)"
+    )
+    axs[0].set_title("(a) mean sea level pressure (hPa) 和 10 m wind", loc="left", fontsize=10)
 
     p500 = pl.sel(level=500)
     cf = axs[1].contourf(
@@ -376,8 +378,10 @@ def plot_maps(sfc: xr.Dataset, pl: xr.Dataset):
     axs[1].clabel(cs, cs.levels[::3], fontsize=7, fmt="%d")
     q = _quiver(axs[1], lon, lat, p500["u"], p500["v"], scale=1100)
     axs[1].quiverkey(q, 0.86, 1.03, 50, "50 m/s", labelpos="W", fontproperties={"size": 8})
-    fig.colorbar(cf, ax=axs[1], orientation="horizontal", shrink=0.85, label="500 hPa 风速 (m/s)")
-    axs[1].set_title("(b) 500 hPa 位势高度 (m) 和风", loc="left", fontsize=10)
+    fig.colorbar(
+        cf, ax=axs[1], orientation="horizontal", shrink=0.85, label="500 hPa wind speed (m/s)"
+    )
+    axs[1].set_title("(b) 500 hPa geopotential height (m) 和 wind", loc="left", fontsize=10)
     return fig
 
 
@@ -403,10 +407,10 @@ def plot_ageostrophic_500(z500, u, v, ug, vg, centre=None):
     _quiver(axs[0], lon, lat, ug, vg, color=COLORS["geostrophic"], width=0.007, **kw)
     q = _quiver(axs[0], lon, lat, u, v, color=COLORS["wind"], width=0.0025, **kw)
     axs[0].quiverkey(q, 0.86, 1.03, 50, "50 m/s", labelpos="W", fontproperties={"size": 8})
-    axs[0].plot([], [], color=COLORS["geostrophic"], lw=2, label="地转风")
-    axs[0].plot([], [], color=COLORS["wind"], lw=2, label="风")
+    axs[0].plot([], [], color=COLORS["geostrophic"], lw=2, label="geostrophic wind")
+    axs[0].plot([], [], color=COLORS["wind"], lw=2, label="wind")
     axs[0].legend(loc="lower left", fontsize=8, framealpha=0.9)
-    axs[0].set_title("(a) 风和地转风", loc="left", fontsize=10)
+    axs[0].set_title("(a) wind 和 geostrophic wind", loc="left", fontsize=10)
 
     uag, vag = u - ug, v - vg
     cf = axs[1].contourf(
@@ -420,8 +424,10 @@ def plot_ageostrophic_500(z500, u, v, ug, vg, centre=None):
     )
     q = _quiver(axs[1], lon, lat, uag, vag, scale=450, regrid_shape=12)
     axs[1].quiverkey(q, 0.86, 1.03, 20, "20 m/s", labelpos="W", fontproperties={"size": 8})
-    fig.colorbar(cf, ax=axs, orientation="horizontal", shrink=0.45, label="非地转风速 (m/s)")
-    axs[1].set_title("(b) 非地转风", loc="left", fontsize=10)
+    fig.colorbar(
+        cf, ax=axs, orientation="horizontal", shrink=0.45, label="ageostrophic wind speed (m/s)"
+    )
+    axs[1].set_title("(b) ageostrophic wind", loc="left", fontsize=10)
     return fig
 
 
@@ -446,8 +452,8 @@ def plot_angles(angles: dict, weights: dict, title: str = "ERA5"):
         )
         ax.axvline(med, color=COLORS[key], lw=1, ls="--")
     ax.axvline(0, color="0.5", lw=0.8)
-    ax.set_xlabel("穿越角 (°)，正值表示风偏向低压")
-    ax.set_ylabel("格点的面积比例 (%)")
+    ax.set_xlabel("cross-isobar angle (°)，正值表示 wind 偏向 low")
+    ax.set_ylabel("grid point 的面积比例 (%)")
     ax.set_xlim(bins[0], bins[-1])
     ax.grid(alpha=0.3, lw=0.5)
     ax.legend(fontsize=9, title=title, title_fontsize=9)
@@ -460,7 +466,10 @@ def plot_fraction(near: pd.DataFrame, far: pd.DataFrame, radius_km: float):
     ``near`` and ``far`` have one column per data source and the levels as index.
     """
     fig, axs = plt.subplots(1, 2, figsize=(8.4, 4.0), layout="constrained", sharey=True)
-    titles = [f"(a) 离低压中心 {radius_km:.0f} km 以内", f"(b) 离低压中心 {radius_km:.0f} km 以外"]
+    titles = [
+        f"(a) 离 low centre {radius_km:.0f} km 以内",
+        f"(b) 离 low centre {radius_km:.0f} km 以外",
+    ]
     for ax, table, title in zip(axs, (near, far), titles, strict=True):
         for name in table.columns:
             ax.plot(
@@ -470,11 +479,11 @@ def plot_fraction(near: pd.DataFrame, far: pd.DataFrame, radius_km: float):
         ax.set_yticks(table.index, [str(p) for p in table.index])
         ax.minorticks_off()
         ax.set_xlim(0, 1.1)
-        ax.set_xlabel("非地转风比例")
+        ax.set_xlabel("ageostrophic wind fraction")
         ax.grid(alpha=0.3, lw=0.5)
         ax.set_title(title, loc="left", fontsize=10)
     axs[0].invert_yaxis()
-    axs[0].set_ylabel("气压 (hPa)")
+    axs[0].set_ylabel("pressure (hPa)")
     axs[1].legend(fontsize=9, loc="lower right")
     return fig
 

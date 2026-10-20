@@ -36,25 +36,25 @@ project:
   # Paths in the TOC are relative to this file. Page agents write exactly these files.
   toc:
     - file: intro.md
-    - title: 气压与热力学
+    - title: pressure 与热力学
       children:
         - file: docs/topics/ch01-global-circulation.md
         - file: docs/topics/ch02-station-observations.md
         - file: docs/topics/ch03-pressure-hydrostatic.md
         - file: docs/topics/ch04-thermodynamics-stability.md
-    - title: 动力学、水汽与稳定度
+    - title: 动力学、water vapour 与稳定度
       children:
         - file: docs/topics/ch05-dynamics-geostrophic.md
         - file: docs/topics/ch06-water-vapour.md
         - file: docs/topics/ch07-stability-tephigram.md
         - file: docs/topics/t1-cloud-composition.md
-    - title: 位势高度、向量微积分与热成风
+    - title: geopotential height、向量微积分与 thermal wind
       children:
         - file: docs/topics/ch08-geopotential-thickness.md
         - file: docs/topics/ch09-vector-calculus.md
         - file: docs/topics/ch10-thermal-wind.md
         - file: docs/topics/t2-radiation.md
-    - title: 边界层、涡度与温带气旋
+    - title: atmospheric boundary layer、vorticity 与 extratropical cyclone
       children:
         - file: docs/topics/t3-boundary-layer.md
         - file: docs/topics/ch11-vorticity-divergence.md

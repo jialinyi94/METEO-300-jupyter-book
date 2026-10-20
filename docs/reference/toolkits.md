@@ -2,13 +2,13 @@
 title: 工具包
 ---
 
-本页列出处理气象数据的 Python 软件包。每个条目写明用途、成熟度、最新版本和替代软件包。
+本页列出处理气象 data 的 Python 软件包。每个条目写明用途、成熟度、最新版本和替代软件包。
 
 本页的版本在 2026-10-17 从 PyPI 检查。成熟度取自 PyPI 的 Development Status 分类。
 软件包没有这个分类时，本页写“未标注”。
 “本书”一栏是 `uv.lock` 锁定的版本。“未安装”表示本书现在不安装这个软件包。
 
-## 数据结构、格式和单位
+## data 结构、格式和单位
 
 | 软件包 | 用途 | 成熟度 | 最新版本 | 发布日期 | 检查日期 | 本书 | 替代 |
 |---|---|---|---|---|---|---|---|
@@ -26,32 +26,32 @@ title: 工具包
 h5netcdf 1.8 和更新的版本不再依赖 h5py。没有 h5py 时，`engine="h5netcdf"` 打不开文件。
 所以本书安装 `h5netcdf[h5py]`。
 
-## GRIB 和卫星数据
+## GRIB 和卫星 data
 
 | 软件包 | 用途 | 成熟度 | 最新版本 | 发布日期 | 检查日期 | 本书 | 替代 |
 |---|---|---|---|---|---|---|---|
 | [eccodes](https://pypi.org/project/eccodes/) | ECMWF 的 GRIB 和 BUFR 库 | Beta | 2.50.0 | 2026-10-15 | 2026-10-17 | 2.50.0 | — |
 | [cfgrib](https://pypi.org/project/cfgrib/) | 用 xarray 打开 GRIB 文件 | Beta | 0.9.15.1 | 2025-09-30 | 2026-10-17 | 0.9.15.1 | earthkit-data |
-| [satpy](https://pypi.org/project/satpy/) | 读取和处理气象卫星数据 | 稳定 | 0.60.0 | 2026-03-04 | 2026-10-17 | 0.60.0 | — |
-| [pyresample](https://pypi.org/project/pyresample/) | 卫星数据的投影和重采样 | 稳定 | 1.35.0 | 2025-12-02 | 2026-10-17 | 1.35.0 | — |
+| [satpy](https://pypi.org/project/satpy/) | 读取和处理气象卫星 data | 稳定 | 0.60.0 | 2026-03-04 | 2026-10-17 | 0.60.0 | — |
+| [pyresample](https://pypi.org/project/pyresample/) | 卫星 data 的投影和重采样 | 稳定 | 1.35.0 | 2025-12-02 | 2026-10-17 | 1.35.0 | — |
 
 eccodes 2.43 和更新的版本带有自己的 PROJ 库，pyproj 也带有一份 PROJ 库。
 eccodes 的那一份先加载时，程序在退出时崩溃。pyproj 的那一份先加载时，程序正常退出。
 所以先导入 meteo300 或 pyproj，再导入 eccodes、cfgrib 或 earthkit。
 `import meteo300` 第一个加载的软件包是 pyproj。
 
-## 数据访问
+## data 访问
 
 | 软件包 | 用途 | 成熟度 | 最新版本 | 发布日期 | 检查日期 | 本书 | 替代 |
 |---|---|---|---|---|---|---|---|
-| [ecmwf-opendata](https://pypi.org/project/ecmwf-opendata/) | 下载 ECMWF 开放数据 | Alpha | 0.3.35 | 2026-10-16 | 2026-10-17 | 0.3.35 | Herbie |
-| [herbie-data](https://pypi.org/project/herbie-data/) | 下载多个模式的 GRIB 预报 | Beta | 2026.9.2 | 2026-09-27 | 2026-10-17 | 未安装 | ecmwf-opendata |
-| [siphon](https://pypi.org/project/siphon/) | 读取 THREDDS 服务器和 Wyoming 探空 | 稳定 | 0.11.0 | 2026-07-20 | 2026-10-17 | 0.11.0 | — |
-| [cdsapi](https://pypi.org/project/cdsapi/) | 从 CDS 和 ADS 下载数据 | Beta | 0.7.7 | 2025-09-30 | 2026-10-17 | 0.7.7 | ecmwf-datastores-client |
+| [ecmwf-opendata](https://pypi.org/project/ecmwf-opendata/) | 下载 ECMWF 开放 data | Alpha | 0.3.35 | 2026-10-16 | 2026-10-17 | 0.3.35 | Herbie |
+| [herbie-data](https://pypi.org/project/herbie-data/) | 下载多个模式的 GRIB forecast | Beta | 2026.9.2 | 2026-09-27 | 2026-10-17 | 未安装 | ecmwf-opendata |
+| [siphon](https://pypi.org/project/siphon/) | 读取 THREDDS 服务器和 Wyoming sounding | 稳定 | 0.11.0 | 2026-07-20 | 2026-10-17 | 0.11.0 | — |
+| [cdsapi](https://pypi.org/project/cdsapi/) | 从 CDS 和 ADS 下载 data | Beta | 0.7.7 | 2025-09-30 | 2026-10-17 | 0.7.7 | ecmwf-datastores-client |
 | [ecmwf-datastores-client](https://pypi.org/project/ecmwf-datastores-client/) | CDS 和 ADS 的新客户端 | 稳定 | 0.5.3 | 2026-07-31 | 2026-10-17 | 0.5.3 | cdsapi |
-| [earthaccess](https://pypi.org/project/earthaccess/) | 搜索和下载 NASA Earthdata 数据 | Beta | 0.19.0 | 2026-09-04 | 2026-10-17 | 0.19.0 | — |
-| [eumdac](https://pypi.org/project/eumdac/) | 从 EUMETSAT Data Store 下载数据 | 稳定 | 3.1.1 | 2025-12-11 | 2026-10-17 | 3.1.1 | — |
-| [icoscp_core](https://pypi.org/project/icoscp_core/) | 下载 ICOS 观测数据 | 未标注 | 0.3.13 | 2026-08-24 | 2026-10-17 | 未安装 | — |
+| [earthaccess](https://pypi.org/project/earthaccess/) | 搜索和下载 NASA Earthdata data | Beta | 0.19.0 | 2026-09-04 | 2026-10-17 | 0.19.0 | — |
+| [eumdac](https://pypi.org/project/eumdac/) | 从 EUMETSAT Data Store 下载 data | 稳定 | 3.1.1 | 2025-12-11 | 2026-10-17 | 3.1.1 | — |
+| [icoscp_core](https://pypi.org/project/icoscp_core/) | 下载 ICOS 观测 data | 未标注 | 0.3.13 | 2026-08-24 | 2026-10-17 | 未安装 | — |
 
 `cdsapi` 和 `ecmwf-datastores-client` 都能访问 CDS 和 ADS。
 ADS 的说明要求 `cdsapi` 0.7.7 或更新的版本。
@@ -61,19 +61,19 @@ ECMWF 把 `ecmwf-datastores-client` 作为新的客户端，但不要求用户�
 
 本书优先用 earthkit。earthkit 没有的功能，本书再用 MetPy、cartopy 等软件包。
 
-earthkit 是 ECMWF 的一组软件包。它们处理数据访问、气象计算、统计汇总、画图和插值。
+earthkit 是 ECMWF 的一组软件包。它们处理 data 访问、气象计算、统计汇总、画图和插值。
 全部 earthkit 软件包都使用 Apache-2.0 许可证。
 
 | 软件包 | 用途 | 成熟度 | 最新版本 | 发布日期 | 检查日期 | 本书 | 替代 |
 |---|---|---|---|---|---|---|---|
 | [earthkit](https://pypi.org/project/earthkit/) | 一次安装全部 earthkit 软件包 | 稳定 | 1.0.0 | 2026-06-29 | 2026-10-17 | 未安装 | — |
-| [earthkit-data](https://pypi.org/project/earthkit-data/) | 用一个接口读取 GRIB、netCDF、CDS 和 MARS 数据 | 稳定 | 1.3.0 | 2026-10-15 | 2026-10-17 | 1.3.0 | cfgrib、climetlab |
-| [earthkit-meteo](https://pypi.org/project/earthkit-meteo/) | 气象计算，例如热力学量、风和太阳位置 | 稳定 | 1.2.1 | 2026-10-15 | 2026-10-17 | 1.2.1 | MetPy |
-| [earthkit-transforms](https://pypi.org/project/earthkit-transforms/) | 按时间、区域和集合成员做统计，例如日平均和气候态 | 稳定 | 1.0.0 | 2026-06-29 | 2026-10-17 | 1.0.0 | xarray |
+| [earthkit-data](https://pypi.org/project/earthkit-data/) | 用一个接口读取 GRIB、netCDF、CDS 和 MARS data | 稳定 | 1.3.0 | 2026-10-15 | 2026-10-17 | 1.3.0 | cfgrib、climetlab |
+| [earthkit-meteo](https://pypi.org/project/earthkit-meteo/) | 气象计算，例如热力学量、wind 和太阳位置 | 稳定 | 1.2.1 | 2026-10-15 | 2026-10-17 | 1.2.1 | MetPy |
+| [earthkit-transforms](https://pypi.org/project/earthkit-transforms/) | 按时间、区域和 ensemble member 做统计，例如日平均和 climatology | 稳定 | 1.0.0 | 2026-06-29 | 2026-10-17 | 1.0.0 | xarray |
 | [earthkit-utils](https://pypi.org/project/earthkit-utils/) | earthkit 软件包共用的工具 | 稳定 | 1.0.3 | 2026-10-15 | 2026-10-17 | 1.0.3 | — |
 | [earthkit-plots](https://pypi.org/project/earthkit-plots/) | 气象地图和图表 | Beta | 1.0.4 | 2026-08-26 | 2026-10-17 | 1.0.4 | cartopy |
 | [earthkit-geo](https://pypi.org/project/earthkit-geo/) | 地理计算 | 稳定 | 1.2.0 | 2026-10-15 | 2026-10-17 | 1.2.0 | pyproj |
-| [earthkit-regrid](https://pypi.org/project/earthkit-regrid/) | 网格之间的插值 | Pre-Alpha | 0.5.1 | 2025-12-11 | 2026-10-17 | 未安装 | xESMF |
+| [earthkit-regrid](https://pypi.org/project/earthkit-regrid/) | grid 之间的插值 | Pre-Alpha | 0.5.1 | 2025-12-11 | 2026-10-17 | 未安装 | xESMF |
 
 本书安装 earthkit-data、earthkit-geo、earthkit-meteo、earthkit-plots 和 earthkit-transforms。
 本书不安装软件包 earthkit 和 earthkit-regrid。
@@ -81,17 +81,17 @@ earthkit 是 ECMWF 的一组软件包。它们处理数据访问、气象计算�
 所以本书另外安装 geopandas。
 
 earthkit-data 读取 GRIB 时加载 eccodes。earthkit-geo 加载 eckit，eckit 也带有自己的 PROJ 库。
-所以导入 earthkit 之前，先导入 meteo300。原因见“GRIB 和卫星数据”一节。
+所以导入 earthkit 之前，先导入 meteo300。原因见“GRIB 和卫星 data”一节。
 
 ## 气象计算
 
 | 软件包 | 用途 | 成熟度 | 最新版本 | 发布日期 | 检查日期 | 本书 | 替代 |
 |---|---|---|---|---|---|---|---|
-| [MetPy](https://pypi.org/project/MetPy/) | 气象计算、斜温图和观测站填图 | 稳定 | 1.7.1 | 2025-08-29 | 2026-10-17 | 1.7.1 | — |
-| [tephi](https://pypi.org/project/tephi/) | 温熵图 | Beta | 0.4.0.post0 | 2026-01-30 | 2026-10-17 | 0.4.0.post0 | MetPy 的斜温图 |
-| [xeofs](https://pypi.org/project/xeofs/) | 用 xarray 计算经验正交函数 | 未标注 | 3.0.4 | 2024-10-28 | 2026-10-17 | 3.0.4 | — |
+| [MetPy](https://pypi.org/project/MetPy/) | 气象计算、skew-T log-p diagram 和 station plot | 稳定 | 1.7.1 | 2025-08-29 | 2026-10-17 | 1.7.1 | — |
+| [tephi](https://pypi.org/project/tephi/) | tephigram | Beta | 0.4.0.post0 | 2026-01-30 | 2026-10-17 | 0.4.0.post0 | MetPy 的 skew-T log-p diagram |
+| [xeofs](https://pypi.org/project/xeofs/) | 用 xarray 计算 empirical orthogonal function | 未标注 | 3.0.4 | 2024-10-28 | 2026-10-17 | 3.0.4 | — |
 | [climlab](https://pypi.org/project/climlab/) | 简单的辐射和能量平衡气候模式 | 未标注 | 0.9.2 | 2026-03-18 | 2026-10-17 | 0.9.2 | — |
-| [pvlib](https://pypi.org/project/pvlib/) | 太阳位置和地面短波辐射 | Beta | 0.16.1 | 2026-09-26 | 2026-10-17 | 0.16.1 | — |
+| [pvlib](https://pypi.org/project/pvlib/) | 太阳位置和 surface shortwave radiation | Beta | 0.16.1 | 2026-09-26 | 2026-10-17 | 0.16.1 | — |
 
 [t2](../topics/t2-radiation.md) 用 climlab 计算单柱辐射模式，用 pvlib 计算 Cabauw 的太阳位置。
 
@@ -105,13 +105,13 @@ earthkit-data 读取 GRIB 时加载 eccodes。earthkit-geo 加载 eckit，eckit 
 本书把 Matplotlib 限制在 3.10。MetPy 1.7.1 的 `StationPlot` 在 Matplotlib 3.11 上出错。
 MetPy 发布修复后，本书再升级 Matplotlib。
 
-## 预报评估
+## forecast 评估
 
 | 软件包 | 用途 | 成熟度 | 最新版本 | 发布日期 | 检查日期 | 本书 | 替代 |
 |---|---|---|---|---|---|---|---|
-| [scores](https://pypi.org/project/scores/) | 预报评分，包括 CRPS | 未标注 | 2.7.0 | 2026-09-05 | 2026-10-17 | 2.7.0 | xskillscore |
-| [xskillscore](https://pypi.org/project/xskillscore/) | 基于 xarray 的预报评分 | 稳定 | 0.0.29 | 2026-02-18 | 2026-10-17 | 未安装 | scores |
-| [WeatherBench 2](https://github.com/google-research/weatherbench2) | AI 天气模型的评估代码和数据 | 未标注 | v0.2.0 | 2023-12-04 | 2026-10-17 | 未安装 | scores |
+| [scores](https://pypi.org/project/scores/) | forecast 评分，包括 CRPS | 未标注 | 2.7.0 | 2026-09-05 | 2026-10-17 | 2.7.0 | xskillscore |
+| [xskillscore](https://pypi.org/project/xskillscore/) | 基于 xarray 的 forecast 评分 | 稳定 | 0.0.29 | 2026-02-18 | 2026-10-17 | 未安装 | scores |
+| [WeatherBench 2](https://github.com/google-research/weatherbench2) | AI weather model 的评估代码和 data | 未标注 | v0.2.0 | 2023-12-04 | 2026-10-17 | 未安装 | scores |
 
 本书通过 `earthkit-meteo[scores]` 安装 scores。`earthkit.meteo.score` 的部分评分函数调用 scores。
 [ch08](../topics/ch08-geopotential-thickness.md) 也直接调用 `scores.continuous.rmse`。
@@ -126,7 +126,7 @@ WeatherBench 2 不在 PyPI 上。用户从 GitHub 安装它。
 
 | 软件包 | 用途 | 成熟度 | 最新版本 | 发布日期 | 检查日期 | 本书 | 替代 |
 |---|---|---|---|---|---|---|---|
-| [geopandas](https://pypi.org/project/geopandas/) | 带几何形状的表格，读写矢量地理数据 | 稳定 | 1.2.0 | 2026-09-28 | 2026-10-17 | 1.2.0 | — |
+| [geopandas](https://pypi.org/project/geopandas/) | 带几何形状的表格，读写矢量地理 data | 稳定 | 1.2.0 | 2026-09-28 | 2026-10-17 | 1.2.0 | — |
 | [ipywidgets](https://pypi.org/project/ipywidgets/) | Jupyter 的交互控件和进度条 | 未标注 | 8.1.9 | 2026-08-18 | 2026-10-17 | 8.1.9 | — |
 | [six](https://pypi.org/project/six/) | Python 2 和 Python 3 的兼容层 | 稳定 | 1.17.0 | 2024-12-04 | 2026-10-17 | 1.17.0 | — |
 
@@ -136,7 +136,7 @@ WeatherBench 2 不在 PyPI 上。用户从 GitHub 安装它。
 
 ## 不再活跃的软件包
 
-[climetlab](https://pypi.org/project/climetlab/) 是 ECMWF 早期的数据访问软件包。
+[climetlab](https://pypi.org/project/climetlab/) 是 ECMWF 早期的 data 访问软件包。
 
 - 最新版本：0.24.0，发布日期 2024-06-20，检查日期 2026-10-17。
 - 它的 GitHub 仓库最后一次更新在 2024 年 11 月。

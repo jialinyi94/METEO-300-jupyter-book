@@ -112,4 +112,8 @@ max_sentences = 6
 # A sentence with this many numbers or more is a number list. Its numbers do not count.
 number_list_min = 3
 # Words that contain a rejected term but have a different meaning.
-allow = ["陆地表面", "自相关系数", "偏相关系数"]
+allow = [
+    "陆地表面", "自相关系数", "偏相关系数",
+    # Common words that contain a term but are not the term. They stay in Chinese.
+    "数据书", "风暴", "风电", "风机", "预报员", "东风", "西风", "南风", "北风", "东北风", "西南风", "东南风", "西北风", "偏北风", "偏南风", "偏东风", "偏西风", "静风", "大风", "中纬度", "高纬度", "低纬度", "经纬度", "温度计", "气压计",
+]

@@ -105,7 +105,7 @@ COLORS = {
     "land": "#a6611a",
     "sea": "#1f77b4",
 }
-NAMES = {"graphcast": "GraphCast", "hres": "IFS HRES", "persistence": "持续性预报"}
+NAMES = {"graphcast": "GraphCast", "hres": "IFS HRES", "persistence": "persistence forecast"}
 
 
 # =============================================================================================
@@ -523,8 +523,10 @@ def plot_maps(case: xr.Dataset):
         lon, lat, z500, levels=np.arange(4800, 5900, 60), colors="k", linewidths=0.7, transform=pc
     )
     axs[0].clabel(cs, cs.levels[::2], fontsize=7, fmt="%d")
-    fig.colorbar(cf, ax=axs[0], orientation="horizontal", shrink=0.85, label="500 hPa 风速 (m/s)")
-    axs[0].set_title("(a) 500 hPa 位势高度 (m) 和风速", loc="left", fontsize=10)
+    fig.colorbar(
+        cf, ax=axs[0], orientation="horizontal", shrink=0.85, label="500 hPa wind speed (m/s)"
+    )
+    axs[0].set_title("(a) 500 hPa geopotential height (m) 和 wind speed", loc="left", fontsize=10)
 
     levels = np.arange(5100, 5701, 30)
     norm = BoundaryNorm(levels, plt.get_cmap("RdBu_r").N, extend="both")
@@ -548,9 +550,9 @@ def plot_maps(case: xr.Dataset):
         orientation="horizontal",
         shrink=0.85,
         ticks=levels[::4],
-        label="厚度 ［500, 1000］ hPa (m)",
+        label="thickness ［500, 1000］ hPa (m)",
     )
-    axs[1].set_title("(b) 海平面气压 (hPa) 和厚度", loc="left", fontsize=10)
+    axs[1].set_title("(b) mean sea level pressure (hPa) 和 thickness", loc="left", fontsize=10)
     return fig
 
 
@@ -590,9 +592,13 @@ def plot_precip(precip: xr.Dataset, times=("2021-01-20T12", "2021-01-21T00")):
         _thickness_lines(ax, lon, lat, p["thickness"], pc)
         t = pd.Timestamp(time)
         span = f"{t - pd.Timedelta('6h'):%m-%d %H} UTC 至 {t + pd.Timedelta('6h'):%m-%d %H} UTC"
-        ax.set_title(f"({letter}) 12 h 降水量，{span}", loc="left", fontsize=10)
-    fig.colorbar(cf, ax=axs, orientation="horizontal", shrink=0.5, label="12 h 降水量 (mm)")
-    handle = Patch(facecolor="white", edgecolor="#5e3c99", hatch="////", label="降雪量占一半以上")
+        ax.set_title(f"({letter}) 12 h precipitation amount，{span}", loc="left", fontsize=10)
+    fig.colorbar(
+        cf, ax=axs, orientation="horizontal", shrink=0.5, label="12 h precipitation amount (mm)"
+    )
+    handle = Patch(
+        facecolor="white", edgecolor="#5e3c99", hatch="////", label="snowfall 占一半以上"
+    )
     axs[0].legend(handles=[handle], loc="lower left", fontsize=8, framealpha=0.9)
     return fig
 
@@ -615,8 +621,8 @@ def plot_snow_fraction(table: pd.DataFrame):
     for value in (5280, 5400):
         ax.axvline(value, color=COLORS[str(value)], lw=1.5, ls="--")
         ax.text(value + 6, 103, f"{value} m", color=COLORS[str(value)], fontsize=8)
-    ax.set_xlabel("厚度 ［500, 1000］ hPa (m)")
-    ax.set_ylabel("降雪量占降水量的比例 (%)")
+    ax.set_xlabel("thickness ［500, 1000］ hPa (m)")
+    ax.set_ylabel("snowfall 占 precipitation amount 的比例 (%)")
     ax.set_ylim(-3, 110)
     ax.grid(alpha=0.3, lw=0.5)
     ax.legend(fontsize=9, loc="center left")
@@ -650,11 +656,11 @@ def plot_scores(scores: pd.DataFrame, region: str = "europe"):
     axs[1].set_ylabel("ACC")
     axs[1].set_ylim(0.4, 1.01)
     for ax in axs:
-        ax.set_xlabel("预报时效 (d)")
+        ax.set_xlabel("lead time (d)")
         ax.set_xticks(range(0, 11))
         ax.grid(alpha=0.3, lw=0.5)
-    axs[0].set_title("(a) 500 hPa 位势高度的 RMSE", loc="left", fontsize=10)
-    axs[1].set_title("(b) 500 hPa 位势高度的 ACC", loc="left", fontsize=10)
+    axs[0].set_title("(a) 500 hPa geopotential height 的 RMSE", loc="left", fontsize=10)
+    axs[1].set_title("(b) 500 hPa geopotential height 的 ACC", loc="left", fontsize=10)
     fig.legend(*axs[0].get_legend_handles_labels(), loc="outside lower center", ncols=4, fontsize=8)
     return fig
 

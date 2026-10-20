@@ -181,19 +181,33 @@ def _term_regex(term: str) -> str:
 
 
 def load_glossary(path: Path, allow: list[str]) -> Glossary:
+    """Read the term tables of glossary.md.
+
+    The column 术语 holds the approved term. The words in the columns 中文 and 弃用词 are
+    rejected. Since 2026-10-20 the approved terms are English and the column 中文 holds the
+    old Chinese term. A table with the old header 中文术语 uses its first and last columns.
+    """
     approved: set[str] = set(allow)
     rejected: dict[str, list[str]] = {}
     if not path.exists():
         return Glossary(None, approved, rejected)
+    columns: dict[str, int] = {}
     for line in path.read_text(encoding="utf-8").splitlines():
         if not line.startswith("|") or TABLE_SEP_RE.match(line):
             continue
         cells = [c.strip() for c in line.strip().strip("|").split("|")]
-        if len(cells) < 6 or cells[0] in ("中文术语", ""):
+        if cells[0] in ("术语", "中文术语"):
+            columns = {name: i for i, name in enumerate(cells)}
+            columns.setdefault("术语", 0)
             continue
-        term = cells[0]
+        if not columns or len(cells) < len(columns) or cells[0] == "":
+            continue
+        term = cells[columns["术语"]] if "术语" in columns else cells[0]
         approved.add(term)
-        for word in re.split(r"[、，,]", cells[5]):
+        words = re.split(r"[、，,]", cells[columns["弃用词"]])
+        if "中文" in columns and HAN_RE.search(cells[columns["中文"]]):
+            words.append(cells[columns["中文"]])
+        for word in words:
             word = word.strip()
             if word and word not in ("—", "-"):
                 rejected.setdefault(word, []).append(term)
@@ -223,6 +237,8 @@ def split_units(lines: list[str]) -> list[Unit]:
     ignore_next = 0  # 0: off, 1: waiting for the block, 2: inside the block
     ignoring_block = False
     directive_options = False
+    in_table = False
+    header: list[str] = []
 
     def close() -> None:
         nonlocal current
@@ -320,6 +336,7 @@ def split_units(lines: list[str]) -> list[Unit]:
 
         if not stripped:
             close()
+            in_table = False
             continue
         if stripped.startswith("%") or stripped.startswith("+++") or TARGET_RE.match(raw):
             close()
@@ -331,10 +348,17 @@ def split_units(lines: list[str]) -> list[Unit]:
         if text.lstrip().startswith("|"):
             close()
             cleaned = clean_inline(text)
-            for cell in cleaned.strip().strip("|").split("|"):
+            cells = cleaned.strip().strip("|").split("|")
+            if not in_table:
+                header = [c.strip() for c in cells]
+            in_table = True
+            for k, cell in enumerate(cells):
                 if cell.strip():
-                    units.append(Unit([(lineno, cell.strip())], kind="cell"))
+                    # A column named 中文 shows the Chinese name of an English term.
+                    zh = k < len(header) and header[k] == "中文"
+                    units.append(Unit([(lineno, cell.strip())], kind="cell-zh" if zh else "cell"))
             continue
+        in_table = False
         if HEADING_RE.match(text):
             close()
             units.append(Unit([(lineno, clean_inline(HEADING_RE.sub("", text)))], kind="heading"))
@@ -505,6 +529,8 @@ def check_unit(unit: Unit, path: str, glossary: Glossary, cfg: dict) -> list[Vio
     if glossary.pattern is not None:
         for m in glossary.pattern.finditer(text):
             key = _norm(m.group(0))
+            if unit.kind == "cell-zh":
+                break
             if key in glossary.rejected and key not in glossary.approved:
                 use = " / ".join(dict.fromkeys(glossary.rejected[key]))
                 out.append(Violation(path, at(m.start()), "rejected-term", f"{m.group(0)} → {use}"))

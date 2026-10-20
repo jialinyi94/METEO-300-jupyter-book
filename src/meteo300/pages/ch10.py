@@ -394,7 +394,7 @@ def plot_map(t850, u850, v850, adv, msl=None):
         ax.text(
             clon,
             clat + 0.6,
-            "低压中心",
+            "low centre",
             ha="center",
             va="bottom",
             fontsize=9,
@@ -403,7 +403,9 @@ def plot_map(t850, u850, v850, adv, msl=None):
             zorder=5,
         )
     _station(ax, pc)
-    cbar = fig.colorbar(cf, ax=ax, shrink=0.85, label="850 hPa 温度平流 (K/h)，正值是暖平流")
+    cbar = fig.colorbar(
+        cf, ax=ax, shrink=0.85, label="850 hPa temperature advection (K/h)，正值是 warm advection"
+    )
     cbar.ax.tick_params(labelsize=8)
     return fig
 
@@ -438,7 +440,9 @@ def plot_thermal_map(tbar, u_t, v_t):
         q, 0.9, 0.04, 20, "20 m/s", labelpos="N", fontproperties={"size": 8}, coordinates="axes"
     )
     _station(ax, pc)
-    fig.colorbar(cf, ax=ax, shrink=0.85, label="850 hPa 到 500 hPa 的热成风风速 (m/s)")
+    fig.colorbar(
+        cf, ax=ax, shrink=0.85, label="850 hPa 到 500 hPa 的 thermal wind wind speed (m/s)"
+    )
     return fig
 
 
@@ -501,11 +505,11 @@ def plot_hodograph(prof: pd.DataFrame, top: float = 250.0):
     ax.set_xlabel("u (m/s)，向东为正")
     ax.set_ylabel("v (m/s)，向北为正")
     labels = [
-        "地面到 850 hPa",
+        "surface 到 850 hPa",
         "850 到 700 hPa",
         "700 到 500 hPa",
         f"500 到 {top:.0f} hPa",
-        "850 到 500 hPa 的垂直风切变",
+        "850 到 500 hPa 的 vertical wind shear",
     ]
     handles = [plt.Line2D([], [], color=c, lw=2.5) for c in colors[::-1]]
     handles.append(plt.Line2D([], [], color=COLORS["thermal"], lw=2.5, marker=">", ms=7))
@@ -552,7 +556,7 @@ def plot_zonal_shear(shear_obs, shear_tw, t_zm, u_zm, min_lat: float = 15.0):
         ax.set_ylim(1000, 100)
         ax.set_xlim(-80, 80)
         ax.set_xticks(range(-80, 81, 20))
-        ax.set_xlabel("纬度 (°)")
+        ax.set_xlabel("latitude (°)")
     cs = axs[0].contour(
         lat, u_zm["level"], u_zm, levels=np.arange(10, 50, 10), colors="0.35", linewidths=0.8
     )
@@ -567,10 +571,16 @@ def plot_zonal_shear(shear_obs, shear_tw, t_zm, u_zm, min_lat: float = 15.0):
         linestyles="--",
     )
     axs[1].clabel(cs, fontsize=7, fmt="%d")
-    axs[0].set_ylabel("气压 (hPa)")
-    axs[0].set_title("(a) ERA5 纬向风的垂直风切变，灰线是纬向风", loc="left", fontsize=10)
-    axs[1].set_title("(b) 用温度梯度算出的垂直风切变，虚线是温度", loc="left", fontsize=10)
-    fig.colorbar(cf, ax=axs, shrink=0.9, label="每升高 1 km 纬向风的变化 (m/s)")
+    axs[0].set_ylabel("pressure (hPa)")
+    axs[0].set_title(
+        "(a) ERA5 zonal wind 的 vertical wind shear，灰线是 zonal wind", loc="left", fontsize=10
+    )
+    axs[1].set_title(
+        "(b) 用 temperature gradient 算出的 vertical wind shear，虚线是 temperature",
+        loc="left",
+        fontsize=10,
+    )
+    fig.colorbar(cf, ax=axs, shrink=0.9, label="每升高 1 km zonal wind 的变化 (m/s)")
     return fig
 
 
@@ -597,7 +607,7 @@ def plot_jet_bias(bias: pd.DataFrame, ylabel: str):
             label=model,
         )
     ax.axhline(0, color="0.4", lw=0.8)
-    ax.set_xlabel("预报时效 (天)")
+    ax.set_xlabel("lead time (天)")
     ax.set_ylabel(ylabel)
     ax.set_xticks(sorted(bias["lead_h"].unique() / 24))
     ax.grid(alpha=0.3, lw=0.5)

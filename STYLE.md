@@ -10,10 +10,10 @@
 
 ### 规则 1：一词一义，一义一词
 
-每个概念只用一个词。一个词只表示一个概念。给一种量起了名字，全书都用这个名字。术语表的“弃用词”一列列出不用的词。自动检查。
+每个概念只用一个词。一个词只表示一个概念。给一种量起了名字，全书都用这个名字。术语表的“中文”和“弃用词”两列列出不用的词。自动检查。
 
 - 错误：500 hPa 高度在槽前降低，这个气压层上的气温也降低。
-- 正确：500 hPa 位势高度在槽前降低，这个等压面上的温度也降低。
+- 正确：500 hPa geopotential height 在 trough 前降低，这个 isobaric surface 上的 temperature 也降低。
 
 ### 规则 2：一句只说一件事，不超过 40 字
 
@@ -22,9 +22,9 @@
 一个句子列出 3 个或更多数字时，数字不计数。这样的句子先说每个数字是什么，再列数字。
 
 - 错误：ERA5 是 ECMWF 制作的再分析数据集，它把观测和数值模式结合起来，给出 1940 年以来每小时 0.25° 网格上的全球大气状态。
-- 正确：ERA5 是 ECMWF 制作的再分析数据集。它把观测和数值模式结合起来。它给出 1940 年以来每小时的全球大气状态。网格间距是 0.25°。
+- 正确：ERA5 是 ECMWF 制作的 reanalysis dataset。它把观测和 numerical weather prediction model 结合起来。它给出 1940 年以来每小时的全球大气状态。grid spacing 是 0.25°。
 - 错误：结果是 111 m、1457 m 和 5574 m。
-- 正确：1000 hPa、850 hPa 和 500 hPa 的位势高度分别是 111 m、1457 m 和 5574 m。
+- 正确：1000 hPa、850 hPa 和 500 hPa 的 geopotential height 分别是 111 m、1457 m 和 5574 m。
 
 ### 规则 3：主语清楚，用主动语态
 
@@ -33,23 +33,23 @@
 - 错误：给出了 159 的 RMSE。
 - 正确：模型给 159 m² s⁻² 的 RMSE。
 - 错误：2 m 温度被模型低估了 2 K。
-- 正确：模型把 2 m 温度低估了 2 K。
+- 正确：模型把 2 m temperature 低估了 2 K。
 
 ### 规则 4：一段只有一个主题，最多六句
 
 一个段落只讲一件事。换主题时，换段落。自动检查句数。
 
 - 错误：一个段落先讲静力平衡，再讲 ERA5 的下载方式，最后讲 GraphCast 的输入变量。
-- 正确：三个主题写成三个段落，分别放在“知识点”“数据集”“AI 天气连接”三节。
+- 正确：三个主题写成三个段落，分别放在“知识点”“dataset”“AI 天气连接”三节。
 
 ### 规则 5：不用括号写附加说明
 
-括号里的内容要么重要，要么不重要。重要的内容写成一个句子。不重要的内容删去。英文术语放在术语表或页面的术语表格里。评分指标和六个动力学术语是例外，见 3.8 节第 5 条和第 6 条。自动检查。
+括号里的内容要么重要，要么不重要。重要的内容写成一个句子。不重要的内容删去。中文名放在术语表或页面的术语表格里，正文不在括号里写中文名，见 3.8 节。自动检查。
 
-- 错误：位温（potential temperature）在干绝热过程中守恒。
-- 正确：位温在干绝热过程中守恒。
-- 错误：ERA5（ECMWF 的第五代再分析）有 37 个等压面。
-- 正确：ERA5 是 ECMWF 的第五代再分析。它有 37 个等压面。
+- 错误：potential temperature（位温）在干绝热过程中守恒。
+- 正确：potential temperature 在 dry adiabatic process 中守恒。
+- 错误：ERA5（ECMWF 的第五代 reanalysis）有 37 个 isobaric surface。
+- 正确：ERA5 是 ECMWF 的第五代 reanalysis。它有 37 个 isobaric surface。
 
 ## 2 英文规则
 
@@ -78,7 +78,7 @@ README 的英文摘要和图的替代文字使用英文。英文使用 ASD-STE10
 - 错误：850–1000 hPa、850~1000 hPa、850 到 1000 hPa、[850, 1000] hPa、（850，1000）hPa
 - 正确：［850, 1000］ hPa
 - 错误：云量的取值是 0-1。
-- 正确：云量的取值区间是 ［0, 1］。
+- 正确：cloud cover 的取值区间是 ［0, 1］。
 
 日期 2023-01-15 和时间 06:00 不是区间。检查器跳过它们。
 
@@ -94,7 +94,7 @@ README 的英文摘要和图的替代文字使用英文。英文使用 ASD-STE10
 风速的单位 knot 只写符号 kt，和 hPa 一样。“节”只表示文档的节，例如“第 2 课 2.2 节”。自动检查数字后面的“节”。
 
 - 错误：平均风速 51 节、风速的单位是节
-- 正确：平均风速 51 kt、风速的单位是 kt
+- 正确：平均 wind speed 51 kt、wind speed 的单位是 kt
 
 公式里的单位写在 `\mathrm{}` 里，例如 $g_0 = 9.80665\ \mathrm{m\,s^{-2}}$。
 
@@ -103,7 +103,7 @@ README 的英文摘要和图的替代文字使用英文。英文使用 ASD-STE10
 变量名、函数名、参数名、文件名和路径用行内代码字体。数据集名和软件包名用普通字体。物理量用公式符号。
 
 - 错误：ERA5 的 t2m 变量用 metpy.calc.potential_temperature 计算位温 theta。
-- 正确：ERA5 的 `t2m` 是 2 m 温度。函数 `metpy.calc.potential_temperature` 计算位温 $\theta$。
+- 正确：ERA5 的 `t2m` 是 2 m temperature。函数 `metpy.calc.potential_temperature` 计算 potential temperature $\theta$。
 - 错误：用 `xarray` 打开 `ERA5`。
 - 正确：用 xarray 打开 ERA5。
 
@@ -114,7 +114,7 @@ README 的英文摘要和图的替代文字使用英文。英文使用 ASD-STE10
 图题的第一句说明时间、区域、等压面和变量。第二句写数据来源。时间写作 `YYYY-MM-DD HH UTC`。
 
 - 错误：图 1：位势高度。
-- 正确：2023-01-15 00 UTC，北大西洋 500 hPa 的位势高度。数据来源：ERA5。
+- 正确：2023-01-15 00 UTC，北大西洋 500 hPa 的 geopotential height。data 来源：ERA5。
 
 代码生成的图，在代码单元的开头写 `label` 和 `caption`：
 
@@ -157,7 +157,7 @@ METEO 300 是宾夕法尼亚州立大学的公开课程，作者是 William H. B
 第一次引用一个数据集时，写出它的论文或 DOI。
 
 - 错误：数据来自网上。
-- 正确：本页用 ERA5 再分析。ERA5 的论文是 Hersbach 等，2020，[doi:10.1002/qj.3803](https://doi.org/10.1002/qj.3803)。ERA5 以 Copernicus 产品许可发布。
+- 正确：本页用 ERA5 reanalysis。ERA5 的论文是 Hersbach 等，2020，[doi:10.1002/qj.3803](https://doi.org/10.1002/qj.3803)。ERA5 以 Copernicus 产品许可发布。
 
 ### 3.7 标点和空格
 
@@ -167,36 +167,32 @@ METEO 300 是宾夕法尼亚州立大学的公开课程，作者是 William H. B
 4. 标题不加句号。
 
 - 错误：ERA5有37个等压面.
-- 正确：ERA5 有 37 个等压面。
+- 正确：ERA5 有 37 个 isobaric surface。
 
 ### 3.8 术语
 
-1. 只用术语表的中文术语。新概念先加入术语表，再写进页面。
-2. 每页“知识点”一节的末尾有一张术语表格，列出本页术语的中文、英文和符号。正文不在括号里写英文。
+1. 术语写术语表“术语”一列的英文词。新概念先加入术语表，再写进页面。用户在 2026-10-20 做了这个决定。
+   - 英文术语在句中小写。专有名词和缩写照原样写，例如 Coriolis force、Icelandic Low 和 RMSE。
+   - 英文和中文、数字之间留一个半角空格。英文和中文标点之间不留空格。
+   - 正文第一次出现时也不加中文括注。
+   - 术语表“中文”一列的中文名是弃用词。检查器报出它们。
+2. 每页“知识点”一节的末尾有一张术语表格，列出本页术语的英文、中文和符号。表头是“术语 | 中文 | 符号”。检查器不检查“中文”一列。
 3. 一个公式符号只表示一个量。符号以术语表为准。
-4. 人名术语写成英文人名加中文通用词，例如 Coriolis 力、Hadley 环流、Rossby 数。英文人名和中文之间留一个半角空格。两个人名之间用连接号“–”，例如 Stefan–Boltzmann 定律。不写中文音译词。术语表把旧的音译词列为弃用词，检查器报出它们。以人名命名的单位照旧写符号，例如 K 和 Pa。
+4. 人名术语写英文全称，例如 Coriolis force、Hadley cell 和 Rossby number。两个人名之间用连接号“–”，例如 Stefan–Boltzmann law。不写中文音译词。以人名命名的单位照旧写符号，例如 K 和 Pa。
 
-- 错误：科里奥利力使北半球的风向右偏。哈得来环流在 30°N 附近下沉。
-- 错误：Coriolis力使北半球的风向右偏。
-- 正确：Coriolis 力使北半球的风向右偏。Hadley 环流在 30°N 附近下沉。
+- 错误：科里奥利力使北半球的风向右偏。
+- 错误：Coriolis 力使北半球的风向右偏。
+- 正确：Coriolis force 使北半球的 wind 向右偏。
 
-5. 评分指标在正文、图注和术语表里都写常见的英文名，不写中文名。这是第 2 条的例外。用户在 2026-10-17 做了这个决定。
-   - 缩写全部大写：MAE、MSE、RMSE、RMS、ACC、CRPS 和 SEEPS。
-   - 普通英文词在句中小写：bias、hit、miss、false alarm、correlation、skill score、spread 和 track error。
-   - 英文和中文之间留一个半角空格，和 ERA5 的写法一样。第一次出现时也不加中文括注。
-   - 页面术语表格的“English term”一列写全称，例如 root mean squared error。
-   - 只有表示评分指标时才写英文名。其他意思用术语表里的中文词，例如距平。
+5. 评分指标写常见的英文名。缩写全部大写：MAE、MSE、RMSE、RMS、ACC、CRPS 和 SEEPS。普通英文词小写：bias、hit、miss、false alarm、correlation、skill score、spread 和 track error。页面术语表格的“术语”一列写全称，例如 root mean squared error，“符号”一列写缩写。
 
 - 错误：AIFS 的均方根误差是 2.1 K，偏差是 −0.3 K，相关系数是 0.9。
 - 正确：AIFS 的 RMSE 是 2.1 K，bias 是 −0.3 K，correlation 是 0.9。
 
-6. 六个动力学术语在正文、图注和术语表里都写英文原词，不写中文。这是第 2 条的第二个例外。用户在 2026-10-20 做了这个决定。
-   - 这六个词是 geostrophic wind speed、subgeostrophic wind、supergeostrophic wind、gradient wind balance、centripetal acceleration 和 radius of curvature。
-   - 它们在句中小写。英文和中文之间留一个半角空格。第一次出现时也不加中文括注。
-   - 例外只包括这六个词。其他术语仍写术语表的中文术语，例如地转风、梯度风和风速。
+6. 有些常用词含有术语的字，但意思不同。它们仍写中文，例如西风、风暴、预报员和中纬度。pyproject.toml 的 allow 列表列出这些词。新加这样的词时，先加入 allow 列表。
 
-- 错误：低压周围的风是次地转风，这一点的地转风速是 33.0 m s⁻¹。
-- 正确：低压周围的风是 subgeostrophic wind，这一点的 geostrophic wind speed 是 33.0 m s⁻¹。
+- 错误：pressure gradient force 从高压指向低压。
+- 正确：pressure gradient force 从 high 指向 low。
 
 ## 4 检查器
 

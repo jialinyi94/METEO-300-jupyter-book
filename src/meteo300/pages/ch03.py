@@ -288,19 +288,32 @@ def plot_sounding(prof: pd.DataFrame, levels: pd.DataFrame):
     """
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9, 4.6), layout="constrained")
     pp = np.linspace(40, 1013.25, 300)
-    ax1.plot(pp, std_atmosphere_height(pp) / 1000, color="0.6", lw=2, label="1976 年美国标准大气")
-    ax1.plot(levels["pressure"], levels["height"] / 1000, "o", color="C0", label="Camborne 探空")
-    ax1.set(xlabel="气压 $p$ (hPa)", ylabel="位势高度 $Z$ (km)", xlim=(0, 1050), ylim=(0, 22))
-    ax1.set_title("(a) 气压与位势高度", loc="left", fontsize=10)
+    ax1.plot(
+        pp,
+        std_atmosphere_height(pp) / 1000,
+        color="0.6",
+        lw=2,
+        label="1976 年美国 standard atmosphere",
+    )
+    ax1.plot(
+        levels["pressure"], levels["height"] / 1000, "o", color="C0", label="Camborne sounding"
+    )
+    ax1.set(
+        xlabel="pressure $p$ (hPa)",
+        ylabel="geopotential height $Z$ (km)",
+        xlim=(0, 1050),
+        ylim=(0, 22),
+    )
+    ax1.set_title("(a) pressure 与 geopotential height", loc="left", fontsize=10)
     ax1.legend(loc="upper right", frameon=False)
     _style(ax1)
 
     ax2.plot(prof["temperature"], prof["pressure"], "-", color="C3", marker=".", ms=4)
     _log_p_axis(ax2, [1000, 850, 700, 500, 300, 200, 100, 50], 1000, 40)
     ax2.axhline(200, color="0.5", ls="--", lw=1)
-    ax2.text(-30, 185, "对流层顶 200 hPa", fontsize=9, color="0.3")
-    ax2.set(xlabel="温度 $T$ (°C)", ylabel="气压 $p$ (hPa，对数坐标)")
-    ax2.set_title("(b) 温度廓线", loc="left", fontsize=10)
+    ax2.text(-30, 185, "tropopause 200 hPa", fontsize=9, color="0.3")
+    ax2.set(xlabel="temperature $T$ (°C)", ylabel="pressure $p$ (hPa，对数坐标)")
+    ax2.set_title("(b) temperature 廓线", loc="left", fontsize=10)
     _style(ax2)
     return fig
 
@@ -317,7 +330,10 @@ def plot_sp_msl(sfc: xr.Dataset):
     )
     levels = np.arange(700, 1041, 10)
     pc = ccrs.PlateCarree()
-    panels = [(axs[0], "sp", "(a) 地面气压 sp"), (axs[1], "msl", "(b) 海平面气压 msl")]
+    panels = [
+        (axs[0], "sp", "(a) surface pressure sp"),
+        (axs[1], "msl", "(b) mean sea level pressure msl"),
+    ]
     for ax, name, title in panels:
         cf = ax.contourf(
             sfc["longitude"],
@@ -346,7 +362,7 @@ def plot_sp_msl(sfc: xr.Dataset):
         transform=pc,
     )
     axs[1].clabel(cs, fontsize=7, fmt="%d")
-    fig.colorbar(cf, ax=axs, shrink=0.85, label="气压 (hPa)")
+    fig.colorbar(cf, ax=axs, shrink=0.85, label="pressure (hPa)")
     return fig
 
 
@@ -362,14 +378,14 @@ def plot_scale_height(prof: pd.DataFrame, levels: pd.DataFrame, fits: dict):
         ".",
         color="0.6",
         ms=4,
-        label="全部层，积分的位势高度",
+        label="全部层，积分的 geopotential height",
     )
     ax.plot(
         levels["height"] / 1000,
         levels["pressure"],
         "o",
         color="C0",
-        label="标准等压面，报告的位势高度",
+        label="mandatory pressure level，报告的 geopotential height",
     )
     for i, (label, (p_bottom, p_top, h, p0)) in enumerate(fits.items()):
         zz = np.linspace(h * np.log(p0 / p_bottom), h * np.log(p0 / p_top), 20)
@@ -382,7 +398,9 @@ def plot_scale_height(prof: pd.DataFrame, levels: pd.DataFrame, fits: dict):
             label=f"{label}：H = {h / 1000:.2f} km",
         )
     _log_p_axis(ax, [1000, 700, 500, 300, 200, 100, 50], 1000, 40)
-    ax.set(xlabel="位势高度 $Z$ (km)", ylabel="气压 $p$ (hPa，对数坐标)", xlim=(0, 22))
+    ax.set(
+        xlabel="geopotential height $Z$ (km)", ylabel="pressure $p$ (hPa，对数坐标)", xlim=(0, 22)
+    )
     ax.legend(frameon=False, fontsize=8, loc="lower right")
     _style(ax)
     return fig

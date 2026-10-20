@@ -1,5 +1,5 @@
 ---
-title: 温带气旋
+title: extratropical cyclone
 jupytext:
   text_representation:
     extension: .md
@@ -15,24 +15,24 @@ kernelspec:
 
 本页取自 [METEO 300](https://www.e-education.psu.edu/meteo300/) 第 12 课 12.1 节，以及第 3 课 3.5 节、第 9 课 9.3 节和第 10 课 10.9 节。
 
-METEO 300 第 12 课把大气看成一个整体，把前面各课的内容连在一起。温带气旋是一个好例子。一个温带气旋里有湿空气的热力学、风的运动学、高空的动力学和云。本页用一次真实的风暴把这些过程放在同一组图上。然后本页写一个简单的气旋追踪器，用它比较 AI 天气模型和数值模式的预报。
+METEO 300 第 12 课把大气看成一个整体，把前面各课的内容连在一起。extratropical cyclone 是一个好例子。一个 extratropical cyclone 里有湿空气的热力学、wind 的运动学、高空的动力学和云。本页用一次真实的风暴把这些过程放在同一组图上。然后本页写一个简单的 cyclone tracking 器，用它比较 AI weather model 和 numerical weather prediction model 的 forecast。
 
-### 温带气旋和锋
+### extratropical cyclone 和 front
 
-温带气旋是中纬度的低压系统。它在冷空气和暖空气的交界上发展。这个交界是斜压的：等压面上有很大的温度梯度。[热成风](ch10-thermal-wind.md) 一页说，温度梯度大的地方，高空的西风强，这就是急流。
+extratropical cyclone 是中纬度的 low 系统。它在冷空气和暖空气的交界上发展。这个交界是 baroclinic 的：isobaric surface 上有很大的 temperature gradient。[thermal wind](ch10-thermal-wind.md) 一页说，temperature gradient 大的地方，高空的西风强，这就是 jet stream。
 
-冷空气和暖空气之间温度梯度集中的窄带叫锋。冷空气向暖空气推进的锋叫冷锋。暖空气向冷空气推进的锋叫暖锋。冷锋和暖锋之间的暖空气区叫暖区。气旋成熟时，冷锋追上暖锋，两条锋合成锢囚锋，暖空气离开地面。
+冷空气和暖空气之间 temperature gradient 集中的窄带叫 front。冷空气向暖空气推进的 front 叫 cold front。暖空气向冷空气推进的 front 叫 warm front。cold front 和 warm front 之间的暖空气区叫 warm sector。cyclone 成熟时，cold front 追上 warm front，两条 front 合成 occluded front，暖空气离开 surface。
 
-### 相当位温标出气团
+### equivalent potential temperature 标出 air mass
 
-METEO 300 第 3 课 3.5 节说，气块绝热地上升和下沉时，相当位温不变。所以一个气团在几天里大致保持自己的相当位温。两个气团相遇的地方，相当位温在很短的距离里变化很大，这就是锋。METEO 300 给出一个近似式：
+METEO 300 第 3 课 3.5 节说，air parcel 绝热地上升和下沉时，equivalent potential temperature 不变。所以一个 air mass 在几天里大致保持自己的 equivalent potential temperature。两个 air mass 相遇的地方，equivalent potential temperature 在很短的距离里变化很大，这就是 front。METEO 300 给出一个近似式：
 
 ```{math}
 :label: eq-ch12-thetae-approx
 \theta_e \approx \theta + \frac{L_v\, r}{c_p}
 ```
 
-$\theta$ 是位温，$r$ 是混合比，$L_v$ 是水汽的潜热，$c_p$ 是定压比热容。每 1 g kg⁻¹ 的水汽使 $\theta_e$ 增大约 2.5 K。暖湿空气的 $\theta_e$ 高，冷干空气的 $\theta_e$ 低。所以 $\theta_e$ 同时标出温度和水汽的差别，它比温度更清楚地显示锋。
+$\theta$ 是 potential temperature，$r$ 是 mixing ratio，$L_v$ 是 water vapour 的 latent heat，$c_p$ 是 specific heat capacity at constant pressure。每 1 g kg⁻¹ 的 water vapour 使 $\theta_e$ 增大约 2.5 K。暖湿空气的 $\theta_e$ 高，冷 dry air 的 $\theta_e$ 低。所以 $\theta_e$ 同时标出 temperature 和 water vapour 的差别，它比 temperature 更清楚地显示 front。
 
 MetPy 和 earthkit-meteo 用 Bolton 1980 的式 39：
 
@@ -42,18 +42,18 @@ MetPy 和 earthkit-meteo 用 Bolton 1980 的式 39：
 \exp\left[\left(\frac{3036}{T_L} - 1.78\right) r \,(1 + 0.448\, r)\right]
 ```
 
-$p_0 = 1000$ hPa，$e$ 是水汽压，$r$ 的单位是 kg kg⁻¹。$T_L$ 是气块在抬升凝结高度的温度。它来自 Bolton 1980 的式 15：
+$p_0 = 1000$ hPa，$e$ 是 vapour pressure，$r$ 的单位是 kg kg⁻¹。$T_L$ 是 air parcel 在 lifting condensation level 的 temperature。它来自 Bolton 1980 的式 15：
 
 ```{math}
 :label: eq-ch12-tl
 T_L = \frac{1}{\dfrac{1}{T_d - 56} + \dfrac{\ln (T / T_d)}{800}} + 56
 ```
 
-$T$ 和露点温度 $T_d$ 的单位都是 K。式 [](#eq-ch12-bolton) 的第一个因子是干空气的位温。指数因子加上了水汽凝结放出的潜热。
+$T$ 和 dewpoint temperature $T_d$ 的单位都是 K。式 [](#eq-ch12-bolton) 的第一个因子是 dry air 的 potential temperature。指数因子加上了 water vapour condensation 放出的 latent heat。
 
-### 锋生
+### frontogenesis
 
-METEO 300 第 9 课 9.3 节说，风的变形把空气的一部分挤向另一部分，这就形成锋。锋生函数 $\mathcal{F}$ 描述这个过程。它是位温梯度的大小 $|\nabla\theta|$ 跟着水平风的变化率。在局地直角坐标系里：
+METEO 300 第 9 课 9.3 节说，wind 的 deformation 把空气的一部分挤向另一部分，这就形成 front。frontogenesis function $\mathcal{F}$ 描述这个过程。它是 potential temperature gradient 的大小 $|\nabla\theta|$ 跟着 horizontal wind 的变化率。在 local Cartesian coordinate system 里：
 
 ```{math}
 :label: eq-ch12-fgen
@@ -66,91 +66,91 @@ METEO 300 第 9 课 9.3 节说，风的变形把空气的一部分挤向另一�
 \right]
 ```
 
-这个式子假设空气干绝热地运动，并且只看水平风。$\mathcal{F} > 0$ 时，风把位温的等值线挤得更密，锋加强。$\mathcal{F} < 0$ 时，锋减弱。本页把 $\mathcal{F}$ 的单位写成 $\mathrm{K\ (100\ km)^{-1}\ (3\ h)^{-1}}$：每 3 h，每 100 km 上的位温差增大多少 K。
+这个式子假设空气干绝热地运动，并且只看 horizontal wind。$\mathcal{F} > 0$ 时，wind 把 potential temperature 的等值线挤得更密，front 加强。$\mathcal{F} < 0$ 时，front 减弱。本页把 $\mathcal{F}$ 的单位写成 $\mathrm{K\ (100\ km)^{-1}\ (3\ h)^{-1}}$：每 3 h，每 100 km 上的 potential temperature 差增大多少 K。
 
-举一个例子。设 $\theta$ 只随 $y$ 变化，风是 $u = 0$、$v = -\alpha y$，$\alpha > 0$。这是向 $x$ 轴的辐合。式 [](#eq-ch12-fgen) 给 $\mathcal{F} = \alpha |\partial\theta/\partial y|$。所以辐合越强，锋加强得越快。
+举一个例子。设 $\theta$ 只随 $y$ 变化，wind 是 $u = 0$、$v = -\alpha y$，$\alpha > 0$。这是向 $x$ 轴的 convergence。式 [](#eq-ch12-fgen) 给 $\mathcal{F} = \alpha |\partial\theta/\partial y|$。所以 convergence 越强，front 加强得越快。
 
-### 高空的槽和地面的低压
+### 高空的 trough 和 surface 的 low
 
-METEO 300 第 10 课 10.9 节说，高空的气流绕过槽时比地转风慢，绕过脊时比地转风快。气流从槽流向脊的路上加速，高空出现辐散。高空的辐散使气柱里的空气减少，地面气压下降。下面的空气上升，补充高空流走的空气。所以地面低压常在高空槽的下游形成。
+METEO 300 第 10 课 10.9 节说，高空的气流绕过 trough 时比 geostrophic wind 慢，绕过 ridge 时比 geostrophic wind 快。气流从 trough 流向 ridge 的路上加速，高空出现 divergence of the flow。高空的 divergence of the flow 使气柱里的空气减少，surface pressure 下降。下面的空气上升，补充高空流走的空气。所以 surface low 常在高空 trough 的下游形成。
 
-发展中的气旋里，高空的槽在地面低压的西边。气旋加深时，高空的低压向地面低压的上方移动。两者上下对齐以后，高空的辐散不再落在地面低压的上方，气旋一般不再加深。
+发展中的 cyclone 里，高空的 trough 在 surface low 的西边。cyclone 加深时，高空的 low 向 surface low 的上方移动。两者上下对齐以后，高空的 divergence of the flow 不再落在 surface low 的上方，cyclone 一般不再加深。
 
-### 卫星看到的气旋
+### 卫星看到的 cyclone
 
-[辐射](t2-radiation.md) 一页说，大气窗区波段的亮温接近云顶或地面的温度。云顶越高，亮温越低。所以红外波段的图像上，高的云白，晴空的海面暗。温带气旋的云常常是逗号的形状。锋上的云带是逗号的尾巴，低压中心北边的云是逗号的头。冷锋后面下沉的干空气没有高云，在图上是一条暗带。
+[辐射](t2-radiation.md) 一页说，atmospheric window spectral band 的 brightness temperature 接近云顶或 surface 的 temperature。云顶越高，brightness temperature 越低。所以红外 spectral band 的图像上，高的云白，clear sky 的海面暗。extratropical cyclone 的云常常是逗号的形状。front 上的云带是逗号的尾巴，low centre 北边的云是逗号的头。cold front 后面下沉的 dry air 没有高云，在图上是一条暗带。
 
-### 低压中心、气旋中心和气旋路径
+### low centre、cyclone centre 和 cyclone track
 
-低压中心是天气图上海平面气压的局地极小值。中心的海平面气压叫中心气压。气旋追踪在每个时刻找出低压中心，再把属于同一个气旋的中心连起来。追踪器找到并跟踪的中心叫气旋中心。把各个时刻的气旋中心连起来，就是气旋路径。
+low centre 是天气图上 mean sea level pressure 的 local minimum。中心的 mean sea level pressure 叫 central pressure。cyclone tracking 在每个时刻找出 low centre，再把属于同一个 cyclone 的中心连起来。追踪器找到并跟踪的中心叫 cyclone centre。把各个时刻的 cyclone centre 连起来，就是 cyclone track。
 
-预报员常问两个问题：预报的气旋中心离实际的有多远？中心气压差多少？第一个量叫 track error，它只指预报的气旋中心和参考的气旋中心之间的距离。本页的参考是 ERA5。第二个量是中心气压的误差。本页在 AI 天气连接一节计算这两个量。
+预报员常问两个问题：forecast 的 cyclone centre 离实际的有多远？central pressure 差多少？第一个量叫 track error，它只指 forecast 的 cyclone centre 和参考的 cyclone centre 之间的距离。本页的参考是 ERA5。第二个量是 central pressure 的误差。本页在 AI 天气连接一节计算这两个量。
 
 本页术语：
 
-| 中文术语 | English term | 符号 |
+| 术语 | 中文 | 符号 |
 |---|---|---|
-| 温带气旋 | extratropical cyclone | — |
-| 锋 | front | — |
-| 冷锋 | cold front | — |
-| 暖锋 | warm front | — |
-| 锢囚锋 | occluded front | — |
-| 暖区 | warm sector | — |
-| 斜压 | baroclinic | — |
-| 气团 | air mass | — |
-| 相当位温 | equivalent potential temperature | $\theta_e$ |
-| 位温 | potential temperature | $\theta$ |
-| 混合比 | mixing ratio | $r$ |
-| 比湿 | specific humidity | $q$ |
-| 水汽压 | vapour pressure | $e$ |
-| 露点温度 | dewpoint temperature | $T_d$ |
-| 抬升凝结高度 | lifting condensation level | LCL |
-| 潜热 | latent heat | $L_v$ |
-| 定压比热容 | specific heat capacity at constant pressure | $c_p$ |
-| 锋生 | frontogenesis | — |
-| 锋生函数 | frontogenesis function | $\mathcal{F}$ |
-| 变形 | deformation | — |
-| 辐合 | convergence | $\delta < 0$ |
-| 辐散 | divergence of the flow | $\delta > 0$ |
-| 曲率项 | metric term | — |
-| 槽 | trough | — |
-| 急流 | jet stream | — |
-| 位势高度 | geopotential height | $Z$ |
-| 亮温 | brightness temperature | $T_b$ |
-| 大气窗区 | atmospheric window | — |
-| 极轨卫星 | polar-orbiting satellite | — |
-| 静止卫星 | geostationary satellite | — |
-| 低压中心 | low centre | — |
-| 气旋中心 | cyclone centre | — |
-| 中心气压 | central pressure | $p_c$ |
-| 气旋路径 | cyclone track | — |
-| 气旋追踪 | cyclone tracking | — |
-| 局地极小值 | local minimum | — |
-| 搜索半径 | search radius | — |
-| 匹配半径 | match radius | — |
-| 爆发性气旋 | explosive cyclone | — |
-| 大圆距离 | great-circle distance | $d$ |
-| track error | track error | — |
-| hit | hit | — |
-| miss | miss | — |
-| bias | bias | — |
-| MAE | mean absolute error | MAE |
-| 起报时间 | initialization time | — |
-| 预报时效 | lead time | — |
-| 有效时间 | valid time | — |
-| 分析场 | analysis | — |
+| extratropical cyclone | 温带气旋 | — |
+| front | 锋 | — |
+| cold front | 冷锋 | — |
+| warm front | 暖锋 | — |
+| occluded front | 锢囚锋 | — |
+| warm sector | 暖区 | — |
+| baroclinic | 斜压 | — |
+| air mass | 气团 | — |
+| equivalent potential temperature | 相当位温 | $\theta_e$ |
+| potential temperature | 位温 | $\theta$ |
+| mixing ratio | 混合比 | $r$ |
+| specific humidity | 比湿 | $q$ |
+| vapour pressure | 水汽压 | $e$ |
+| dewpoint temperature | 露点温度 | $T_d$ |
+| lifting condensation level | 抬升凝结高度 | LCL |
+| latent heat | 潜热 | $L_v$ |
+| specific heat capacity at constant pressure | 定压比热容 | $c_p$ |
+| frontogenesis | 锋生 | — |
+| frontogenesis function | 锋生函数 | $\mathcal{F}$ |
+| deformation | 变形 | — |
+| convergence | 辐合 | $\delta < 0$ |
+| divergence of the flow | 辐散 | $\delta > 0$ |
+| metric term | 曲率项 | — |
+| trough | 槽 | — |
+| jet stream | 急流 | — |
+| geopotential height | 位势高度 | $Z$ |
+| brightness temperature | 亮温 | $T_b$ |
+| atmospheric window | 大气窗区 | — |
+| polar-orbiting satellite | 极轨卫星 | — |
+| geostationary satellite | 静止卫星 | — |
+| low centre | 低压中心 | — |
+| cyclone centre | 气旋中心 | — |
+| central pressure | 中心气压 | $p_c$ |
+| cyclone track | 气旋路径 | — |
+| cyclone tracking | 气旋追踪 | — |
+| local minimum | 局地极小值 | — |
+| search radius | 搜索半径 | — |
+| match radius | 匹配半径 | — |
+| explosive cyclone | 爆发性气旋 | — |
+| great-circle distance | 大圆距离 | $d$ |
+| track error | 路径误差 | — |
+| hit | 命中 | — |
+| miss | 漏报 | — |
+| bias | 偏差 | — |
+| mean absolute error | 平均绝对误差 | MAE |
+| initialization time | 起报时间 | — |
+| lead time | 预报时效 | — |
+| valid time | 有效时间 | — |
+| analysis | 分析场 | — |
 
-## 真实数据
+## 真实 data
 
 ### 2024-12-07，风暴 Darragh 横穿英国
 
-2024-12-05，英国气象局把一个从大西洋移来的气旋命名为 Darragh。英国的风暴名字由 Met Office、Met Éireann 和 KNMI 共同选定。2024-12-07 00 UTC，它的中心在北爱尔兰上空。然后中心经过 Lincolnshire，在 12 UTC 离开 Norfolk 海岸，进入北海。英国气象局对威尔士西部和 Bristol 海峡两岸发布了红色大风预警，时间是 2024-12-07 03 UTC 到 11 UTC。
+2024-12-05，英国气象局把一个从大西洋移来的 cyclone 命名为 Darragh。英国的风暴名字由 Met Office、Met Éireann 和 KNMI 共同选定。2024-12-07 00 UTC，它的中心在北爱尔兰上空。然后中心经过 Lincolnshire，在 12 UTC 离开 Norfolk 海岸，进入北海。英国气象局对威尔士西部和 Bristol 海峡两岸发布了红色大风预警，时间是 2024-12-07 03 UTC 到 11 UTC。
 
-英国气象局的 [风暴报告](https://www.metoffice.gov.uk/api/assets/file/2024_10_storm_darragh_v2pdf?prefix=assets) 给出这些数字。最大阵风是 83 kt，出现在德文郡的 Berry Head。这是那里 30 年记录里 12 月最大的阵风。超过 230 万用户停电。
+英国气象局的 [风暴报告](https://www.metoffice.gov.uk/api/assets/file/2024_10_storm_darragh_v2pdf?prefix=assets) 给出这些数字。最大 wind gust 是 83 kt，出现在德文郡的 Berry Head。这是那里 30 年记录里 12 月最大的 wind gust。超过 230 万用户停电。
 
-本页选这个个例，原因有三个。第一，气旋中心横穿英国，锋和云的结构都在英国上空。第二，大面积停电说明强风直接影响英国的电力系统。第三，ECMWF 开放数据从 2024-02-28 起包含 AIFS 的预报，所以本页能比较 AI 天气模型和数值模式。2023 年 11 月的风暴 Ciarán 更深，可是那时开放数据里还没有 AIFS。Culdrose 和 St Catherine's Point 的气压低到 953.6 hPa，这是英格兰 11 月的最低纪录，见英国气象局的 [Ciarán 报告](https://www.metoffice.gov.uk/api/assets/file/2023_09_storm_ciaran_2pdf?prefix=assets)。
+本页选这个个例，原因有三个。第一，cyclone centre 横穿英国，front 和云的结构都在英国上空。第二，大面积停电说明强 wind 直接影响英国的电力系统。第三，ECMWF 开放 data 从 2024-02-28 起包含 AIFS 的 forecast，所以本页能比较 AI weather model 和 numerical weather prediction model。2023 年 11 月的风暴 Ciarán 更深，可是那时开放 data 里还没有 AIFS。Culdrose 和 St Catherine's Point 的 pressure 低到 953.6 hPa，这是英格兰 11 月的最低纪录，见英国气象局的 [Ciarán 报告](https://www.metoffice.gov.uk/api/assets/file/2023_09_storm_ciaran_2pdf?prefix=assets)。
 
-下面的代码读取 ERA5 和卫星数据，再用本页的追踪器找出 ERA5 的气旋路径。追踪器的细节在计算一节。联网时，函数下载数据。离线时，`d.page_data` 读取 `data/samples/` 里的样本。
+下面的代码读取 ERA5 和卫星 data，再用本页的追踪器找出 ERA5 的 cyclone track。追踪器的细节在计算一节。联网时，函数下载 data。离线时，`d.page_data` 读取 `data/samples/` 里的样本。
 
 ```{code-cell} python
 from meteo300 import data as d
@@ -169,80 +169,80 @@ sat = d.page_data(ch12.SAMPLES["viirs"], ch12.viirs_m15)
 era5_track = ch12.track(era5_msl["msl"], ch12.ERA5_START)
 centres = {t: tuple(era5_track.loc[pd.Timestamp(t), ["lat", "lon"]]) for t in ch12.MAP_TIMES}
 lowest = era5_track["msl_hPa"].idxmin()
-print(f"最低中心气压：{era5_track['msl_hPa'].min():.1f} hPa，时间 {lowest:%Y-%m-%d %H} UTC")
+print(f"最低 central pressure：{era5_track['msl_hPa'].min():.1f} hPa，时间 {lowest:%Y-%m-%d %H} UTC")
 era5_track.iloc[::2].round(2)
 ```
 
-表里是 ERA5 每 6 h 的气旋中心。2024-12-06 00 UTC，气旋中心在 50°N、28.5°W 的大西洋上，中心气压是 993.9 hPa。它向东北偏东移动，经过爱尔兰北部，2024-12-07 00 UTC 到达北爱尔兰。2024-12-07 03 UTC，中心在 54°N、4°W 的爱尔兰海上，中心气压降到最低的 978.4 hPa。以后气旋减弱，2024-12-08 00 UTC 到达荷兰。
+表里是 ERA5 每 6 h 的 cyclone centre。2024-12-06 00 UTC，cyclone centre 在 50°N、28.5°W 的大西洋上，central pressure 是 993.9 hPa。它向东北偏东移动，经过爱尔兰北部，2024-12-07 00 UTC 到达北爱尔兰。2024-12-07 03 UTC，中心在 54°N、4°W 的爱尔兰海上，central pressure 降到最低的 978.4 hPa。以后 cyclone 减弱，2024-12-08 00 UTC 到达荷兰。
 
-### 卫星图像和相当位温
+### 卫星图像和 equivalent potential temperature
 
-下面先用 earthkit-meteo 算出 850 hPa 的相当位温。计算一节用 MetPy 和手算核对它。
+下面先用 earthkit-meteo 算出 850 hPa 的 equivalent potential temperature。计算一节用 MetPy 和手算核对它。
 
 ```{code-cell} python
 now = maps.sel(time=ch12.CASE_TIME)
 theta_e = thermo.ept_from_specific_humidity(now["t850"], now["q850"], 85000.0, method="bolton39")
 ```
 
-卫星是 NOAA-20 极轨卫星。它的 VIIRS 仪器在 02:54 UTC 到 03:00 UTC 扫过英国。M15 波段的中心波长是 10.76 µm，在大气窗区里。satpy 读取这个波段的亮温，再把像元平均到 0.05° 的经纬度网格上。
+卫星是 NOAA-20 polar-orbiting satellite。它的 VIIRS 仪器在 02:54 UTC 到 03:00 UTC 扫过英国。M15 spectral band 的中心 wavelength 是 10.76 µm，在 atmospheric window 里。satpy 读取这个 spectral band 的 brightness temperature，再把像元平均到 0.05° 的经纬度 grid 上。
 
 ```{code-cell} python
 #| label: fig-ch12-overview
-#| caption: 2024-12-07 03 UTC，英国和爱尔兰。左：NOAA-20 VIIRS M15 波段的亮温，扫描时间 02:54 UTC 到 03:00 UTC，温度低的地方白。橙线是 ERA5 的海平面气压，间隔 4 hPa。右：850 hPa 的相当位温和风，黑线是海平面气压。叉号是 ERA5 的低压中心。数据来源：NASA LAADS 的 VIIRS L1B，ERA5。
+#| caption: 2024-12-07 03 UTC，英国和爱尔兰。左：NOAA-20 VIIRS M15 spectral band 的 brightness temperature，扫描时间 02:54 UTC 到 03:00 UTC，temperature 低的地方白。橙线是 ERA5 的 mean sea level pressure，间隔 4 hPa。右：850 hPa 的 equivalent potential temperature 和 wind，黑线是 mean sea level pressure。叉号是 ERA5 的 low centre。data 来源：NASA LAADS 的 VIIRS L1B，ERA5。
 fig = ch12.plot_overview(now, sat, theta_e, centres[ch12.CASE_TIME])
 ```
 
-[](#fig-ch12-overview) 的左图是一个逗号形的云系。白色的云带从法国向北伸进北海，这是锋上的高云。云带在苏格兰上空向西弯，绕过低压中心的北边，这是逗号的头。低压中心的南边是一大片暗区，从爱尔兰南边的海上伸到英格兰。那里的空气在下沉，云顶低，亮温高。西边的海面上有许多小的白点，这是冷空气流过暖的海面时生成的对流云。
+[](#fig-ch12-overview) 的左图是一个逗号形的云系。白色的云带从法国向北伸进北海，这是 front 上的高云。云带在苏格兰上空向西弯，绕过 low centre 的北边，这是逗号的头。low centre 的南边是一大片暗区，从爱尔兰南边的海上伸到英格兰。那里的空气在下沉，云顶低，brightness temperature 高。西边的海面上有许多小的白点，这是冷空气流过暖的海面时生成的 convection 云。
 
-右图里，$\theta_e$ 最高的空气在法国和北海南部，最高约 315 K。这是暖区的暖湿空气。爱尔兰西边的冷空气在 ［284, 290］ K 之间。两者之间的窄带是冷锋，它从英吉利海峡弯向西南。
+右图里，$\theta_e$ 最高的空气在法国和北海南部，最高约 315 K。这是 warm sector 的暖湿空气。爱尔兰西边的冷空气在 ［284, 290］ K 之间。两者之间的窄带是 cold front，它从英吉利海峡弯向西南。
 
-低压中心还有一团 $\theta_e$ 约 307 K 的空气。从中心向东南，$\theta_e$ 先降到约 301 K，再升到暖区的 311 K。所以这团暖湿空气四周都是 $\theta_e$ 更低的空气，它和暖区分开了。
+low centre 还有一团 $\theta_e$ 约 307 K 的空气。从中心向东南，$\theta_e$ 先降到约 301 K，再升到 warm sector 的 311 K。所以这团暖湿空气四周都是 $\theta_e$ 更低的空气，它和 warm sector 分开了。
 
-### 高空的槽和急流
+### 高空的 trough 和 jet stream
 
 ```{code-cell} python
 #| label: fig-ch12-upper
-#| caption: 北大西洋和西欧。左：2024-12-06 12 UTC。右：2024-12-07 03 UTC。色块是 250 hPa 的风速。黑线是 500 hPa 的位势高度，间隔 60 m。橙线是海平面气压，间隔 8 hPa。叉号是 ERA5 的低压中心。数据来源：ERA5。
+#| caption: 北大西洋和西欧。左：2024-12-06 12 UTC。右：2024-12-07 03 UTC。色块是 250 hPa 的 wind speed。黑线是 500 hPa 的 geopotential height，间隔 60 m。橙线是 mean sea level pressure，间隔 8 hPa。叉号是 ERA5 的 low centre。data 来源：ERA5。
 fig = ch12.plot_upper(maps, centres)
 ```
 
-下面的代码在每个地面低压中心周围 600 km 里找 500 hPa 位势高度的局地极小值，即高空的闭合低压。
+下面的代码在每个 surface low centre 周围 600 km 里找 500 hPa geopotential height 的 local minimum，即高空的闭合 low。
 
 ```{code-cell} python
-z500 = maps["z500"] / 9.80665  # 位势高度，m
+z500 = maps["z500"] / 9.80665  # geopotential height，m
 for when, (lat, lon) in centres.items():
     upper = ch12.nearest_low(z500.sel(time=when), lat, lon, radius_km=600)
     jet = float(np.hypot(maps["u250"], maps["v250"]).sel(time=when).max())
-    found = "没有闭合低压" if upper is None else f"闭合低压离地面中心 {upper['dist_km']:.0f} km，{upper['value']:.0f} m"
+    found = "没有闭合 low" if upper is None else f"闭合 low 离 surface 中心 {upper['dist_km']:.0f} km，{upper['value']:.0f} m"
     print(f"{when}：{found}；250 hPa 最大风速 {jet:.0f} m/s")
 ```
 
-[](#fig-ch12-upper) 的左图是 2024-12-06 12 UTC，气旋还在加深。一支急流从西南向东北吹过低压中心的东南边，最大风速约 76 m s⁻¹。500 hPa 的等值线在气旋西边向南弯，这是一个槽。低压中心周围 600 km 里，500 hPa 上没有闭合的低压。
+[](#fig-ch12-upper) 的左图是 2024-12-06 12 UTC，cyclone 还在加深。一支 jet stream 从西南向东北吹过 low centre 的东南边，最大风速约 76 m s⁻¹。500 hPa 的等值线在 cyclone 西边向南弯，这是一个 trough。low centre 周围 600 km 里，500 hPa 上没有闭合的 low。
 
-右图是 15 h 以后，气旋的中心气压最低。500 hPa 上出现了一个闭合的低压，它离地面的低压中心只有 89 km。高空的低压已经移到地面低压的上方。知识点一节说，这时气旋一般不再加深。ERA5 的中心气压在 2024-12-07 03 UTC 以后确实开始上升。
+右图是 15 h 以后，cyclone 的 central pressure 最低。500 hPa 上出现了一个闭合的 low，它离 surface 的 low centre 只有 89 km。高空的 low 已经移到 surface low 的上方。知识点一节说，这时 cyclone 一般不再加深。ERA5 的 central pressure 在 2024-12-07 03 UTC 以后确实开始上升。
 
-## 数据集
+## dataset
 
-本页的主要数据是 ERA5 再分析。ERA5 是 ECMWF 制作的再分析数据集，网格间距是 0.25°。本页从 ARCO-ERA5 读取两个时刻的场：海平面气压 `msl`、500 hPa 的位势 `z`、250 hPa 和 850 hPa 的风 `u` 和 `v`、850 hPa 的温度 `t` 和比湿 `q`。追踪器用每 3 h 的 `msl`。ERA5 的论文是 Hersbach 等，2020，[doi:10.1002/qj.3803](https://doi.org/10.1002/qj.3803)。ERA5 以 CC BY 4.0 许可发布。
+本页的主要 data 是 ERA5 reanalysis。ERA5 是 ECMWF 制作的 reanalysis dataset，grid spacing 是 0.25°。本页从 ARCO-ERA5 读取两个时刻的场：mean sea level pressure `msl`、500 hPa 的 geopotential `z`、250 hPa 和 850 hPa 的 wind `u` 和 `v`、850 hPa 的 temperature `t` 和 specific humidity `q`。追踪器用每 3 h 的 `msl`。ERA5 的论文是 Hersbach 等，2020，[doi:10.1002/qj.3803](https://doi.org/10.1002/qj.3803)。ERA5 以 CC BY 4.0 许可发布。
 
-预报来自 ECMWF 开放数据。2024 年 12 月，开放数据里的 AI 天气模型是 AIFS 的试验版本 v0.2.1，模型名是 `aifs`。2025-02-25 06 UTC 起，AIFS Single v1 取代了它，模型名是 `aifs-single`。数值模式是 IFS，当时的版本是 Cy49r1。两个模型的输出都在 0.25° 网格上。本页读取 10 次起报的 `msl`。
+forecast 来自 ECMWF 开放 data。2024 年 12 月，开放 data 里的 AI weather model 是 AIFS 的 experimental version v0.2.1，模型名是 `aifs`。2025-02-25 06 UTC 起，AIFS Single v1 取代了它，模型名是 `aifs-single`。numerical weather prediction model 是 IFS，当时的版本是 Cy49r1。两个模型的输出都在 0.25° grid 上。本页读取 10 次起报的 `msl`。
 
-AIFS 的论文是 Lang 等，2024，[`arXiv:2406.01465`](https://arxiv.org/abs/2406.01465)。ECMWF 开放数据以 CC BY 4.0 许可发布。
+AIFS 的论文是 Lang 等，2024，[`arXiv:2406.01465`](https://arxiv.org/abs/2406.01465)。ECMWF 开放 data 以 CC BY 4.0 许可发布。
 
-卫星数据是 NOAA-20 VIIRS 的 L1B 文件 `VJ102MOD` 和地理定位文件 `VJ103MOD`，来自 NASA LAADS。下载需要 NASA Earthdata 账户。数据的 DOI 是 [10.5067/VIIRS/VJ102MOD.021](https://doi.org/10.5067/VIIRS/VJ102MOD.021) 和 [10.5067/VIIRS/VJ103MOD.021](https://doi.org/10.5067/VIIRS/VJ103MOD.021)。NASA 的地球科学数据可以自由使用和再分发。本页用 VIIRS，因为它在个例时刻扫过英国，M 波段的像元在星下点是 750 m。
+卫星 data 是 NOAA-20 VIIRS 的 L1B 文件 `VJ102MOD` 和地理定位文件 `VJ103MOD`，来自 NASA LAADS。下载需要 NASA Earthdata 账户。data 的 DOI 是 [10.5067/VIIRS/VJ102MOD.021](https://doi.org/10.5067/VIIRS/VJ102MOD.021) 和 [10.5067/VIIRS/VJ103MOD.021](https://doi.org/10.5067/VIIRS/VJ103MOD.021)。NASA 的地球科学 data 可以自由使用和再分发。本页用 VIIRS，因为它在个例时刻扫过英国，M spectral band 的像元在星下点是 750 m。
 
-两个备选数据集：
+两个备选 dataset：
 
-- Meteosat 是 EUMETSAT 的静止卫星，每 15 min 拍一幅全圆盘图像。`d.meteosat` 读取 SEVIRI 一级数据，需要 EUMETSAT 账户并接受 General Licence。整点的数据以 CC BY 4.0 许可发布。
-- `d.meteosat_image` 从 EUMETView 的 WMS 服务读取 Meteosat 的图片，不需要账户。图片的像素值是颜色，不是亮温，所以本页不用它做计算。
+- Meteosat 是 EUMETSAT 的 geostationary satellite，每 15 min 拍一幅 full disk image。`d.meteosat` 读取 SEVIRI 一级 data，需要 EUMETSAT 账户并接受 General Licence。整点的 data 以 CC BY 4.0 许可发布。
+- `d.meteosat_image` 从 EUMETView 的 WMS 服务读取 Meteosat 的图片，不需要账户。图片的像素值是颜色，不是 brightness temperature，所以本页不用它做计算。
 
-完整的数据集条目见 [数据集参考页](../reference/datasets.md)。
+完整的 dataset 条目见 [dataset 参考页](../reference/datasets.md)。
 
 ## 计算
 
-### 相当位温
+### equivalent potential temperature
 
-earthkit-meteo 的 `thermo.ept_from_specific_humidity` 先从比湿算出露点温度，再用式 [](#eq-ch12-bolton) 算 $\theta_e$。参数 `method="bolton39"` 选择 Bolton 的式 39。MetPy 的 `equivalent_potential_temperature` 用同一个式子。它要露点温度，代码用 `dewpoint_from_specific_humidity` 算出。
+earthkit-meteo 的 `thermo.ept_from_specific_humidity` 先从 specific humidity 算出 dewpoint temperature，再用式 [](#eq-ch12-bolton) 算 $\theta_e$。参数 `method="bolton39"` 选择 Bolton 的式 39。MetPy 的 `equivalent_potential_temperature` 用同一个式子。它要 dewpoint temperature，代码用 `dewpoint_from_specific_humidity` 算出。
 
 ```{code-cell} python
 p850 = 850 * units.hPa
@@ -257,13 +257,13 @@ print(f"IFS 公式减 Bolton 公式：平均 {float((theta_e_ifs - theta_e).mean
 
 两个软件包的结果几乎相同。earthkit-meteo 还有 ECMWF 的 IFS 用的公式，它比 Bolton 公式平均低约 0.7 K。比较不同来源的 $\theta_e$ 时，要先确认它们用了同一个公式。
 
-下面在低压中心的格点上手算式 [](#eq-ch12-tl) 和式 [](#eq-ch12-bolton)。露点温度来自 Bolton 1980 的式 10：$e = 6.112 \exp[17.67\,T_d/(T_d + 243.5)]$，$T_d$ 的单位是 °C。代码也算出式 [](#eq-ch12-thetae-approx) 的近似值。
+下面在 low centre 的 grid point 上手算式 [](#eq-ch12-tl) 和式 [](#eq-ch12-bolton)。dewpoint temperature 来自 Bolton 1980 的式 10：$e = 6.112 \exp[17.67\,T_d/(T_d + 243.5)]$，$T_d$ 的单位是 °C。代码也算出式 [](#eq-ch12-thetae-approx) 的近似值。
 
 ```{code-cell} python
 point = {"latitude": 54.0, "longitude": -4.0}
 t_k, q, p = float(now["t850"].sel(point)), float(now["q850"].sel(point)), 850.0
-r = q / (1 - q)  # 混合比，kg/kg
-e = p * r / (0.622 + r)  # 水汽压，hPa
+r = q / (1 - q)  # mixing ratio，kg/kg
+e = p * r / (0.622 + r)  # vapour pressure，hPa
 x = np.log(e / 6.112)
 td_k = 243.5 * x / (17.67 - x) + 273.15  # Bolton 式 10 的反函数
 t_l = 1 / (1 / (td_k - 56) + np.log(t_k / td_k) / 800) + 56  # 式 15
@@ -276,11 +276,11 @@ print(f"T = {t_k - 273.15:.2f} °C，Td = {td_k - 273.15:.2f} °C，r = {r * 100
 print(f"θ = {theta:.2f} K；θe：earthkit {float(theta_e.sel(point)):.2f} K，手算 {theta_e_hand:.2f} K，近似式 {approx:.2f} K")
 ```
 
-手算和 earthkit-meteo 相差不到 0.1 K。这个格点上空气几乎饱和，$T$ 和 $T_d$ 只差约 0.6 K。近似式比 Bolton 公式低约 2.3 K。在冷锋的两侧，$\theta_e$ 相差 20 K 以上，所以近似式足够用来认锋。
+手算和 earthkit-meteo 相差不到 0.1 K。这个 grid point 上空气几乎 saturation，$T$ 和 $T_d$ 只差约 0.6 K。近似式比 Bolton 公式低约 2.3 K。在 cold front 的两侧，$\theta_e$ 相差 20 K 以上，所以近似式足够用来认 front。
 
-### 锋生函数
+### frontogenesis function
 
-MetPy 的 `frontogenesis` 计算式 [](#eq-ch12-fgen)。函数 `ch12.latlon_grid` 告诉 MetPy 数据在球面的经纬度网格上，所以 MetPy 加上曲率项。本页用 850 hPa 的位温，单位换成 $\mathrm{K\ (100\ km)^{-1}\ (3\ h)^{-1}}$。
+MetPy 的 `frontogenesis` 计算式 [](#eq-ch12-fgen)。函数 `ch12.latlon_grid` 告诉 MetPy data 在球面的经纬度 grid 上，所以 MetPy 加上 metric term。本页用 850 hPa 的 potential temperature，单位换成 $\mathrm{K\ (100\ km)^{-1}\ (3\ h)^{-1}}$。
 
 ```{code-cell} python
 grid = ch12.latlon_grid(now)
@@ -292,13 +292,13 @@ theta850 = theta850.metpy.dequantify()
 
 ```{code-cell} python
 #| label: fig-ch12-frontogenesis
-#| caption: 2024-12-07 03 UTC，英国、爱尔兰和周围的海，850 hPa。色块是锋生函数，红色表示锋加强，蓝色表示锋减弱。绝对值大于 6 K (100 km)⁻¹ (3 h)⁻¹ 的地方颜色不再加深。灰线是位温，间隔 2 K。叉号是 ERA5 的低压中心。数据来源：ERA5。
+#| caption: 2024-12-07 03 UTC，英国、爱尔兰和周围的海，850 hPa。色块是 frontogenesis function，红色表示 front 加强，蓝色表示 front 减弱。绝对值大于 6 K (100 km)⁻¹ (3 h)⁻¹ 的地方颜色不再加深。灰线是 potential temperature，间隔 2 K。叉号是 ERA5 的 low centre。data 来源：ERA5。
 fig = ch12.plot_frontogenesis(theta850, fgen, centres[ch12.CASE_TIME])
 ```
 
-[](#fig-ch12-frontogenesis) 里有三条红色的窄带，它们都在位温等值线密集的地方。第一条从英吉利海峡弯向西南的大西洋，这是冷锋。第二条从苏格兰东部向东南伸进北海，在气旋的东北边。它是暖区北边的暖锋。第三条在低压中心的西边，沿着北爱尔兰东海岸南北伸展。这里的冷空气从北边绕过低压中心，和中心的暖空气相遇。
+[](#fig-ch12-frontogenesis) 里有三条红色的窄带，它们都在 potential temperature 等值线密集的地方。第一条从英吉利海峡弯向西南的大西洋，这是 cold front。第二条从苏格兰东部向东南伸进北海，在 cyclone 的东北边。它是 warm sector 北边的 warm front。第三条在 low centre 的西边，沿着北爱尔兰东海岸南北伸展。这里的冷空气从北边绕过 low centre，和中心的暖空气相遇。
 
-下面在气旋附近 $\mathcal{F}$ 最大的格点上手算式 [](#eq-ch12-fgen)。函数 `ch12.frontogenesis_hand` 用 0.25° 的中心差分。它在 $\partial u/\partial x$ 里减去 $v\tan\varphi/a$，在 $\partial v/\partial x$ 里加上 $u\tan\varphi/a$，这是 MetPy 的曲率项。$a$ 是地球半径，$\varphi$ 是纬度。
+下面在 cyclone 附近 $\mathcal{F}$ 最大的 grid point 上手算式 [](#eq-ch12-fgen)。函数 `ch12.frontogenesis_hand` 用 0.25° 的 centred difference。它在 $\partial u/\partial x$ 里减去 $v\tan\varphi/a$，在 $\partial v/\partial x$ 里加上 $u\tan\varphi/a$，这是 MetPy 的 metric term。$a$ 是 Earth radius，$\varphi$ 是 latitude。
 
 ```{code-cell} python
 storm = fgen.sel(latitude=slice(58, 48), longitude=slice(-12, 4))
@@ -311,37 +311,37 @@ args = [theta850.isel(box).values, now["u850"].isel(box).values, now["v850"].ise
 f_hand = ch12.frontogenesis_hand(*args, lat0, 0.25, 0.25) * 1e5 * 3 * 3600
 f_max = float(fgen[i, j])
 dist = float(ch12.distance_km(*centres[ch12.CASE_TIME], lat0, lon0))
-dy = 6371.229 * np.deg2rad(0.25) / 100  # 0.25° 纬度，100 km
-dx = dy * np.cos(np.deg2rad(lat0))  # 0.25° 经度，100 km
+dy = 6371.229 * np.deg2rad(0.25) / 100  # 0.25° latitude，100 km
+dx = dy * np.cos(np.deg2rad(lat0))  # 0.25° longitude，100 km
 th = args[0]
 grad = np.hypot((th[1, 2] - th[1, 0]) / (2 * dx), (th[0, 1] - th[2, 1]) / (2 * dy))
 u0, v0 = args[1][1, 1], args[2][1, 1]
 assert abs(f_hand - f_max) < 1e-3 * abs(f_max)
-print(f"最大值在 {lat0}°N、{-lon0}°W，离低压中心 {dist:.0f} km")
+print(f"最大值在 {lat0}°N、{-lon0}°W，离 low centre {dist:.0f} km")
 print(f"MetPy {f_max:.2f}，手算 {f_hand:.2f} K (100 km)-1 (3 h)-1")
-print(f"位温梯度 {grad:.1f} K (100 km)-1；风 u = {u0:.1f} m/s，v = {v0:.1f} m/s")
+print(f"potential temperature gradient {grad:.1f} K (100 km)-1；wind u = {u0:.1f} m/s，v = {v0:.1f} m/s")
 ```
 
-手算和 MetPy 一致。这个最大值在第三条锋上，离低压中心约 160 km。这里的位温梯度约为 14 $\mathrm{K\ (100\ km)^{-1}}$，风从北偏西吹来，风速约 23 m s⁻¹。冷锋上的锋生函数最大只有约 7 $\mathrm{K\ (100\ km)^{-1}\ (3\ h)^{-1}}$。所以这一刻，低压中心附近的锋加强得最快。
+手算和 MetPy 一致。这个最大值在第三条 front 上，离 low centre 约 160 km。这里的 potential temperature gradient 约为 14 $\mathrm{K\ (100\ km)^{-1}}$，wind 从北偏西吹来，wind speed 约 23 m s⁻¹。cold front 上的 frontogenesis function 最大只有约 7 $\mathrm{K\ (100\ km)^{-1}\ (3\ h)^{-1}}$。所以这一刻，low centre 附近的 front 加强得最快。
 
-### 气旋追踪
+### cyclone tracking
 
-本页的追踪器是函数 `ch12.track`，它只用海平面气压。追踪器有四个参数：
+本页的追踪器是函数 `ch12.track`，它只用 mean sea level pressure。追踪器有四个参数：
 
 ```{code-cell} python
-print(f"局地极小值的窗口：{ch12.MINIMUM_BOX} × {ch12.MINIMUM_BOX} 个格点")
+print(f"local minimum 的窗口：{ch12.MINIMUM_BOX} × {ch12.MINIMUM_BOX} 个 grid point")
 ring = f"{ch12.DEPTH_RING_KM[0]:.0f}–{ch12.DEPTH_RING_KM[1]:.0f} km"
-print(f"深度：中心比 {ring} 圆环的平均气压低至少 {ch12.MIN_DEPTH_HPA} hPa")
-print(f"搜索半径：{ch12.SEARCH_RADIUS_KM:.0f} km；匹配半径：{ch12.MATCH_RADIUS_KM:.0f} km")
+print(f"深度：中心比 {ring} 圆环的平均 pressure 低至少 {ch12.MIN_DEPTH_HPA} hPa")
+print(f"search radius：{ch12.SEARCH_RADIUS_KM:.0f} km；match radius：{ch12.MATCH_RADIUS_KM:.0f} km")
 ```
 
-追踪器分三步。第一步，在每个时刻找出所有的局地极小值。一个格点的海平面气压是 5 × 5 个格点的窗口里最低的，它就是局地极小值。0.25° 网格上，这个窗口约为 1° × 1°。
+追踪器分三步。第一步，在每个时刻找出所有的 local minimum。一个 grid point 的 mean sea level pressure 是 5 × 5 个 grid point 的窗口里最低的，它就是 local minimum。0.25° grid 上，这个窗口约为 1° × 1°。
 
-第二步，去掉弱的极小值。中心的气压要比周围 ［200, 400］ km 的圆环的平均气压低至少 2 hPa。高压里和平坦气压场里的小的极小值都通不过这一步。
+第二步，去掉弱的极小值。中心的 pressure 要比周围 ［200, 400］ km 的圆环的平均 pressure 低至少 2 hPa。high 里和平坦 pressure 场里的小的极小值都通不过这一步。
 
-第三步，把各个时刻的中心连起来。追踪器先估计气旋下一个时刻的位置：把上一个中心按上一步的位移再移动一次。然后它取离这个估计位置最近的中心。这个中心离估计位置超过搜索半径 600 km 时，追踪结束。两个中心的距离是大圆距离。Darragh 在 6 h 里最多移动约 470 km，所以搜索半径不能太小。
+第三步，把各个时刻的中心连起来。追踪器先估计 cyclone 下一个时刻的位置：把上一个中心按上一步的位移再移动一次。然后它取离这个估计位置最近的中心。这个中心离估计位置超过 search radius 600 km 时，追踪结束。两个中心的距离是 great-circle distance。Darragh 在 6 h 里最多移动约 470 km，所以 search radius 不能太小。
 
-ERA5 的路径在真实数据一节。下面用它算出气旋的移动速度和加深的速度。爆发性气旋的常用标准来自 Sanders 和 Gyakum，1980，[`doi:10.1175/1520-0493(1980)108<1589:SDCOT>2.0.CO;2`](https://journals.ametsoc.org/doi/10.1175/1520-0493%281980%29108%3C1589%3ASDCOT%3E2.0.CO%3B2)：24 h 里，中心气压至少下降 $24\ \mathrm{hPa} \times \sin\varphi / \sin 60°$。
+ERA5 的路径在真实 data 一节。下面用它算出 cyclone 的移动速度和加深的速度。explosive cyclone 的常用标准来自 Sanders 和 Gyakum，1980，[`doi:10.1175/1520-0493(1980)108<1589:SDCOT>2.0.CO;2`](https://journals.ametsoc.org/doi/10.1175/1520-0493%281980%29108%3C1589%3ASDCOT%3E2.0.CO%3B2)：24 h 里，central pressure 至少下降 $24\ \mathrm{hPa} \times \sin\varphi / \sin 60°$。
 
 ```{code-cell} python
 six = era5_track.loc[ch12.VALID_TIMES]
@@ -356,89 +356,89 @@ print(f"24 h 最大降压：{fall.max():.1f} hPa，从 {fall.idxmax():%m-%d %H} 
 print(f"{ch12.CASE_TIME} UTC，英国西部 850 hPa 的最大风速：{float(wind.max()):.0f} m/s")
 ```
 
-2024-12-06 06 UTC 到 12 UTC，Darragh 的中心移动了 469 km，平均每秒约 22 m。从 2024-12-06 00 UTC 起的 24 h 里，中心气压下降了 14.2 hPa，只有爆发性标准的 0.65 倍。所以 Darragh 不是爆发性气旋。它的危险来自中心周围强的气压梯度：2024-12-07 03 UTC，英国西部 850 hPa 的最大风速是 45 m s⁻¹。
+2024-12-06 06 UTC 到 12 UTC，Darragh 的中心移动了 469 km，平均每秒约 22 m。从 2024-12-06 00 UTC 起的 24 h 里，central pressure 下降了 14.2 hPa，只有爆发性标准的 0.65 倍。所以 Darragh 不是 explosive cyclone。它的危险来自中心周围强的 pressure gradient：2024-12-07 03 UTC，英国西部 850 hPa 的最大风速是 45 m s⁻¹。
 
 ## AI 天气连接
 
-AI 天气模型输出本页用到的所有变量。AIFS 输出海平面气压 `msl`，以及 13 个等压面上的温度 `t`、比湿 `q` 和风 `u`、`v`。WeatherBench 2 把它们叫作 `mean_sea_level_pressure`、`temperature`、`specific_humidity`、`u_component_of_wind` 和 `v_component_of_wind`。GraphCast 和 Pangu-Weather 的输出也包括这些变量。所以分析师可以从 AI 天气模型的预报算出 $\theta_e$、锋生函数和气旋路径，和数值模式一样。
+AI weather model 输出本页用到的所有变量。AIFS 输出 mean sea level pressure `msl`，以及 13 个 isobaric surface 上的 temperature `t`、specific humidity `q` 和 wind `u`、`v`。WeatherBench 2 把它们叫作 `mean_sea_level_pressure`、`temperature`、`specific_humidity`、`u_component_of_wind` 和 `v_component_of_wind`。GraphCast 和 Pangu-Weather 的输出也包括这些变量。所以分析师可以从 AI weather model 的 forecast 算出 $\theta_e$、frontogenesis function 和 cyclone track，和 numerical weather prediction model 一样。
 
-### track error 和中心气压误差
+### track error 和 central pressure 误差
 
-对一个具名风暴，分析师要回答两个问题：模型把气旋中心放在哪里？中心气压多深？下面读取 AIFS 和 IFS 的 10 次起报。起报时间从 2024-12-03 00 UTC 到 2024-12-07 12 UTC，每 12 h 一次。有效时间从 2024-12-06 00 UTC 到 2024-12-08 00 UTC，每 6 h 一个。
+对一个具名风暴，分析师要回答两个问题：模型把 cyclone centre 放在哪里？central pressure 多深？下面读取 AIFS 和 IFS 的 10 次起报。initialization time 从 2024-12-03 00 UTC 到 2024-12-07 12 UTC，每 12 h 一次。valid time 从 2024-12-06 00 UTC 到 2024-12-08 00 UTC，每 6 h 一个。
 
-函数 `ch12.track_errors` 先追踪每次起报的预报气旋。追踪器在第一个离 ERA5 中心不到 500 km 的预报中心起步。追踪器丢失气旋时，它用同样的办法重新起步。然后函数在每个有效时间比较预报中心和 ERA5 中心。预报中心离 ERA5 中心不超过匹配半径 500 km，算 hit。没有预报中心，或者离得更远，算 miss。
+函数 `ch12.track_errors` 先追踪每次起报的 forecast cyclone。追踪器在第一个离 ERA5 中心不到 500 km 的 forecast 中心起步。追踪器丢失 cyclone 时，它用同样的办法重新起步。然后函数在每个 valid time 比较 forecast 中心和 ERA5 中心。forecast 中心离 ERA5 中心不超过 match radius 500 km，算 hit。没有 forecast 中心，或者离得更远，算 miss。
 
 ```{code-cell} python
 fc = d.page_data(ch12.SAMPLES["forecast_msl"], ch12.forecast_msl)
 errors = ch12.track_errors(fc, era5_track)
 summary = ch12.error_summary(errors)
-print(f"每个模型的预报个数：{errors.groupby('model').size().to_dict()}，来自 {fc.sizes['run']} 次起报")
+print(f"每个模型的 forecast 个数：{errors.groupby('model').size().to_dict()}，来自 {fc.sizes['run']} 次起报")
 summary.round(1)
 ```
 
-表里每一行是一个模型的一个预报时效区间。`n` 是预报的个数，`hits` 是 hit 的个数。后面四列只用 hit 的预报：track error 的平均值和中位数、中心气压的 bias 和 MAE。中心气压的误差是预报减去 ERA5，负的 bias 表示预报的气旋太深。
+表里每一行是一个模型的一个 lead time 区间。`n` 是 forecast 的个数，`hits` 是 hit 的个数。后面四列只用 hit 的 forecast：track error 的平均值和中位数、central pressure 的 bias 和 MAE。central pressure 的误差是 forecast 减去 ERA5，负的 bias 表示 forecast 的 cyclone 太深。
 
 ```{code-cell} python
 #| label: fig-ch12-tracks
-#| caption: 2024 年 12 月，北大西洋和西欧的气旋路径。黑线是 ERA5，每 3 h 一个点。彩色线是每 24 h 一次起报的预报，每 6 h 一个点，颜色从深紫到黄表示起报时间从早到晚。图例的括号里是路径的第一个预报时效。左：AIFS。右：IFS。数据来源：ERA5，ECMWF 开放数据。
+#| caption: 2024 年 12 月，北大西洋和西欧的 cyclone track。黑线是 ERA5，每 3 h 一个点。彩色线是每 24 h 一次起报的 forecast，每 6 h 一个点，颜色从深紫到黄表示 initialization time 从早到晚。图例的括号里是路径的第一个 lead time。左：AIFS。右：IFS。data 来源：ERA5，ECMWF 开放 data。
 tracks = ch12.forecast_tracks(fc, era5_track, runs=fc["run"].values[::2])
 fig = ch12.plot_tracks(era5_track, tracks)
 ```
 
 ```{code-cell} python
 #| label: fig-ch12-errors
-#| caption: AIFS 和 IFS 对 Darragh 的预报误差，10 次起报，有效时间 2024-12-06 00 UTC 到 2024-12-08 00 UTC。小点是一次起报在一个有效时间的 hit。大点是每个 24 h 预报时效区间的平均值。左图顶部的叉号是 miss，虚线是匹配半径。数据来源：ERA5，ECMWF 开放数据。
+#| caption: AIFS 和 IFS 对 Darragh 的 forecast 误差，10 次起报，valid time 2024-12-06 00 UTC 到 2024-12-08 00 UTC。小点是一次起报在一个 valid time 的 hit。大点是每个 24 h lead time 区间的平均值。左图顶部的叉号是 miss，虚线是 match radius。data 来源：ERA5，ECMWF 开放 data。
 fig = ch12.plot_errors(errors)
 ```
 
-预报时效 0 h 的误差不为零，因为两个模型的 0 h 场来自 ECMWF 的业务分析场，不是 ERA5。0 h 的 track error 在 ［17, 56］ km 之间，AIFS 平均 26 km，IFS 平均 31 km，约为一个网格间距。中心气压只差 ［0.1, 0.5］ hPa。所以 30 km 以下的 track error 在这个网格上分辨不出来。
+lead time 0 h 的误差不为零，因为两个模型的 0 h 场来自 ECMWF 的业务 analysis，不是 ERA5。0 h 的 track error 在 ［17, 56］ km 之间，AIFS 平均 26 km，IFS 平均 31 km，约为一个 grid spacing。central pressure 只差 ［0.1, 0.5］ hPa。所以 30 km 以下的 track error 在这个 grid 上分辨不出来。
 
-预报时效在 2 天以内时，两个模型差不多。平均 track error在 ［45, 77］ km 之间，中心气压的 MAE 不超过 3.5 hPa。2 天以后，两个模型分开了。IFS 2024-12-03 起报的两次预报都没有抓住 Darragh。2024-12-06 00 UTC 到 2024-12-07 06 UTC，它们的气旋在 ERA5 中心的南边 ［410, 750］ km，中心气压高 ［14, 31］ hPa。IFS 2024-12-04 00 UTC 起报的气旋也偏南 ［230, 350］ km，2024-12-06 的中心气压高 ［11, 15］ hPa。
+lead time 在 2 天以内时，两个模型差不多。平均 track error 在 ［45, 77］ km 之间，central pressure 的 MAE 不超过 3.5 hPa。2 天以后，两个模型分开了。IFS 2024-12-03 起报的两次 forecast 都没有抓住 Darragh。2024-12-06 00 UTC 到 2024-12-07 06 UTC，它们的 cyclone 在 ERA5 中心的南边 ［410, 750］ km，central pressure 高 ［14, 31］ hPa。IFS 2024-12-04 00 UTC 起报的 cyclone 也偏南 ［230, 350］ km，2024-12-06 的 central pressure 高 ［11, 15］ hPa。
 
-AIFS 从 2024-12-03 12 UTC 起报开始就有一个和 ERA5 相近的气旋，track error 不超过 330 km。3 天到 4 天的预报时效上，AIFS 的 14 个预报里有 13 个 hit，平均 track error是 160 km。IFS 只有 7 个 hit，平均 track error是 306 km。2 天以后，AIFS 中心气压的 bias 是负的，它的气旋比 ERA5 深 ［0.7, 2.1］ hPa。
+AIFS 从 2024-12-03 12 UTC 起报开始就有一个和 ERA5 相近的 cyclone，track error 不超过 330 km。3 天到 4 天的 lead time 上，AIFS 的 14 个 forecast 里有 13 个 hit，平均 track error 是 160 km。IFS 只有 7 个 hit，平均 track error 是 306 km。2 天以后，AIFS central pressure 的 bias 是负的，它的 cyclone 比 ERA5 深 ［0.7, 2.1］ hPa。
 
-[](#fig-ch12-errors) 里，IFS 有几个 hit 的中心气压误差在 ［11, 23］ hPa 之间。它们来自 IFS 2024-12-03 和 2024-12-04 起报的偏南、偏浅的低压。这些低压离 ERA5 中心不到 500 km，所以算 hit。练习 1 改变匹配半径，看这些点怎样影响比较的结论。
+[](#fig-ch12-errors) 里，IFS 有几个 hit 的 central pressure 误差在 ［11, 23］ hPa 之间。它们来自 IFS 2024-12-03 和 2024-12-04 起报的偏南、偏浅的 low。这些 low 离 ERA5 中心不到 500 km，所以算 hit。练习 1 改变 match radius，看这些点怎样影响比较的结论。
 
-下面的表给出每次起报在 hit 时的最低中心气压。表里只有 2024-12-06 00 UTC 以前的起报，因为以后的起报看不到气旋最深的时刻。
+下面的表给出每次起报在 hit 时的最低 central pressure。表里只有 2024-12-06 00 UTC 以前的起报，因为以后的起报看不到 cyclone 最深的时刻。
 
 ```{code-cell} python
 covers_peak = errors["run"] <= pd.Timestamp("2024-12-06T00")
 hit = errors[errors["hit"] & covers_peak]
 lowest_fc = hit.groupby(["run", "model"])["msl_hPa"].min().unstack().round(1)
-print(f"ERA5 每 6 h 的最低中心气压：{six['msl_hPa'].min():.1f} hPa")
+print(f"ERA5 每 6 h 的最低 central pressure：{six['msl_hPa'].min():.1f} hPa")
 lowest_fc
 ```
 
-从 2024-12-04 12 UTC 起，两个模型的每次起报都比 ERA5 深 ［1.5, 4.1］ hPa。这不一定是预报的错。ERA5 的模式分辨率约 31 km，2024 年的业务 IFS 约 9 km。所以深的低压中心在 ERA5 里可能偏浅。
+从 2024-12-04 12 UTC 起，两个模型的每次起报都比 ERA5 深 ［1.5, 4.1］ hPa。这不一定是 forecast 的错。ERA5 的模式 resolution 约 31 km，2024 年的业务 IFS 约 9 km。所以深的 low centre 在 ERA5 里可能偏浅。
 
-表里 2024-12-03 00 UTC 起报的 AIFS 只有 982.0 hPa，因为它只在 3 天到 3.75 天的预报时效上有 hit。以后追踪器丢失了它的气旋。IFS 2024-12-03 起报的 1012.0 hPa 和 1007.5 hPa 来自南边那个偏浅的低压。
+表里 2024-12-03 00 UTC 起报的 AIFS 只有 982.0 hPa，因为它只在 3 天到 3.75 天的 lead time 上有 hit。以后追踪器丢失了它的 cyclone。IFS 2024-12-03 起报的 1012.0 hPa 和 1007.5 hPa 来自南边那个偏浅的 low。
 
-这个结果只来自一个风暴，不能推广成一般结论。每个模型的 78 个预报来自 10 次起报，同一次起报的相邻有效时间的误差强相关。所以真正独立的样本远少于 78 个。IFS 早期起报的 miss 是这次风暴的特点，别的风暴可能相反。结果还取决于追踪器的参数和参考场的选择。本页的 AIFS 是 2024 年的试验版本，现在的 AIFS Single 已经更新。
+这个结果只来自一个风暴，不能推广成一般结论。每个模型的 78 个 forecast 来自 10 次起报，同一次起报的相邻 valid time 的误差强相关。所以真正独立的样本远少于 78 个。IFS 早期起报的 miss 是这次风暴的特点，别的风暴可能相反。结果还取决于追踪器的参数和参考场的选择。本页的 AIFS 是 2024 年的 experimental version，现在的 AIFS Single 已经更新。
 
-要得到一般的结论，需要一个季节的很多气旋。分析师可以用本页的追踪器做到这一点。先追踪 ERA5 里所有的气旋，再追踪每次起报的预报。最后按预报时效统计 hit rate、track error 和中心气压的误差。
+要得到一般的结论，需要一个季节的很多 cyclone。分析师可以用本页的追踪器做到这一点。先追踪 ERA5 里所有的 cyclone，再追踪每次起报的 forecast。最后按 lead time 统计 hit rate、track error 和 central pressure 的误差。
 
 ## 练习
 
 :::{exercise}
 :label: ex-ch12-1
 
-把 AI 天气连接一节第一个代码单元里的 `ch12.track_errors(fc, era5_track)` 改成 `ch12.track_errors(fc, era5_track, match_km=300)`，重新运行这一节。两个模型在 3 天到 4 天的 hit 的个数和平均 track error怎样变化？为什么匹配半径会改变比较的结论？
+把 AI 天气连接一节第一个代码单元里的 `ch12.track_errors(fc, era5_track)` 改成 `ch12.track_errors(fc, era5_track, match_km=300)`，重新运行这一节。两个模型在 3 天到 4 天的 hit 的个数和平均 track error 怎样变化？为什么 match radius 会改变比较的结论？
 :::
 
 :::{solution} ex-ch12-1
 :class: dropdown
 
-AIFS 在 3 天到 4 天几乎不变：仍然有 14 个里的 13 个 hit，平均 track error仍是 160 km。它的预报中心离 ERA5 中心都不到 300 km。
+AIFS 在 3 天到 4 天几乎不变：仍然有 14 个里的 13 个 hit，平均 track error 仍是 160 km。它的 forecast 中心离 ERA5 中心都不到 300 km。
 
-IFS 的 hit 从 7 个减到 4 个，平均 track error从 306 km 降到 251 km。2 天到 3 天的 hit 从 15 个减到 11 个，中心气压的 bias 从 3.4 hPa 变成 −0.3 hPa。原因是 IFS 偏南、偏浅的低压不再算 hit。
+IFS 的 hit 从 7 个减到 4 个，平均 track error 从 306 km 降到 251 km。2 天到 3 天的 hit 从 15 个减到 11 个，central pressure 的 bias 从 3.4 hPa 变成 −0.3 hPa。原因是 IFS 偏南、偏浅的 low 不再算 hit。
 
-匹配半径越小，IFS 的平均误差越小，可是 miss 越多。只看 hit 的平均误差，会把 miss 藏起来。所以比较两个模型时，要同时报告 hit 的个数和误差，并写明匹配半径。
+match radius 越小，IFS 的平均误差越小，可是 miss 越多。只看 hit 的平均误差，会把 miss 藏起来。所以比较两个模型时，要同时报告 hit 的个数和误差，并写明 match radius。
 :::
 
 :::{exercise}
 :label: ex-ch12-2
 
-一个冷锋前面的温度是 12 °C，混合比是 8 g kg⁻¹。冷锋后面的温度是 2 °C，混合比是 3 g kg⁻¹。两处的气压都是 850 hPa。用式 [](#eq-ch12-thetae-approx) 估算两边的 $\theta_e$ 和它们的差。位温的差占 $\theta_e$ 的差的多少？
+一个 cold front 前面的 temperature 是 12 °C，mixing ratio 是 8 g kg⁻¹。cold front 后面的 temperature 是 2 °C，mixing ratio 是 3 g kg⁻¹。两处的 pressure 都是 850 hPa。用式 [](#eq-ch12-thetae-approx) 估算两边的 $\theta_e$ 和它们的差。potential temperature 的差占 $\theta_e$ 的差的多少？
 :::
 
 :::{solution} ex-ch12-2
@@ -448,13 +448,13 @@ IFS 的 hit 从 7 个减到 4 个，平均 track error从 306 km 降到 251 km�
 
 冷的一侧：$\theta \approx 288.2$ K，$L_v r / c_p \approx 7.5$ K，$\theta_e \approx 295.7$ K。
 
-$\theta_e$ 的差约 22.9 K，位温的差约 10.5 K。位温的差只占 $\theta_e$ 的差的约 46%，其余来自水汽。所以锋在 $\theta_e$ 图上比在温度图上更清楚。MetPy 用 Bolton 公式算出 322.4 K 和 297.1 K，差是 25.3 K。
+$\theta_e$ 的差约 22.9 K，potential temperature 的差约 10.5 K。potential temperature 的差只占 $\theta_e$ 的差的约 46%，其余来自 water vapour。所以 front 在 $\theta_e$ 图上比在 temperature 图上更清楚。MetPy 用 Bolton 公式算出 322.4 K 和 297.1 K，差是 25.3 K。
 :::
 
 :::{exercise}
 :label: ex-ch12-3
 
-把计算一节锋生函数的两个代码单元复制到一个新的单元里。在开头加上 `now = maps.sel(time=ch12.EARLY_TIME)`，把 `centres[ch12.CASE_TIME]` 换成 `centres[ch12.EARLY_TIME]`。2024-12-06 12 UTC，锋生函数最大的地方在哪里？离低压中心多远？它在哪一条锋上？
+把计算一节 frontogenesis function 的两个代码单元复制到一个新的单元里。在开头加上 `now = maps.sel(time=ch12.EARLY_TIME)`，把 `centres[ch12.CASE_TIME]` 换成 `centres[ch12.EARLY_TIME]`。2024-12-06 12 UTC，frontogenesis function 最大的地方在哪里？离 low centre 多远？它在哪一条 front 上？
 :::
 
 :::{solution} ex-ch12-3
@@ -473,23 +473,23 @@ fig = ch12.plot_frontogenesis(theta850, fgen, centres[ch12.EARLY_TIME])
 fgen.where(fgen == fgen.max(), drop=True)
 ```
 
-锋生函数的最大值约 28 $\mathrm{K\ (100\ km)^{-1}\ (3\ h)^{-1}}$，在 54.5°N、12.25°W，爱尔兰西北的海上。它在低压中心东北偏东约 380 km。
+frontogenesis function 的最大值约 28 $\mathrm{K\ (100\ km)^{-1}\ (3\ h)^{-1}}$，在 54.5°N、12.25°W，爱尔兰西北的海上。它在 low centre 东北偏东约 380 km。
 
-沿 12.25°W 从南向北，850 hPa 的位温从 54°N 的 293.8 K 降到 55°N 的 286.1 K。南边是暖区，西南风约 35 m s⁻¹，把暖空气吹向冷空气。所以这条锋是暖锋。
+沿 12.25°W 从南向北，850 hPa 的 potential temperature 从 54°N 的 293.8 K 降到 55°N 的 286.1 K。南边是 warm sector，西南风约 35 m s⁻¹，把暖空气吹向冷空气。所以这条 front 是 warm front。
 :::
 
 :::{exercise}
 :label: ex-ch12-4
 
-两个模型在 0 h 的 track error 约 30 km。ERA5 和预报都在 0.25° 网格上。在 54°N，0.25° 的纬度和经度各是多少 km？只因为网格，一个气旋中心的位置最多偏多少 km？两个中心的距离最多能差多少 km？
+两个模型在 0 h 的 track error 约 30 km。ERA5 和 forecast 都在 0.25° grid 上。在 54°N，0.25° 的 latitude 和 longitude 各是多少 km？只因为 grid，一个 cyclone centre 的位置最多偏多少 km？两个中心的距离最多能差多少 km？
 :::
 
 :::{solution} ex-ch12-4
 :class: dropdown
 
-0.25° 的纬度是 $6371.229\ \mathrm{km} \times 0.25 \times \pi/180 \approx 27.8$ km。54°N 上，0.25° 的经度是 $27.8\ \mathrm{km} \times \cos 54° \approx 16.3$ km。
+0.25° 的 latitude 是 $6371.229\ \mathrm{km} \times 0.25 \times \pi/180 \approx 27.8$ km。54°N 上，0.25° 的 longitude 是 $27.8\ \mathrm{km} \times \cos 54° \approx 16.3$ km。
 
-格点上的中心在每个方向最多偏半个网格间距。所以一个中心最多偏 $\sqrt{13.9^2 + 8.2^2} \approx 16$ km。两个中心向相反的方向偏时，距离最多差约 32 km。
+grid point 上的中心在每个方向最多偏半个 grid spacing。所以一个中心最多偏 $\sqrt{13.9^2 + 8.2^2} \approx 16$ km。两个中心向相反的方向偏时，距离最多差约 32 km。
 
-所以 0 h 的 track error 约 30 km 时，误差可能全部来自网格。本页 0 h 的最小误差约 17 km，正好是一个经度的网格间距。
+所以 0 h 的 track error 约 30 km 时，误差可能全部来自 grid。本页 0 h 的最小误差约 17 km，正好是一个 longitude 的 grid spacing。
 :::

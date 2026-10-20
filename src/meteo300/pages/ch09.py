@@ -405,10 +405,24 @@ def plot_maps(one: xr.Dataset, kin: xr.Dataset, centre=None):
     tc = one["t"] - 273.15
     iso = np.arange(-20, 21, 2)
     panels = [
-        ("温度和风", tc, np.arange(-12, 13, 2), "RdBu_r", "温度 (°C)", 1.0),
-        ("温度平流", kin["adv"], np.arange(-3, 3.1, 0.5), "RdBu_r", "温度平流 (K/h)", 1.0),
-        ("散度", kin["div"], np.arange(-15, 16, 3), "PuOr_r", "散度 (1e-5 s-1)", 1e5),
-        ("相对涡度", kin["vort"], np.arange(-30, 31, 6), "PiYG_r", "相对涡度 (1e-5 s-1)", 1e5),
+        ("temperature 和 wind", tc, np.arange(-12, 13, 2), "RdBu_r", "temperature (°C)", 1.0),
+        (
+            "temperature advection",
+            kin["adv"],
+            np.arange(-3, 3.1, 0.5),
+            "RdBu_r",
+            "temperature advection (K/h)",
+            1.0,
+        ),
+        ("divergence", kin["div"], np.arange(-15, 16, 3), "PuOr_r", "divergence (1e-5 s-1)", 1e5),
+        (
+            "relative vorticity",
+            kin["vort"],
+            np.arange(-30, 31, 6),
+            "PiYG_r",
+            "relative vorticity (1e-5 s-1)",
+            1e5,
+        ),
     ]
     for ax, (title, field, levels, cmap, label, scale) in zip(axs, panels, strict=True):
         cf = ax.contourf(
@@ -482,12 +496,14 @@ def plot_trajectories(wind0: xr.Dataset, frozen: xr.Dataset, traj: xr.Dataset, t
     axs[1].plot(trk["lon"], trk["lat"], "-", color="k", lw=1.2, transform=pc)
     axs[1].plot(trk6["lon"], trk6["lat"], "x", color="k", ms=7, mew=2, transform=pc)
     axs[0].plot(trk["lon"].iloc[0], trk["lat"].iloc[0], "x", color="k", ms=9, mew=2.2, transform=pc)
-    axs[0].set_title(f"冻结在 {t0:%m-%d %H} UTC 的风：流线", loc="left", fontsize=10)
-    axs[1].set_title("随时间变化的风：轨迹", loc="left", fontsize=10)
-    axs[0].plot([], [], color="0.3", lw=2, ls="--", label="沿流线走 24 h")
-    axs[0].plot([], [], "x", color="k", ms=8, mew=2, label="低压中心")
-    axs[1].plot([], [], color="0.3", lw=2, marker="o", ms=4.5, label="轨迹，圆点间隔 6 h")
-    axs[1].plot([], [], color="k", lw=1.2, marker="x", ms=7, mew=2, label="气旋中心，间隔 6 h")
+    axs[0].set_title(f"冻结在 {t0:%m-%d %H} UTC 的 wind：streamline", loc="left", fontsize=10)
+    axs[1].set_title("随时间变化的 wind：trajectory", loc="left", fontsize=10)
+    axs[0].plot([], [], color="0.3", lw=2, ls="--", label="沿 streamline 走 24 h")
+    axs[0].plot([], [], "x", color="k", ms=8, mew=2, label="low centre")
+    axs[1].plot([], [], color="0.3", lw=2, marker="o", ms=4.5, label="trajectory，圆点间隔 6 h")
+    axs[1].plot(
+        [], [], color="k", lw=1.2, marker="x", ms=7, mew=2, label="cyclone centre，间隔 6 h"
+    )
     for ax in axs:
         ax.legend(loc="lower left", fontsize=8, framealpha=0.9)
     return fig
@@ -518,7 +534,7 @@ def plot_weights(error, bands=15):
     for lat in (-60, 60):
         ax.axhline(lat, color="k", lw=0.8, ls="--")
     fig.colorbar(cf, ax=ax, orientation="horizontal", shrink=0.7, pad=0.03, label="误差 (K)")
-    ax.set_title("AIFS 预报减 ERA5", loc="left", fontsize=10)
+    ax.set_title("AIFS forecast 减 ERA5", loc="left", fontsize=10)
 
     ax2 = fig.add_subplot(gs[1])
     lat = np.abs(error["latitude"].values)
@@ -530,14 +546,14 @@ def plot_weights(error, bands=15):
         points.append(band.mean() * 100)
         area.append(w[band].sum() / w.sum() * 100)
     x = np.arange(len(points))
-    ax2.bar(x - 0.2, points, width=0.38, color="#eb6834", label="格点数的比例")
+    ax2.bar(x - 0.2, points, width=0.38, color="#eb6834", label="grid point 数的比例")
     ax2.bar(x + 0.2, area, width=0.38, color="#2a78d6", label="面积的比例")
     ax2.set_xticks(x, [f"{lo}–{hi}°" for lo, hi in zip(edges[:-1], edges[1:], strict=True)])
-    ax2.set_xlabel("纬度的绝对值")
+    ax2.set_xlabel("latitude 的绝对值")
     ax2.set_ylabel("比例 (%)")
     ax2.legend(fontsize=9)
     ax2.grid(axis="y", alpha=0.3, lw=0.5)
-    ax2.set_title("每一纬度带的格点和面积", loc="left", fontsize=10)
+    ax2.set_title("每一 latitude 带的 grid point 和面积", loc="left", fontsize=10)
     return fig
 
 
@@ -557,7 +573,7 @@ def plot_divergence(fields: dict, centre=None):
         ax.set_title(title, loc="left", fontsize=10)
         if centre is not None:
             ax.plot(centre[1], centre[0], "x", color="k", ms=8, mew=2, transform=pc)
-    fig.colorbar(cf, ax=axs, orientation="horizontal", shrink=0.5, label="散度 (1e-5 s-1)")
+    fig.colorbar(cf, ax=axs, orientation="horizontal", shrink=0.5, label="divergence (1e-5 s-1)")
     return fig
 
 

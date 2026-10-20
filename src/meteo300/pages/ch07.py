@@ -324,7 +324,7 @@ def tephigram(fig, rect=111, corners=TEPHI_CORNERS, label_size=7):
     ax.text(
         0.5,
         -0.06,
-        "温度 T (°C)",
+        "temperature T (°C)",
         transform=ax.transAxes,
         ha="center",
         va="top",
@@ -333,7 +333,7 @@ def tephigram(fig, rect=111, corners=TEPHI_CORNERS, label_size=7):
     ax.text(
         -0.09,
         0.5,
-        "位温 θ (K)",
+        "potential temperature θ (K)",
         transform=ax.transAxes,
         ha="right",
         va="center",
