@@ -20,6 +20,10 @@ project:
   license:
     content: CC-BY-NC-SA-4.0
     code: MIT
+  # BibTeX for every DOI the pages link to. With it, the build does not ask doi.org,
+  # which fails at random in CI. Add an entry when a page links a new DOI.
+  bibliography:
+    - references.bib
   numbering:
     figure:
       template: 图 %s

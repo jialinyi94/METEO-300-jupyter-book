@@ -106,7 +106,7 @@ $p_s$ 是地面气压。在海面和平地上，$\omega(p_s) \approx 0$。低层
 \omega_c(p) = \omega_K(p) - \left[\omega_K(p_t) - \omega_t\right]\left(\frac{p_s - p}{p_s - p_t}\right)^2
 ```
 
-$p_t$ 是顶层的气压，本页取 100 hPa。$\omega_t$ 是顶层 $\omega$ 的真值，本页取零。把平方换成一次方，就是假设各层散度的误差相同。O'Brien 的论文是 [`doi:10.1175/1520-0450(1970)009<0197:ASTTCV>2.0.CO;2`](https://doi.org/10.1175/1520-0450%281970%29009%3C0197%3AASTTCV%3E2.0.CO%3B2)。
+$p_t$ 是顶层的气压，本页取 100 hPa。$\omega_t$ 是顶层 $\omega$ 的真值，本页取零。把平方换成一次方，就是假设各层散度的误差相同。O'Brien 的论文是 [`doi:10.1175/1520-0450(1970)009<0197:ASTTCV>2.0.CO;2`](https://journals.ametsoc.org/doi/10.1175/1520-0450%281970%29009%3C0197%3AASTTCV%3E2.0.CO%3B2)。
 
 ### 位涡
 
@@ -467,7 +467,7 @@ slopes.round(2)
 fig = ch11.plot_spectra(spec_era5, spec, ratio_leads={"AIFS": [24, 72, 240], "IFS": [24, 240]})
 ```
 
-[](#fig-ch11-spectra) 的左图里，三个 0 h 的谱在 $k < 60$ 时几乎重合。在天气尺度上，谱沿着 k⁻³ 的参考线下降，但斜率稍缓。Nastrom 和 Gage 在 1985 年用飞机观测发现，对流层顶附近的谱在波长小于约 500 km 时变成 k⁻⁵ᐟ³。他们的论文是 [`doi:10.1175/1520-0469(1985)042<0950:ACOAWS>2.0.CO;2`](https://doi.org/10.1175/1520-0469%281985%29042%3C0950%3AACOAWS%3E2.0.CO%3B2)。本例的 500 hPa 上，三个分析场都没有这一段。
+[](#fig-ch11-spectra) 的左图里，三个 0 h 的谱在 $k < 60$ 时几乎重合。在天气尺度上，谱沿着 k⁻³ 的参考线下降，但斜率稍缓。Nastrom 和 Gage 在 1985 年用飞机观测发现，对流层顶附近的谱在波长小于约 500 km 时变成 k⁻⁵ᐟ³。他们的论文是 [`doi:10.1175/1520-0469(1985)042<0950:ACOAWS>2.0.CO;2`](https://journals.ametsoc.org/doi/10.1175/1520-0469%281985%29042%3C0950%3AACOAWS%3E2.0.CO%3B2)。本例的 500 hPa 上，三个分析场都没有这一段。
 
 小尺度上，三个 0 h 的场已经不同。在 $k > 100$ 时，IFS 的能量最多，ERA5 的最少。IFS 的网格间距约 9 km，ERA5 和 AIFS 约 31 km。本例的 AIFS 是 AIFS Single v1.1。它从 IFS 的业务分析场起报，初始条件先从约 9 km 的网格插值到约 31 km 的 N320 网格，见它的 [模型卡](https://huggingface.co/ecmwf/aifs-single-1.1)。所以 AIFS 0 h 场的小尺度能量介于两者之间。
 

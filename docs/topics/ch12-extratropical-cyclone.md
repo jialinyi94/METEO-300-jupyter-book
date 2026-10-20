@@ -341,7 +341,7 @@ print(f"搜索半径：{ch12.SEARCH_RADIUS_KM:.0f} km；匹配半径：{ch12.MAT
 
 第三步，把各个时刻的中心连起来。追踪器先估计气旋下一个时刻的位置：把上一个中心按上一步的位移再移动一次。然后它取离这个估计位置最近的中心。这个中心离估计位置超过搜索半径 600 km 时，追踪结束。两个中心的距离是大圆距离。Darragh 在 6 h 里最多移动约 470 km，所以搜索半径不能太小。
 
-ERA5 的路径在真实数据一节。下面用它算出气旋的移动速度和加深的速度。爆发性气旋的常用标准来自 Sanders 和 Gyakum，1980，[`doi:10.1175/1520-0493(1980)108<1589:SDCOT>2.0.CO;2`](https://doi.org/10.1175/1520-0493%281980%29108%3C1589%3ASDCOT%3E2.0.CO%3B2)：24 h 里，中心气压至少下降 $24\ \mathrm{hPa} \times \sin\varphi / \sin 60°$。
+ERA5 的路径在真实数据一节。下面用它算出气旋的移动速度和加深的速度。爆发性气旋的常用标准来自 Sanders 和 Gyakum，1980，[`doi:10.1175/1520-0493(1980)108<1589:SDCOT>2.0.CO;2`](https://journals.ametsoc.org/doi/10.1175/1520-0493%281980%29108%3C1589%3ASDCOT%3E2.0.CO%3B2)：24 h 里，中心气压至少下降 $24\ \mathrm{hPa} \times \sin\varphi / \sin 60°$。
 
 ```{code-cell} python
 six = era5_track.loc[ch12.VALID_TIMES]
