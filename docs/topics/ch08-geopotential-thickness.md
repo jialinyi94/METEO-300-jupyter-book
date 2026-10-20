@@ -305,7 +305,7 @@ ug_phi, vg_phi = mpcalc.geostrophic_wind(phi500)
 assert float(abs(ug - ug_phi).max().metpy.dequantify()) < 1e-6
 ```
 
-下面在苏格兰东南部上空取一点，那里的等值线几乎是直线。代码用中心差分手算地转风速，网格间距是 0.25°。代码还算出相邻两条 60 m 等值线的距离。读者可以在 [](#fig-ch08-maps) 上量出这个距离。
+下面在苏格兰东南部上空取一点，那里的等值线几乎是直线。代码用中心差分手算 geostrophic wind speed，网格间距是 0.25°。代码还算出相邻两条 60 m 等值线的距离。读者可以在 [](#fig-ch08-maps) 上量出这个距离。
 
 ```{code-cell} python
 lat0, lon0 = 56.0, -2.0
@@ -323,23 +323,23 @@ dx = 2 * radius * np.cos(np.deg2rad(lat0)) * step
 dz_dx = (gh_at(lat0, lon0 + 0.25) - gh_at(lat0, lon0 - 0.25)) / dx
 vg_hand = g0 / f0 * np.hypot(dz_dx, dz_dy)
 
-speed_g = mpcalc.wind_speed(ug, vg).metpy.dequantify()  # 地转风速，m/s
+speed_g = mpcalc.wind_speed(ug, vg).metpy.dequantify()  # geostrophic wind speed，m/s
 speed = np.hypot(case["u500"], case["v500"])  # ERA5 的风速，m/s
 here = {"latitude": lat0, "longitude": lon0}
 assert abs(float(speed_g.sel(here)) - vg_hand) < 0.01
 print(f"60 m 等值线的间距 {60 / np.hypot(dz_dx, dz_dy) / 1000:.0f} km")
-print(f"地转风速：MetPy {float(speed_g.sel(here)):.1f} m/s，手算 {vg_hand:.1f} m/s")
+print(f"geostrophic wind speed：MetPy {float(speed_g.sel(here)):.1f} m/s，手算 {vg_hand:.1f} m/s")
 print(f"ERA5 的风速 {float(speed.sel(here)):.1f} m/s")
 ```
 
-这一点的地转风速是 35.5 m s⁻¹，ERA5 的风速是 34.2 m s⁻¹，两者相差不到 4%。下面再看急流在大西洋上最强的地方。
+这一点的 geostrophic wind speed 是 35.5 m s⁻¹，ERA5 的风速是 34.2 m s⁻¹，两者相差不到 4%。下面再看急流在大西洋上最强的地方。
 
 ```{code-cell} python
 jet = {"latitude": 50.5, "longitude": -17.5}
-print(f"地转风速 {float(speed_g.sel(jet)):.1f} m/s，ERA5 的风速 {float(speed.sel(jet)):.1f} m/s")
+print(f"geostrophic wind speed {float(speed_g.sel(jet)):.1f} m/s，ERA5 的风速 {float(speed.sel(jet)):.1f} m/s")
 ```
 
-这里的地转风速比 ERA5 的风速大约三分之一。主要原因是气流沿气旋式弯曲的路径绕过槽，所以风比地转风慢。这就是梯度风。[力与地转风](ch05-dynamics-geostrophic.md) 一页讨论了地转风和风的差。
+这里的 geostrophic wind speed 比 ERA5 的风速大约三分之一。主要原因是气流沿气旋式弯曲的路径绕过槽，所以风比地转风慢。这就是梯度风。[力与地转风](ch05-dynamics-geostrophic.md) 一页讨论了地转风和风的差。
 
 式 [](#eq-ch08-pgf) 的左边需要密度，右边不需要。下面比较 1000 hPa 和 500 hPa。两层都取 50°N 和 20 m s⁻¹ 的地转风，温度分别取 280 K 和 250 K。
 

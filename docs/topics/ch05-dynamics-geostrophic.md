@@ -76,18 +76,18 @@ s = Vt \cdot \Omega t = \tfrac{1}{2} a t^2 \;\Rightarrow\; a = 2\Omega V, \qquad
 
 ### 等压线弯曲时：梯度风
 
-地转风假设等压线是直的。低压和高压周围的等压线却是弯的。空气沿弯曲的路径运动，就要不断转弯。转弯需要一个指向弯曲中心的合力。单位质量空气受的这个合力等于 $V^2/R$，式中 $V$ 是风速，$R$ 是路径的曲率半径。这个量叫向心加速度。
+地转风假设等压线是直的。低压和高压周围的等压线却是弯的。空气沿弯曲的路径运动，就要不断转弯。转弯需要一个指向弯曲中心的合力。单位质量空气受的这个合力等于 $V^2/R$，式中 $V$ 是风速，$R$ 是路径的 radius of curvature。这个量叫 centripetal acceleration。
 
-在低压周围，气压梯度力指向低压中心，Coriolis 力指向外侧。两者的差提供向心加速度，所以 Coriolis 力比气压梯度力小。Coriolis 力等于 $fV$，所以风比地转风慢，这样的风叫次地转风。在高压周围，气压梯度力指向外侧，Coriolis 力指向高压中心。Coriolis 力要比气压梯度力大，所以风比地转风快，这样的风叫超地转风。这种三个力的平衡叫梯度风平衡，满足它的风叫梯度风。
+在低压周围，气压梯度力指向低压中心，Coriolis 力指向外侧。两者的差提供 centripetal acceleration，所以 Coriolis 力比气压梯度力小。Coriolis 力等于 $fV$，所以风比地转风慢，这样的风叫 subgeostrophic wind。在高压周围，气压梯度力指向外侧，Coriolis 力指向高压中心。Coriolis 力要比气压梯度力大，所以风比地转风快，这样的风叫 supergeostrophic wind。这种三个力的平衡叫 gradient wind balance，满足它的风叫梯度风。
 
 ```{math}
 :label: eq-ch05-gradient
 \text{低压：}\ \frac{V^2}{R} = fV_g - fV, \qquad \text{高压：}\ \frac{V^2}{R} = fV - fV_g, \qquad \frac{V_g}{V} = 1 \pm \frac{V}{fR}
 ```
 
-式中 $fV_g$ 是气压梯度力的大小，$V_g$ 是地转风速，$R$ 取正值。取 $f = 10^{-4}\ \mathrm{s^{-1}}$，$R = 500$ km，$V_g = 10$ m s⁻¹。解两个二次方程，低压周围和高压周围的风速分别是 8.5 m s⁻¹ 和 13.8 m s⁻¹。核对低压：$fV$ 是 $0.85 \times 10^{-3}$ m s⁻²，$V^2/R$ 是 $0.15 \times 10^{-3}$ m s⁻²，两者之和等于气压梯度力。
+式中 $fV_g$ 是气压梯度力的大小，$V_g$ 是 geostrophic wind speed，$R$ 取正值。取 $f = 10^{-4}\ \mathrm{s^{-1}}$，$R = 500$ km，$V_g = 10$ m s⁻¹。解两个二次方程，低压周围和高压周围的风速分别是 8.5 m s⁻¹ 和 13.8 m s⁻¹。核对低压：$fV$ 是 $0.85 \times 10^{-3}$ m s⁻²，$V^2/R$ 是 $0.15 \times 10^{-3}$ m s⁻²，两者之和等于气压梯度力。
 
-前两式的两边除以 $fV$，就得到第三式。第三式的加号用于低压，减号用于高压。它说明地转风速的相对误差等于 $V/(fR)$。这个比值就是 Rossby 数，只是把式 [](#eq-ch05-rossby) 的 $L$ 换成了 $R$。本例低压和高压的 Rossby 数分别是 0.17 和 0.28。Rossby 数越小，地转风越接近梯度风。
+前两式的两边除以 $fV$，就得到第三式。第三式的加号用于低压，减号用于高压。它说明 geostrophic wind speed 的相对误差等于 $V/(fR)$。这个比值就是 Rossby 数，只是把式 [](#eq-ch05-rossby) 的 $L$ 换成了 $R$。本例低压和高压的 Rossby 数分别是 0.17 和 0.28。Rossby 数越小，地转风越接近梯度风。
 
 高压有一个上限，低压没有。高压的方程要求 $fV - V^2/R = fV_g$，而左边在 $V = fR/2$ 时最大，最大值是 $f^2R/4$。所以 $V_g$ 不能超过 $fR/4$，本例的上限是 12.5 m s⁻¹。密度取 1.2 kg m⁻³ 时，这个上限相当于每 100 km 约 1.5 hPa 的气压差。因此高压中心附近的等压线稀疏，风也弱。梯度风仍然略去摩擦力，并假设风速沿路径不变。
 
@@ -100,7 +100,7 @@ s = Vt \cdot \Omega t = \tfrac{1}{2} a t^2 \;\Rightarrow\; a = 2\Omega V, \qquad
 \mathbf{v}_{ag} = \mathbf{v}_h - \mathbf{v}_g
 ```
 
-非地转风有两个主要来源。第一个来源是加速度。气流沿弯曲的路径运动时，一部分气压梯度力用来改变风向。上一节的梯度风就是这个来源：低压周围的风是次地转风，高压周围的风是超地转风。
+非地转风有两个主要来源。第一个来源是加速度。气流沿弯曲的路径运动时，一部分气压梯度力用来改变风向。上一节的梯度风就是这个来源：低压周围的风是 subgeostrophic wind，高压周围的风是 supergeostrophic wind。
 
 第二个来源是摩擦力。在边界层里，摩擦力使风变慢。风变慢以后，Coriolis 力变小，不再能平衡气压梯度力。于是风向低压一侧偏转，斜穿等压线。地面越粗糙，摩擦力越大，风偏转得越多。
 
@@ -126,12 +126,12 @@ s = Vt \cdot \Omega t = \tfrac{1}{2} a t^2 \;\Rightarrow\; a = 2\Omega V, \qquad
 | 地转风 | geostrophic wind | $\mathbf{v}_g$ |
 | 非地转风 | ageostrophic wind | $\mathbf{v}_{ag}$ |
 | 梯度风 | gradient wind | — |
-| 梯度风平衡 | gradient wind balance | — |
-| 向心加速度 | centripetal acceleration | $V^2/R$ |
-| 曲率半径 | radius of curvature | $R$ |
-| 次地转风 | subgeostrophic wind | — |
-| 超地转风 | supergeostrophic wind | — |
-| 地转风速 | geostrophic wind speed | $V_g$ |
+| gradient wind balance | gradient wind balance | — |
+| centripetal acceleration | centripetal acceleration | $V^2/R$ |
+| radius of curvature | radius of curvature | $R$ |
+| subgeostrophic wind | subgeostrophic wind | — |
+| supergeostrophic wind | supergeostrophic wind | — |
+| geostrophic wind speed | geostrophic wind speed | $V_g$ |
 | 风速 | wind speed | $V$ |
 | 垂直速度 | vertical velocity | $w$ |
 | 重力加速度 | gravitational acceleration | $g$ |
@@ -249,7 +249,7 @@ print(f"手算的地转风：  ug = {ug_hand:.2f} m/s，vg = {vg_hand:.2f} m/s")
 print(f"ERA5 的风：     u  = {u0:.2f} m/s，v  = {v0:.2f} m/s")
 ```
 
-MetPy 和手算的结果相同。这一点的风速是 31.9 m s⁻¹，地转风速是 33.0 m s⁻¹，风比地转风慢 3%。风向和地转风的方向相差 7°。
+MetPy 和手算的结果相同。这一点的风速是 31.9 m s⁻¹，geostrophic wind speed 是 33.0 m s⁻¹，风比地转风慢 3%。风向和地转风的方向相差 7°。
 
 下面用同一点的数值做尺度分析。气压梯度力等于 $|\nabla_p \Phi|$，Coriolis 力等于 $f\,|\mathbf{v}_h|$。Rossby 数取 $L = 1000$ km。
 
@@ -272,11 +272,11 @@ fig = ch05.plot_ageostrophic_500(
 )
 ```
 
-[](#fig-ch05-ageo500) 的左图里，大部分地方的两种箭头几乎重合。苏格兰和爱尔兰上空的蓝色箭头比黑色箭头长很多，所以那里的地转风比风大。右图的非地转风在低压中心的东侧最大，超过 30 m s⁻¹。那里的非地转风大致指向风的反方向，所以风比地转风慢。这里的气流沿气旋式弯曲的路径运动，所以风是次地转风。
+[](#fig-ch05-ageo500) 的左图里，大部分地方的两种箭头几乎重合。苏格兰和爱尔兰上空的蓝色箭头比黑色箭头长很多，所以那里的地转风比风大。右图的非地转风在低压中心的东侧最大，超过 30 m s⁻¹。那里的非地转风大致指向风的反方向，所以风比地转风慢。这里的气流沿气旋式弯曲的路径运动，所以风是 subgeostrophic wind。
 
 右图还有几条窄的条纹，它们在爱尔兰、威尔士、英格兰北部和苏格兰的山地上空。条纹的宽度只有几十千米。它们很可能是气流越过山地时激发的重力波。重力波的尺度小，地转平衡不适用于它们。
 
-下面的代码比较风速和地转风速，只统计地转风速不小于 10 m s⁻¹ 的格点。代码还算出整个区域的非地转风比例。非地转风比例等于非地转风的 RMS 除以风的 RMS。均值按格点的面积加权，权重是 $\cos\varphi$。
+下面的代码比较风速和 geostrophic wind speed，只统计 geostrophic wind speed 不小于 10 m s⁻¹ 的格点。代码还算出整个区域的非地转风比例。非地转风比例等于非地转风的 RMS 除以风的 RMS。均值按格点的面积加权，权重是 $\cos\varphi$。
 
 ```{code-cell} python
 dist = ch05.distance_km(lat_c, lon_c, p500["latitude"], p500["longitude"])
@@ -286,12 +286,12 @@ ratio_near = float(ratio.where((dist <= 600) & strong).median())
 ratio_far = float(ratio.where((dist > 1000) & strong).median())
 frac500 = ch05.ageostrophic_fraction(pl.sel(level=[500]).assign(sp=sfc["sp"]))[500]
 assert ratio_near < 0.8 < ratio_far
-print(f"离低压中心 600 km 以内，风速 / 地转风速的中位数：{ratio_near:.2f}")
-print(f"离低压中心 1000 km 以外，风速 / 地转风速的中位数：{ratio_far:.2f}")
+print(f"离低压中心 600 km 以内，风速 / geostrophic wind speed 的中位数：{ratio_near:.2f}")
+print(f"离低压中心 1000 km 以外，风速 / geostrophic wind speed 的中位数：{ratio_far:.2f}")
 print(f"500 hPa 的非地转风比例：{frac500:.2f}")
 ```
 
-离低压中心 600 km 以内，风速的中位数只有地转风速的 71%。离低压中心 1000 km 以外，这个比值是 0.97。整个区域的非地转风比例是 0.29。
+离低压中心 600 km 以内，风速的中位数只有 geostrophic wind speed 的 71%。离低压中心 1000 km 以外，这个比值是 0.97。整个区域的非地转风比例是 0.29。
 
 ### 10 m 风的穿越角
 
@@ -342,9 +342,9 @@ stats.round(2)
 fig = ch05.plot_angles(angles, weights)
 ```
 
-表中的 `q25`、`q50` 和 `q75` 是穿越角的四分位数，`speed_ratio` 是 10 m 风速和地转风速的比值的中位数。[](#fig-ch05-angle) 里，海面的穿越角的中位数是 16°，一半的格点在 ［9, 24］ ° 之内。低地陆面的中位数是 41°，一半的格点在 ［32, 50］ ° 之内。陆面比海面粗糙，摩擦力大，所以穿越角大。METEO 300 的典型值 30° 落在两者之间。
+表中的 `q25`、`q50` 和 `q75` 是穿越角的四分位数，`speed_ratio` 是 10 m 风速和 geostrophic wind speed 的比值的中位数。[](#fig-ch05-angle) 里，海面的穿越角的中位数是 16°，一半的格点在 ［9, 24］ ° 之内。低地陆面的中位数是 41°，一半的格点在 ［32, 50］ ° 之内。陆面比海面粗糙，摩擦力大，所以穿越角大。METEO 300 的典型值 30° 落在两者之间。
 
-摩擦力也使风变慢。海面的 10 m 风速约为地转风速的 0.69，低地陆面只有 0.31。
+摩擦力也使风变慢。海面的 10 m 风速约为 geostrophic wind speed 的 0.69，低地陆面只有 0.31。
 
 两个分布都很宽，海面还有一些负的穿越角。风暴附近的气流在加速，路径也弯曲，这些都改变穿越角。所以单个格点的穿越角不只反映摩擦力。
 
@@ -406,7 +406,7 @@ assert (table.xs("land", level=1)["q50"] - table.loc[("ERA5", "land"), "q50"]).a
 table.round(2)
 ```
 
-AIFS 的中位数和 ERA5 相差约 1°，四分位数之间的范围略窄。所以 AIFS 学会了海面和陆面的差别。AIFS 的 10 m 风速和地转风速的比值也和 ERA5 几乎相同。
+AIFS 的中位数和 ERA5 相差约 1°，四分位数之间的范围略窄。所以 AIFS 学会了海面和陆面的差别。AIFS 的 10 m 风速和 geostrophic wind speed 的比值也和 ERA5 几乎相同。
 
 但是 AIFS 学到的是 ERA5 的穿越角。ERA5 的穿越角来自 IFS 的湍流方案。这个方案的穿越角有 bias 时，AIFS 也继承同样的 bias。要检查真实大气的穿越角，要用观测站的风和气压。
 
@@ -423,7 +423,7 @@ AIFS 的中位数和 ERA5 相差约 1°，四分位数之间的范围略窄。�
 :::{solution} ex-ch05-1
 :class: dropdown
 
-$f = 2 \times 7.292 \times 10^{-5} \times \sin 55° = 1.195 \times 10^{-4}\ \mathrm{s^{-1}}$。地转风速是 $\Delta p / (\rho f \Delta n) = 400 / (1.225 \times 1.195 \times 10^{-4} \times 2 \times 10^5) = 13.7\ \mathrm{m\,s^{-1}}$。海面的 10 m 风速约为地转风速的 0.69，所以约 9.4 m s⁻¹。风向从等压线向低压一侧偏转约 16°。
+$f = 2 \times 7.292 \times 10^{-5} \times \sin 55° = 1.195 \times 10^{-4}\ \mathrm{s^{-1}}$。geostrophic wind speed 是 $\Delta p / (\rho f \Delta n) = 400 / (1.225 \times 1.195 \times 10^{-4} \times 2 \times 10^5) = 13.7\ \mathrm{m\,s^{-1}}$。海面的 10 m 风速约为 geostrophic wind speed 的 0.69，所以约 9.4 m s⁻¹。风向从等压线向低压一侧偏转约 16°。
 :::
 
 :::{exercise}

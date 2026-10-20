@@ -4,7 +4,7 @@
 
 表格的列：
 
-- 中文术语：本书使用的唯一说法。人名术语写英文人名加中文通用词，例如 Coriolis 力。评分指标写常见的英文名，例如 RMSE 和 bias，见难选的词第 32 条。
+- 中文术语：本书使用的唯一说法。人名术语写英文人名加中文通用词，例如 Coriolis 力。评分指标写常见的英文名，例如 RMSE 和 bias，见难选的词第 32 条。六个动力学术语也写英文原词，例如 geostrophic wind speed，见难选的词第 34 条。
 - English term：英文术语。
 - 符号：公式里的符号。本书一个符号只表示一个量。
 - 单位：正文使用的单位。
@@ -124,11 +124,11 @@
 | 100 m 风 | 100 m wind | $u_{100}$, $v_{100}$ | m s⁻¹ | `u100`, `v100` / `100m_u_component_of_wind`, `100m_v_component_of_wind` | — |
 | 阵风 | wind gust | — | m s⁻¹ | `i10fg` / `instantaneous_10m_wind_gust` | — |
 | 地转风 | geostrophic wind | $\mathbf{v}_g$ | m s⁻¹ | `geostrophic_wind_speed` | — |
-| 地转风速 | geostrophic wind speed | $V_g$ | m s⁻¹ | — | — |
+| geostrophic wind speed | geostrophic wind speed | $V_g$ | m s⁻¹ | — | 地转风速 |
 | 非地转风 | ageostrophic wind | $\mathbf{v}_{ag}$ | m s⁻¹ | `ageostrophic_wind_speed` | 偏地转风 |
 | 梯度风 | gradient wind | — | m s⁻¹ | — | — |
-| 次地转风 | subgeostrophic wind | — | m s⁻¹ | — | 亚地转风 |
-| 超地转风 | supergeostrophic wind | — | m s⁻¹ | — | — |
+| subgeostrophic wind | subgeostrophic wind | — | m s⁻¹ | — | 次地转风、亚地转风 |
+| supergeostrophic wind | supergeostrophic wind | — | m s⁻¹ | — | 超地转风 |
 | 穿越角 | cross-isobar angle | $\gamma - \gamma_g$ | ° | — | 越等压线角 |
 | 非地转风比例 | ageostrophic wind fraction | — | — | — | — |
 | 热成风 | thermal wind | $\mathbf{v}_T$ | m s⁻¹ | — | 热风 |
@@ -154,9 +154,9 @@
 | 地球自转角速度 | Earth's angular velocity | $\Omega$ | s⁻¹ | — | — |
 | 摩擦力 | friction | — | m s⁻² | — | — |
 | 地转平衡 | geostrophic balance | — | — | — | — |
-| 梯度风平衡 | gradient wind balance | — | — | — | 梯度平衡 |
-| 向心加速度 | centripetal acceleration | $V^2/R$ | m s⁻² | — | — |
-| 曲率半径 | radius of curvature | $R$ | km | — | — |
+| gradient wind balance | gradient wind balance | — | — | — | 梯度风平衡、梯度平衡 |
+| centripetal acceleration | centripetal acceleration | $V^2/R$ | m s⁻² | — | 向心加速度 |
+| radius of curvature | radius of curvature | $R$ | km | — | 曲率半径 |
 | Rossby 数 | Rossby number | Ro | — | — | 罗斯贝数、罗斯比数 |
 | 尺度分析 | scale analysis | — | — | — | 量级分析 |
 | f 平面 | f-plane | — | — | — | — |
@@ -608,3 +608,4 @@
 31. 低压中心和气旋中心：低压中心是天气图上海平面气压的局地极小值。描述天气图、气压场和个例时，写“低压中心”。气旋中心是气旋追踪器找到并跟踪的低压中心。写气旋路径、气旋追踪、hit、miss 和中心的移动时，写“气旋中心”。同一个低压，在一个时刻的天气图上叫低压中心，在追踪的结果里叫气旋中心。不写“风暴中心”。用户在 2026-10-17 做了这个决定。
 32. 评分指标：写常见的英文名，不写中文。缩写全部大写：MAE、MSE、RMSE、RMS、ACC、CRPS 和 SEEPS。普通英文词在句中小写：bias、hit、miss、false alarm、correlation、skill score、spread 和 track error。英文和中文之间留一个空格，和 ERA5 的写法一样。正文第一次出现时也不加中文。“偏差”“均方根”“相关系数”等中文名是弃用词。用户在 2026-10-17 做了这个决定。
 33. track error：预报的气旋中心和参考的气旋中心之间的距离，单位是 km。track error 只指这个距离，不包括中心气压的误差。不写“路径误差”或“轨迹误差”。“位置误差”不是弃用词。槽、锋和其他天气系统放错了位置，可以写“位置误差”。
+34. 六个动力学术语：写英文原词，不写中文。这六个词是 geostrophic wind speed、subgeostrophic wind、supergeostrophic wind、gradient wind balance、centripetal acceleration 和 radius of curvature。它们在句中小写。英文和中文之间留一个半角空格。正文第一次出现时也不加中文。“地转风速”“次地转风”“超地转风”“梯度风平衡”“向心加速度”和“曲率半径”是弃用词。其他术语仍写中文，例如地转风、梯度风和风速。用户在 2026-10-20 做了这个决定。

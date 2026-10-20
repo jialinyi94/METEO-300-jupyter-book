@@ -199,6 +199,39 @@ def test_words_that_contain_a_metric_name():
         assert ste_check.check_text(text, "x.md", glossary, cfg) == []
 
 
+# Six dynamics terms are written as the English original words. The Chinese
+# words are rejected terms. User decision, 2026-10-20.
+DYNAMICS_TERMS = {
+    "地转风速": "geostrophic wind speed",
+    "次地转风": "subgeostrophic wind",
+    "超地转风": "supergeostrophic wind",
+    "梯度风平衡": "gradient wind balance",
+    "向心加速度": "centripetal acceleration",
+    "曲率半径": "radius of curvature",
+}
+
+
+@pytest.mark.parametrize(("old", "new"), DYNAMICS_TERMS.items())
+def test_chinese_dynamics_term_is_rejected(old, new):
+    (v,) = ste_check.check_text(f"本页讲{old}。", "x.md", GLOSSARY)
+    assert str(v) == f"x.md:1: rejected-term: {old} → {new}"
+    assert rules(f"本页讲 {new}。") == []
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "低压周围的风是 subgeostrophic wind，高压周围的风是 supergeostrophic wind。",
+        "这一点的 geostrophic wind speed 是 33.0 m s⁻¹，风比地转风慢 3%。",
+        "这种三个力的平衡叫 gradient wind balance，满足它的风叫梯度风。",
+        "$R$ 是路径的 radius of curvature，$V^2/R$ 叫 centripetal acceleration。",
+        "整个区域还有许多细小的斑点，非地转风速约 ［3, 6］ m s⁻¹。",
+    ],
+)
+def test_english_dynamics_terms_pass(text):
+    assert rules(text) == []
+
+
 def test_every_rejected_word_is_found():
     missed = [w for w in GLOSSARY.rejected if "rejected-term" not in rules(f"{w}。")]
     assert missed == []

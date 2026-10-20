@@ -330,7 +330,7 @@ assert diff < 0.1 * vectors.loc["热成风", "风速"]
 speed850 = float(ekwind.speed(era5["u"], era5["v"]).sel(level=850, **point))
 speed850_g = float(ekwind.speed(ug, vg).sel(level=850, **point))
 print(f"热成风和地转风的差相差 {diff:.2f} m/s")
-print(f"850 hPa：ERA5 风速 {speed850:.1f} m/s，地转风速 {speed850_g:.1f} m/s")
+print(f"850 hPa：ERA5 风速 {speed850:.1f} m/s，geostrophic wind speed {speed850_g:.1f} m/s")
 vectors.round(1)
 ```
 
@@ -338,7 +338,7 @@ vectors.round(1)
 
 表里的风向是来向。热成风来自西北，吹向东南。冷空气在它的左边，也就是 Valentia 的东北边。ERA5 风的差和探空风的差彼此接近，风速相差 1.2 m s⁻¹，风向相差 6°。但是它们和热成风相差约 7 m s⁻¹。
 
-原因是 850 hPa 的风离地转风很远。ERA5 在 Valentia 上空 850 hPa 的风速是 29 m s⁻¹，地转风速是 39 m s⁻¹。850 hPa 离地面只有约 1.35 km，那里的风还受摩擦力影响。暖平流带里的气流也在加速。所以单次探空的垂直风切变只能近似地代表热成风。
+原因是 850 hPa 的风离地转风很远。ERA5 在 Valentia 上空 850 hPa 的风速是 29 m s⁻¹，geostrophic wind speed 是 39 m s⁻¹。850 hPa 离地面只有约 1.35 km，那里的风还受摩擦力影响。暖平流带里的气流也在加速。所以单次探空的垂直风切变只能近似地代表热成风。
 
 ### 温度平流
 
